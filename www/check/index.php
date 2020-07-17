@@ -1,5 +1,7 @@
 <?php
 
+// ---
+
 if(PHP_SAPI == 'cli') define('EOL',PHP_EOL); else define('EOL','<br/>');
 if(PHP_SAPI == 'cli') define('TAB',"\t"); else define('TAB','&nbsp;');
 
