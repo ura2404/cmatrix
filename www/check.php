@@ -19,6 +19,16 @@ array_map(function($key,$value){
 
 
 // --- --- --- --- --- --- --- ---
+echo  EOL."Check Apache modules:". EOL;
+$ModulesApache = [
+    'mod_rewrite'
+];
+$LoadedModules = apache_get_modules();
+array_map(function($value) use($LoadedModules){
+    echo TAB. $value .TAB.TAB.TAB. (in_array($value,$LoadedModules) ? 'OK' : 'Fail') . EOL;
+},$ModulesApache);
+
+// --- --- --- --- --- --- --- ---
 echo  EOL."Check PHP modules:". EOL;
 $ModulesPHP = [
     'json',
@@ -27,6 +37,7 @@ $ModulesPHP = [
     'PDO',
     'pgsql',
     'pdo_pgsql',
+    'gd',
 ];
 
 array_map(function($value){
