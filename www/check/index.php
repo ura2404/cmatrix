@@ -44,5 +44,6 @@ array_map(function($value){
     echo TAB. $value .TAB.TAB.TAB. (extension_loaded($value) ? 'OK' : 'Fail') . EOL;
 },$ModulesPHP);
 
+echo '';
 
 ?>
