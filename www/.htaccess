@@ -1,0 +1,50 @@
+#-----------------------------------------------
+#AuthType Basic
+#AuthName "Cmatrix"
+#AuthUserFile .htpasswd
+#require valid-user
+
+#-----------------------------------------------
+DefaultLanguage ru
+AddDefaultCharset UTF-8
+php_value default_charset "UTF-8"
+
+<IfModule mod_rewrite.c>
+    RewriteEngine on
+    RewriteBase /cmatrix
+
+    # --- --- --- --- --- --- --- ---
+    # Крайний слеш
+    # если файл, то отбросить слеш
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^(.*)(/)$ $1 [L,R=301]
+
+    # если в url в конце нет слеша, то добавить
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} !(.*)/$
+    RewriteRule ^(.*[^/])$ $1/ [L,R=301]
+
+    # --- --- --- --- --- --- --- ---
+    # Check
+    RewriteCond %{REQUEST_URI} (.*)/$
+    RewriteRule ^(check) $1/index.php [QSA,L]
+
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^(check/index\.php)$ $1 [L]
+    # RewriteRule ^(check/.*\.)(php|js|css|less|png|jpg|gif|ttf|ico)$ $1$2 [L]
+
+    # --- --- --- --- --- --- --- ---
+    # Raw
+    RewriteCond %{REQUEST_URI} (.*)/$
+    RewriteRule ^(raw) $1/index.php [QSA,L]
+
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^(raw/index\.php)$ $1 [L]
+    RewriteRule ^(raw/.*\.)(php|js|css|less|png|jpg|gif|ttf|ico)$ $1$2 [L]
+
+    # --- --- --- --- --- --- --- ---
+    # Global
+    RewriteCond %{REQUEST_URI} (.*)$
+    RewriteRule ^(.*)$ index.php?cmp=$1 [QSA,L]
+</IfModule>
