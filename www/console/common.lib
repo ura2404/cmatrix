@@ -1,0 +1,52 @@
+#!/bin/bash
+home=`pwd`
+
+folder=`pwd | grep -o [^/]* | sed -e '$!{h;d;}' -e x`
+name=`cat ../.config/app.ini.json | jq '.app.code' |  sed 's/\"//g'`
+
+db=`cat ../.config/app.ini.json | jq '.db._def' |  sed 's/\"//g'`
+
+db_host=`cat ../.config/app.ini.json | jq '.db._def.host' |  sed 's/\"//g'`
+db_port=`cat ../.config/app.ini.json | jq '.db._def.port' |  sed 's/\"//g'`
+db_name=`cat ../.config/app.ini.json | jq '.db._def.name' |  sed 's/\"//g'`
+db_user=`cat ../.config/app.ini.json | jq '.db._def.user' |  sed 's/\"//g'`
+db_pass=`cat ../.config/app.ini.json | jq '.db._def.pass' |  sed 's/\"//g'`
+[ $db_host == 'null' ] && db_host=localhost
+[ $db_port == 'null' ] && db_port=5432
+
+function ts(){
+    [ "$1" == 'true' ] && echo $(date +"%Y-%m-%d %H:%M:%S") | sed 's/:/-/g;s/ /_/g' || echo $(date +"%Y-%m-%d %H:%M:%S")
+};
+
+## ------------------------------------
+ # @param $1 имя БД
+ # @param $2 имя файла архива, к нему добавится окончание 'postgres.bz2'
+ #
+function dbBackup(){
+    [ $db_name == 'null' ] && return
+
+    # 1. Проверить есть ли БД, если есть, то архивировать
+    #psql -h $db_host -p $db_port -U $db_user -lqt | cut -d \| -f 1 | grep -qw $db_name && pg_dump -v -h $db_host -p $db_port -F p -U $db_user $db_name 2>/dev/null | bzip2 -9 > tmp/$name-$(ts true).postgres.bz2
+    # простой формат с сжатием
+    psql -h $db_host -p $db_port -U $db_user -lqt | cut -d \| -f 1 | grep -qw $1 && pg_dump -v -h $db_host -p $db_port -F p -U $db_user $1 2>/dev/null | bzip2 -9 > $2.postgres.bz2
+
+    # компактный формат без сжатия
+    #psql -h $db_host -p $db_port -U $db_user -lqt | cut -d \| -f 1 | grep -qw $1 && pg_dump -v -h $db_host -p $db_port -F c -U $db_user $1 > $2.postgres
+
+    # компактный формат с сжатием
+    #psql -h $db_host -p $db_port -U $db_user -lqt | cut -d \| -f 1 | grep -qw $1 && pg_dump -v -h $db_host -p $db_port -F c -U $db_user $1 | bzip2 -9 > $2.postgres.bz2
+};
+
+## ------------------------------------
+ # @param $1 путь к папке проекта
+ # @param $2 имя файла архива, к нему добавится окончание 'code.tar.bz2'
+ #
+function proBackup(){
+    tar --exclude-tag-all=.backup.stop -cjf $2.code.tar.bz2 $1 > /dev/null 2>&1
+};
+
+
+## ------------------------------------
+# 1. Создать временную папку и файл в ней, запрещающий её дальнейшее архивирование
+mkdir -p tmp
+touch tmp/.backup.stop && chmod 660 tmp/.backup.stop && chown www-data:www-data tmp/.backup.stop
