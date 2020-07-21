@@ -1,51 +1,70 @@
 <?php
 
-// ---
-
+// --- --- --- --- --- --- --- ---
 if(PHP_SAPI == 'cli') define('EOL',PHP_EOL); else define('EOL','<br/>');
 if(PHP_SAPI == 'cli') define('TAB',"\t"); else define('TAB','&nbsp;');
 
+class Table {
+    private $Name;
+    private $Data;
+    function __construct($name){
+        $this->Name = $name;
+    }
+    function add($key,$value){
+        $this->Data[$key] = $value;
+    }
+    function addBoolResult($fun,$key){
+        if(!is_array($key)) $key = [$key];
+        array_map(function($value) use($fun){
+            $this->add($value,$fun($value) ? 'true' : 'false');
+        },$key);
+    }
+    function print(){
+        echo '<h2>' .$this->Name. '</h2>';
+        echo '<table><tbody>';
+        array_map(function($key,$value){
+            echo '<tr>';
+            echo '<td class="e">' .$key. '</td>';
+            echo '<td class="v">' .$value. '</td>';
+            echo '</tr>';
+        },array_keys($this->Data),array_values($this->Data));
+        echo '</tbody></table>';
+    }
+}
 
 // --- --- --- --- --- --- --- ---
-echo "Check Databases:". EOL;
-$_databases = [
-    'pgsql' => function(){
-        $Version = shell_exec("psql -V");
-        return !!$Version;
-    },
-];
+echo '<div class="center" style="margin-bottom:150px;">';
 
-array_map(function($key,$value){
-    echo TAB. $key .TAB.TAB.TAB. ($value() ? 'OK' : 'Fail') . EOL;
-},array_keys($_databases),array_values($_databases));
+echo '<table><tbody>';
+echo '<tr class="h">';
+echo '<td><h1>Cmatrix</h1></td>';
+echo '</tr>';
+echo '</tbody></table>';
 
+$Database = new Table('Check Databases');
+$Database->add('pgsql',shell_exec("psql -V") ? 'true' : 'false');
+$Database->print();
 
-// --- --- --- --- --- --- --- ---
-echo  EOL."Check Apache modules:". EOL;
-$ModulesApache = [
-    'mod_rewrite'
-];
-$LoadedModules = apache_get_modules();
-array_map(function($value) use($LoadedModules){
-    echo TAB. $value .TAB.TAB.TAB. (in_array($value,$LoadedModules) ? 'OK' : 'Fail') . EOL;
-},$ModulesApache);
+$ApacheModules = apache_get_modules();
+$Apache = new Table('Check Apache modules');
+$Apache->add('mod_rewrite',in_array('mod_rewrite',$ApacheModules) ? 'true' : 'false');
+$Apache->print();
 
-// --- --- --- --- --- --- --- ---
-echo  EOL."Check PHP modules:". EOL;
-$ModulesPHP = [
+$Php = new Table('Check Php modules');
+//$Php->add('json',     extension_loaded('json') ? 'true' : 'false');
+$Php->addBoolResult('extension_loaded',[
     'json',
     'mbstring',
     'ctype',
+    'gd',
     'PDO',
     'pgsql',
-    'pdo_pgsql',
-    'gd',
-];
+    'pdo_pgsql'
 
-array_map(function($value){
-    echo TAB. $value .TAB.TAB.TAB. (extension_loaded($value) ? 'OK' : 'Fail') . EOL;
-},$ModulesPHP);
+]);
+$Php->print();
 
-echo '';
+echo '</div>';
 
+phpinfo();
 ?>
