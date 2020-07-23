@@ -13,8 +13,12 @@ class Reflection {
 
     // --- --- --- --- --- --- ---
     function __construct($key){
-        if(isset(self::$INSTANCES[$key])) $this->getInstance($key);
-        else $this->createInstance($key);
+        if(gettype($key) === 'string') $key = md5($key);
+        elseif(is_array($key)) $key = md5(serialize($key));
+        
+        $this->Key = $key;
+        if(isset(static::$INSTANCES[$this->Key])) $this->getInstance();
+        else $this->createInstance();
     }
 
     // --- --- --- --- --- --- ---
@@ -26,23 +30,14 @@ class Reflection {
     }
 
     // --- --- --- --- --- --- ---
-    protected function createInstance($key){
-        $this->Key = $key;
-        
-        $Reflect = new \ReflectionClass($this);
-        $Props = $Reflect->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED);
-        $Statics = $Reflect->getStaticProperties();
-        
-        array_map(function($prop) use($Statics){
-            $Name = $prop->getName();
-            if(array_key_exists($Name,$Statics)) return;    // статику не переносим
-        
-            static::$INSTANCES[$this->Key][$Name] = $this->$Name;
-        },$Props);
+    protected function createInstance(){
+        //dump(get_class($this),'createInstance');
+        static::$INSTANCES[$this->Key] = $this;
     }
 
     // --- --- --- --- --- --- ---
-    protected function getInstance($key){
+    protected function getInstance(){
+        //dump(get_class($this),'getInstance');
 		$Reflect = new \ReflectionClass($this);
 		
 		// приватные свойства не трогать, пусть останутся лично классу
@@ -52,17 +47,17 @@ class Reflection {
 		
 		$Statics = $Reflect->getStaticProperties();
 		
-        array_map(function($prop) use($key,$Statics){
+        array_map(function($prop) use($Statics){
             $Name = $prop->getName();
             if(array_key_exists($Name,$Statics)) return;    // статику не переносим
 		    
-		    $this->$Name = static::$INSTANCES[$key]->$Name;
+		    $this->$Name = static::$INSTANCES[$this->Key]->$Name;
 		},$Props);
     }
     
     // --- --- --- --- --- --- ---
-    protected function updateInstance($key,$value){
-        return static::$INSTANCES[$this->Key]->$key = $this->$key = $value;
+    protected function getInstanceValue($key,$_fun){
+        return static::$INSTANCES[$this->Key]->$key = $this->$key = $_fun();
     }
 
 }

@@ -15,6 +15,8 @@ class Page extends cm\Kernel\Reflection{
     protected $Url;
     protected $Path;
     
+    protected $_Json;
+    
     // --- --- --- --- --- --- --- ---
     function __construct($url){
         $this->Url = $url;
@@ -27,6 +29,7 @@ class Page extends cm\Kernel\Reflection{
     function __get($name){
         switch($name){
             case 'Form' : return $this->getMyForm();
+            case 'Json' : return $this->getMyJson();
             default : return parent::__get($name);
         }
     }
@@ -36,13 +39,21 @@ class Page extends cm\Kernel\Reflection{
     // --- --- --- --- --- --- --- ---
     private function getMyPath(){
         $Path = Module::get($this->Url)->Path .'/page/'. strAfter($this->Url,'/');
-        if(!file_exists($Path)) throw new ex\Error($this,'page [' .$this->Url. '] is not found.');
+        if(!file_exists($Path) || !file_exists($Path .'/page.json')) throw new ex\Error($this,'page descriptor [' .$this->Url. '] is not found.');
         return $Path;
     }
     
     // --- --- --- --- --- --- --- ---
+    private function getMyJson(){
+        return $this->getInstanceValue('_Json',function(){
+            return json_decode(file_get_contents($this->Path.'/page.json'),true);
+        });
+    }
+    
+    // --- --- --- --- --- --- --- ---
     private function getMyForm(){
-        
+        if(!isset($this->Json['form'])) throw new ex\Error($this,'page [' .$this->Url. '] form url is not defined.');
+        return $this->Json['form'];
     }
 
     // --- --- --- --- --- --- --- ---

@@ -30,12 +30,11 @@ class Page{
     // --- --- --- --- --- --- --- ---
     private function getMyHtml(){
         $Pages = cm\Kernel\Config::get('pages');
-
+        
         $PageUrl = $this->Url === '/' ? $Pages->getValue('def') : $Pages->getValue($this->Url);
         $FormUrl = cm\Kernel\Ide\Page::get($PageUrl)->Form;
-dump($FormUrl);
-
-        $Html = cm\Kernel\Mvc::get($FormUrl)->Html;
+        
+        $Html = cm\Mvc::get($FormUrl)->Html;
         return $Html;
     }
 

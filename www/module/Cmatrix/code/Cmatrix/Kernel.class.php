@@ -24,7 +24,7 @@ class Kernel {
         $_home = function(){
             $Path = __FILE__;
             $Path = str_replace(DIRECTORY_SEPARATOR,'/',dirname(__FILE__));
-            return strBefore($Path,'/modules/Cmatrix');
+            return strBefore($Path,'/module/Cmatrix');
         };
 
         self::$HOME = $_home();
