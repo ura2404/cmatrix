@@ -8,6 +8,8 @@
 
 namespace Cmatrix\Kernel\Ide;
 use \Cmatrix as cm;
+use \Cmatrix\Kernel as kernel;
+use \Cmatrix\Kernel\Ide as ide;
 use \Cmatrix\Kernel\Exception as ex;
 
 class Module extends cm\Kernel\Reflection{
@@ -17,7 +19,7 @@ class Module extends cm\Kernel\Reflection{
     
     // --- --- --- --- --- --- --- ---
     function __construct($url){
-        cm\Kernel::get();
+        kernel\Kernel::get();
         
         $this->Url = $this->getMyUrl($url);
         $this->Path = $this->getMyPath($this->Url);
@@ -29,6 +31,9 @@ class Module extends cm\Kernel\Reflection{
     function __get($name){
         switch($name){
             case 'Path' : return $this->Path;
+            case 'createCacheForms' :
+                $this->createMyCacheForms();
+                break;
             default : return parent::__get($name);
         }
     }
@@ -42,10 +47,42 @@ class Module extends cm\Kernel\Reflection{
     
     // --- --- --- --- --- --- --- ---
     private function getMyPath($url){
-        $Path = cm\Kernel::$HOME .'/module/'. $url;
+        $Path = kernel\Kernel::$HOME .'/module/'. $url;
         if(!file_exists($Path) || !is_dir($Path)) throw new ex\Error($this,'module [' .$url. '] is not exists.');
         
         return $Path;
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    private function getMyForms(){
+        $Root = $this->Path .'/form';
+        
+        $_rec = function($root=null,&$arr=[]) use($Root,&$_rec){
+            $Files = array_diff(scandir($Root .'/'. $root),['.','..']);
+            $Files = array_filter($Files,function($value) use($Root,$root){
+                $Path = $Root .'/'. $root .'/'. $value;
+                return is_dir($Path) && $value{0} !== '_' ? true : false;
+            });
+            array_map(function($value) use($Root,$root,&$_rec,&$arr){
+                $Path = ltrim($root .'/'. $value,'/');
+                if(file_exists($Root.'/'.$Path.'/form.json')) $arr[] = $Path;
+                $_rec($Path,$arr);
+            },$Files);
+            
+            return $arr;
+        };
+        
+        return file_exists($Root) && is_dir($Root) ? $_rec() : [];
+    }
+
+    // --- --- --- --- --- --- --- ---
+    private function createMyCacheForms(){
+        $Paths = $this->getMyForms();
+        
+        array_map(function($value){
+            ide\Form::get($this->Url .'/'. $value)->createCache();
+        },$Paths);
+        
     }
     
     // --- --- --- --- --- --- --- ---
@@ -53,6 +90,19 @@ class Module extends cm\Kernel\Reflection{
     // --- --- --- --- --- --- --- ---
     static function get($url){
         return new self($url);
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    static function createCacheForms(){
+        $Root = kernel\Kernel::$HOME .'/module';
+        $Files = array_diff(scandir($Root),['.','..']);
+        array_map(function($value){
+            (new self($value))->createCacheForms;
+        },$Files);
+    }
+    // --- --- --- --- --- --- --- ---
+    static function createCacheAll(){
+        self::createCacheForms();
     }
 }
 

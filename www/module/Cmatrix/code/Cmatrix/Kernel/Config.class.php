@@ -15,7 +15,7 @@ class Config extends Reflection {
 
     // --- --- --- --- --- --- --- ---
     function __construct($key,$data=null){
-        cm\Kernel::get();
+        Kernel::get();
         
         $this->Key = !$key ? 'app' : $key;
         $this->Data = !$data ? $this->getMyFile() : $data;
@@ -46,7 +46,7 @@ class Config extends Reflection {
     // --- --- --- --- --- --- --- ---
     private function getMyFile(){
         $Path = $this->getMyPath();
-        $Fullpath = cm\Kernel::$HOME . $Path;
+        $Fullpath = Kernel::$HOME . $Path;
 
         if(!file_exists($Fullpath)) throw new ex\Error($this,'config file path ['.$Path.'] not validate.');
 

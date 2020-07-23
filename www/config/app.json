@@ -3,5 +3,8 @@
         "code" : "cmatrix",
         "name" : "Cmatrix",
         "info" : "ECM/CMS/DMS платформа"
+    },
+    "env" : {
+        "tmp" : "/var/tmp"
     }
 }

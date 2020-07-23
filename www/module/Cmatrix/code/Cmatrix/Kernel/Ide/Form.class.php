@@ -8,6 +8,7 @@
 
 namespace Cmatrix\Kernel\Ide;
 use \Cmatrix as cm;
+use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Exception as ex;
 
 class Form extends cm\Kernel\Reflection{
@@ -16,9 +17,10 @@ class Form extends cm\Kernel\Reflection{
     protected $Path;
     
     protected $_Json;
+    
     // --- --- --- --- --- --- --- ---
     function __construct($url){
-        cm\Kernel::get();
+        kernel\Kernel::get();
         
         $this->Url = $url;
         $this->Path = $this->getMyPath($this->Url);
@@ -58,6 +60,29 @@ class Form extends cm\Kernel\Reflection{
         return $this->Json['type'];
     }
     
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    public function createCache(){
+        $Fs = [
+            'twig' => function(){
+                $Path = $this->Path .'/form.twig';
+                if(!file_exists($Path)) throw new ex\Error($this,'form [' .$this->Url. '] template is not defined.');
+                
+                return [
+                    str_replace('/','_',$this->Url) .'.twig',
+                    file_get_contents($Path)
+                ];
+            }
+        ];
+        
+        if(!isset($Fs[$this->Type])) throw new ex\Error($this,'cache function [' .$this->Type. '] is not defined.');
+        
+        $_fun = $Fs[$this->Type];
+        list($key,$value) = $_fun();
+        if($key && $value) Cache::get('forms')->put($key,$value);
+    }
+
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---

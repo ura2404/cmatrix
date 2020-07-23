@@ -6,7 +6,20 @@
 
 namespace Cmatrix\Kernel;
 
-class Exception{
-}
+class Exception extends \Exception{
+    private $Ob;
 
+    // --- --- --- --- --- --- --- ---
+    function __construct($ob,$message){
+        $this->Ob = $ob;
+        parent::__construct(get_class($this->Ob) .' // '. $message);
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    function __get($name){
+        switch($name){
+            case 'Message' : return $this->getMessage();
+        }
+    }
+}
 ?>

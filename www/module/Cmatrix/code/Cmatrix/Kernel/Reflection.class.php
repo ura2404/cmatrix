@@ -57,6 +57,9 @@ class Reflection {
     
     // --- --- --- --- --- --- ---
     protected function getInstanceValue($key,$_fun){
+        if(!$_fun instanceof \Closure) throw new ex\Error($this,'invalid instance [' .$key. '] of function');
+        
+        if(static::$INSTANCES[$this->Key]->$key) return static::$INSTANCES[$this->Key]->$key;
         return static::$INSTANCES[$this->Key]->$key = $this->$key = $_fun();
     }
 

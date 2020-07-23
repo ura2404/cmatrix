@@ -8,6 +8,7 @@
 
 namespace Cmatrix\Kernel;
 use \Cmatrix as cm;
+use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Exception as ex;
 
 class Vendor extends Reflection{
@@ -18,11 +19,12 @@ class Vendor extends Reflection{
 
     // --- --- --- --- --- --- --- ---
     function __construct($url){
-        cm\Kernel::get();
+        kernel\Kernel::get();
         
         $this->Url = $url;
         
         parent::__construct($url);
+        $this->Path;
     }
 
     // --- --- --- --- --- --- --- ---
@@ -38,7 +40,17 @@ class Vendor extends Reflection{
     // --- --- --- --- --- --- --- ---
     private function getMyPath(){
         return $this->getInstanceValue('_Path',function(){
-            return 'qaz';
+            $ModuleName = strBefore($this->Url,'/');
+            $ScriptName = strAfter($this->Url,'/');
+            
+            $Path = cm\Kernel\Ide\Module::get('Vendor')->Path .'/code/'. $ModuleName;
+            if(!file_exists($Path) || !is_dir($Path)) throw new ex\Error($this,'vendor module [' .$this->Url. '] is not exists.');
+            
+            $Loader = $ScriptName ? $Path .'/'. $ScriptName : $Path .'.loader.php';
+            if(!file_exists($Loader)) throw new ex\Error($this,'vendor module [' .$this->Url. '] loader is not defined.');
+            
+            require_once $Loader;
+            return $Path;
         });
     }
 

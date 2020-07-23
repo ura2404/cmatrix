@@ -27,7 +27,11 @@ class Controller {
             default : throw new ex\Error($this,'class [' .get_class($this). '] property [' .$name. '] is not defined.');
         }
     }
-
+    
+    // --- --- --- --- --- --- --- ---
+    protected function getMyData(){
+        return;
+    }
 }
 
 ?>

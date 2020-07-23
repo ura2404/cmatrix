@@ -6,14 +6,14 @@
 
 namespace Cmatrix\Kernel\Exception;
 use \Cmatrix as cm;
+use \Cmatrix\Kernel as kernel;
 
-class Error extends cm\Exception{
+class Error extends kernel\Exception{
 
     // --- --- --- --- --- --- --- ---
-    function __get($name){
-        switch($name){
-            case 'Message' : 
-        }
+    function __construct($ob,$message){
+        $this->Ob = $ob;
+        parent::__construct($ob,'Error // '. $message);
     }
 }
 

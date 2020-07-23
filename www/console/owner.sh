@@ -21,7 +21,7 @@ echo -e $(ts) 'Mode for console files.'
 find $home -type f \( -name "*.php" -or -name "*.sh" \) -exec chmod 770 {} \;
 
 echo -e $(ts) 'Mode for files.'
-find $folder -type f -not -path '*/.console/*' -exec chmod 660 {} \;
+find $folder -type f -not -path '*/console/*' -exec chmod 660 {} \;
 
 echo -e $(ts) 'Mode for folders.'
 find $folder -type d -exec chmod 770 {} \;

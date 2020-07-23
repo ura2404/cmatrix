@@ -8,24 +8,25 @@
 
 namespace Cmatrix\Mvc\View;
 use \Cmatrix as cm;
+use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Exception as ex;
 
-class Twig {
-    private $Url;
-
-    // --- --- --- --- --- --- --- ---
-    function __construct($url){
-        $this->Url = $url;
-    }
+class Twig extends \Cmatrix\Mvc\View {
 
     // --- --- --- --- --- --- --- ---
     function __get($name){
         switch($name){
-            case 'Data' : return $this->getMyData();
-            default : throw new ex\Error($this,'class [' .get_class($this). '] property [' .$name. '] is not defined.');
+            case 'PathCache' : return $this->getMyPathCache();
+            default : parent::__get($name);
         }
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    protected function getMyPathCache(){
+        $Path = str_replace('/','_',$this->Url) .'.twig';
+        //if(!file_exists(kernel\Ide\Cache::get('forms')->Path .'/'. $Path)) throw new ex\Error($this,'twig template cache file [' .$this->Url. '] is not found.');
+        return $Path;
     }
 
 }
-
 ?>

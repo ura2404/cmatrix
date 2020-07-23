@@ -8,6 +8,10 @@
 
 namespace Cmatrix\Web;
 use \Cmatrix as cm;
+use \Cmatrix\Kernel as kernel;
+use \Cmatrix\Kernel\Ide as ide;
+use \Cmatrix\Kernel\Exception as ex;
+use \Cmatrix\Mvc as mvc;
 
 class Page{
 
@@ -32,9 +36,9 @@ class Page{
         $Pages = cm\Kernel\Config::get('pages');
         
         $PageUrl = $this->Url === '/' ? $Pages->getValue('def') : $Pages->getValue($this->Url);
-        $FormUrl = cm\Kernel\Ide\Page::get($PageUrl)->Form;
+        $FormUrl = ide\Page::get($PageUrl)->Form;
         
-        $Html = cm\Mvc::get($FormUrl)->Html;
+        $Html = mvc\Mvc::get($FormUrl)->Html;
         return $Html;
     }
 

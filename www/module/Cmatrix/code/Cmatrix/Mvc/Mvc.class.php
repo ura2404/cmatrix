@@ -6,7 +6,7 @@
  * @version 1.0 2020-07-23
  */
 
-namespace Cmatrix;
+namespace Cmatrix\Mvc;
 use \Cmatrix as cm;
 use \Cmatrix\Kernel\Exception as ex;
 
