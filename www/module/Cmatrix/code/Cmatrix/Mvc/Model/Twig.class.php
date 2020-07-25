@@ -12,13 +12,6 @@ use \Cmatrix\Kernel\Exception as ex;
 
 class Twig extends \Cmatrix\Mvc\Model {
     
-    // --- --- --- --- --- --- --- ---
-    protected function getMyData(){
-        return [
-            'a' => 123
-        ];
-    }
-
 }
 
 ?>

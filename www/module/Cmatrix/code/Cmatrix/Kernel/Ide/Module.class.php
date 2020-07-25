@@ -63,6 +63,7 @@ class Module extends cm\Kernel\Reflection{
                 $Path = $Root .'/'. $root .'/'. $value;
                 return is_dir($Path) && $value{0} !== '_' ? true : false;
             });
+            
             array_map(function($value) use($Root,$root,&$_rec,&$arr){
                 $Path = ltrim($root .'/'. $value,'/');
                 if(file_exists($Root.'/'.$Path.'/form.json')) $arr[] = $Path;
@@ -80,6 +81,7 @@ class Module extends cm\Kernel\Reflection{
         $Paths = $this->getMyForms();
         
         array_map(function($value){
+            echo $value;
             ide\Form::get($this->Url .'/'. $value)->createCache();
         },$Paths);
         
@@ -96,6 +98,11 @@ class Module extends cm\Kernel\Reflection{
     static function createCacheForms(){
         $Root = kernel\Kernel::$HOME .'/module';
         $Files = array_diff(scandir($Root),['.','..']);
+        $Files = array_filter($Files,function($value) use($Root){
+            $Path = $Root .'/'. $value;
+            return is_dir($Path) && $value{0} !== '_' ? true : false;
+        });
+        
         array_map(function($value){
             (new self($value))->createCacheForms;
         },$Files);
@@ -105,5 +112,4 @@ class Module extends cm\Kernel\Reflection{
         self::createCacheForms();
     }
 }
-
-?>    
+?>

@@ -17,6 +17,8 @@ class Form extends cm\Kernel\Reflection{
     protected $Path;
     
     protected $_Json;
+    protected $_Type;
+    protected $_Parent;
     
     // --- --- --- --- --- --- --- ---
     function __construct($url){
@@ -34,6 +36,7 @@ class Form extends cm\Kernel\Reflection{
             case 'Path' : return $this->Path;
             case 'Json' : return $this->getMyJson();
             case 'Type' : return $this->getMyType();
+            case 'Parent' : return $this->getMyParent();
             default : return parent::__get($name);
         }
     }
@@ -56,8 +59,18 @@ class Form extends cm\Kernel\Reflection{
     
     // --- --- --- --- --- --- --- ---
     private function getMyType(){
-        if(!isset($this->Json['type'])) throw new ex\Error($this,'form [' .$this->Url. '] type is not defined.');
-        return $this->Json['type'];
+        return $this->getInstanceValue('_Type',function(){
+            if(!isset($this->Json['type'])) throw new ex\Error($this,'form [' .$this->Url. '] type is not defined.');
+            return $this->Json['type'];
+        });
+    }
+
+    // --- --- --- --- --- --- --- ---
+    private function getMyParent(){
+        return $this->getInstanceValue('_Parent',function(){
+            if(!array_key_exists('parent',$this->Json)) throw new ex\Error($this,'form [' .$this->Url. '] parent is not defined.');
+            return $this->Json['parent'];
+        });
     }
     
     // --- --- --- --- --- --- --- ---
@@ -90,5 +103,4 @@ class Form extends cm\Kernel\Reflection{
         return new self($url);
     }
 }
-
-?>    
+?>

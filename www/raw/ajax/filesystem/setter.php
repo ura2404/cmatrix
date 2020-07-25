@@ -4,7 +4,8 @@
  */
 use \Cmatrix as cm;
 
-require_once '../../utils.php';
+//require_once '../../utils.php';
+require_once '../../../common.php';
 
 header("Content-type: application/json");
 
@@ -23,12 +24,34 @@ try{
     
 	$length = file_put_contents($path,$content);
 	if($length !== strlen($content)) throw new \Exception('Файл [' .$file. '] записан не верно');
-    
-	// --- временный костыль
+	
+    // --- временный костыль
 	// --- файл *.twig скопировать в кэш
-    $fun_project = function($arr){
-        foreach($arr as $key=>$a) if($a === '.pro') return $arr[$key+1];
-    };
+	//\Cmatrix\Kernel\Ide\Module::get();
+	//dump($path);
+	
+	if(strEnd(basename($path),'.twig')){
+        $fun_project = function($path){
+            $arr = explode('/',$path);
+            $_fun = function() use($arr){
+                foreach($arr as $key=>$a) if($a === 'module') return $key;
+            };
+            
+            $Key = $_fun();
+            $Project = $arr[$Key+1];
+            
+            array_pop($arr);
+            for($i=0;$i<$Key+3;$i++) unset($arr[$i]);
+            
+            $Form = implode('/',$arr);
+            
+            return $Project .'/'.$Form;
+        };
+        
+        \Cmatrix\Kernel\Ide\Form::get($fun_project($path))->createCache();
+	}
+	
+	/*
     $fun_name = function($arr){
         foreach($arr as $key=>$a){
             if($a === '.pro'){
@@ -45,13 +68,17 @@ try{
         $a2 = array_shift($arr);
         return $a2 .'_'. $a1;
     };
+*/
     
 	if(strEnd(basename($path),'.twig')){
+/*
         $arr = explode('/',$path);
         $project = $fun_project($arr);
         $name = $fun_name($arr);
         $new_path = $root_path.'/.cache/forms/'.$project.'_'.$name;
         $new_path = strRBefore($new_path,'_form.twig') . '.twig';
+        
+        dump($new_path);
         
         //throw new \Exception($new_path);
         //dump($path);
@@ -60,6 +87,7 @@ try{
         $res = copy($path,$new_path);
         if(!$res) throw new \Exception('Не создан кэш шаблона.');
         //dump($res);
+*/
 	}
 	
 	// --- файл *.less компилировать и положить в кэш

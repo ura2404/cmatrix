@@ -63,5 +63,4 @@ class Page extends cm\Kernel\Reflection{
         return new self($url);
     }
 }
-
 ?>

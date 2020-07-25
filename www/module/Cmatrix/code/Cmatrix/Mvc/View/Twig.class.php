@@ -24,7 +24,7 @@ class Twig extends \Cmatrix\Mvc\View {
     // --- --- --- --- --- --- --- ---
     protected function getMyPathCache(){
         $Path = str_replace('/','_',$this->Url) .'.twig';
-        //if(!file_exists(kernel\Ide\Cache::get('forms')->Path .'/'. $Path)) throw new ex\Error($this,'twig template cache file [' .$this->Url. '] is not found.');
+        if(!file_exists(kernel\Ide\Cache::get('forms')->Path .'/'. $Path)) throw new ex\Error($this,'twig template cache file [' .$this->Url. '] is not found.');
         return $Path;
     }
 

@@ -68,12 +68,12 @@ class Cache extends cm\Kernel\Reflection{
     // --- --- --- --- --- --- --- ---
     public function put($key,$value){
         $Path = $this->Path .'/'. $key;
-        dump($Path);
-        
+
         try{
             file_put_contents($Path,$value);
-            chgrp($Path,'www-data');
+            chmod($Path,0660);
             chown($Path,'www-data');
+            chgrp($Path,'www-data');
         }
         catch(\Exception $e){
             
