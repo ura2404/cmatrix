@@ -9,6 +9,7 @@
 namespace Cmatrix\Kernel\Ide;
 use \Cmatrix as cm;
 use \Cmatrix\Kernel as kernel;
+use \Cmatrix\Kernel\Ide as ide;
 use \Cmatrix\Kernel\Exception as ex;
 
 class Form extends cm\Kernel\Reflection{
@@ -82,10 +83,21 @@ class Form extends cm\Kernel\Reflection{
                 $Path = $this->Path .'/form.twig';
                 if(!file_exists($Path)) throw new ex\Error($this,'form [' .$this->Url. '] template is not defined.');
                 
-                return [
-                    str_replace('/','_',$this->Url) .'.twig',
-                    file_get_contents($Path)
-                ];
+                $Key = str_replace('/','_',$this->Url) .'.twig';
+                $Data = file_get_contents($Path);
+                
+                if($this->Parent){
+                    $Data = '{% extends "'. str_replace('/','_',$this->Parent).'.twig' .'" %}'."\n" . $Data;
+                }
+                
+                if(count($this->Json['rearHead'])){
+                    $Arr = array_map(function($value){
+                        return ide\Resource::get($value)->Link;
+                    },$this->Json['rearHead']);
+                    $Data = str_replace('{% block blockRearHead %}{% endblock %}',implode('',$Arr),$Data);
+                }
+                
+                return [$Key,$Data];
             }
         ];
         

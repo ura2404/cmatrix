@@ -1,5 +1,7 @@
 {
     "def" : "Cmatrix/custom/def",
     "pages" : {
+        "main" : "Cmatrix/custom/def",
+        "404" : "Cmatrix/custom/404"
     }
 }

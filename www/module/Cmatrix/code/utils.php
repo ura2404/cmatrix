@@ -300,6 +300,56 @@ function arrayMergeReplace(...$arrays){
     return $first;
 }
 
+/**
+ * Получить значение по ключу
+ * 
+ * arrayGetValue(['a','b','c'],[
+ *     'a' => [
+ *         'b'=> [
+ *             'c' => 'value1',
+ *             'd' => 'value2'
+ *         ]
+ *     ]
+ * ])
+ * 
+ */
+function arrayGetValue(array $key,array $data,$default=null){
+    // 1. получить первый индекс цепочки
+    $K = array_shift($key);
+    
+    // 2. если значение есть и индексов больше нет, то вывести значение
+    // если индексы ещё есть и значение массив, то рекурсия
+    // если индексы ещё есть и значение НЕ массив, то false
+    //
+    // если значения нет, то вывести default
+    if(array_key_exists($K,$data)){
+        if(!count($key)) return $data[$K];
+        else{
+            if(is_array($data[$K])) return arrayGetValue($key,$data[$K]);
+            else return false;
+        }
+    }
+    else return $default;
+}
+
+/*
+    public function getValue($path=null,$default=null){
+        if($path === null) return $this->Data;
+
+        $_fun = function($arr,$ini) use(&$_fun,$default){
+            if(count($arr)>1){
+                $ind = $arr[0];
+                array_shift($arr);
+                return isset($ini[$ind]) ? $_fun($arr,$ini[$ind]) : $default;
+            }
+            else return isset($ini[$arr[0]]) ? $ini[$arr[0]] : ($default || is_array($default) ? $default : false);
+        };
+
+        return $_fun(explode("/",$path),$this->Data);
+    }
+*/
+
+
 // --- --- --- --- --- ---
 /**
  * Функция arrayFilter

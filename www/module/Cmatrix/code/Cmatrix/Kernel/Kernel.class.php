@@ -12,8 +12,9 @@ class Kernel {
     static $INSTANCE = null;
 
     static $HOME;
+    static $WHOME;
     static $TMP;
-
+    
     // --- --- --- --- --- --- --- ---
     function __construct(){
         if(!self::$INSTANCE) $this->createInstance();
@@ -24,25 +25,36 @@ class Kernel {
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     private function createInstance(){
-        $_home = function(){
+        $Config = null;
+        $_home = function() use(&$Config){
             $Path = __FILE__;
             $Path = str_replace(DIRECTORY_SEPARATOR,'/',dirname(__FILE__));
-            return strBefore($Path,'/module/Cmatrix');
+            $Path = strBefore($Path,'/module/Cmatrix');
+            return $Path;
         };
         
-        $_tmp = function(){
+        $_config = function(){
             $Path = self::$HOME .'/config/app.json';
             if(!file_exists($Path)) throw new ex\Error($this,"application config file is not defined.");
-            
-            $Json = json_decode(file_get_contents($Path),true);
-            if(!isset($Json['env']) || !isset($Json['env']['tmp'])) throw new ex\Error($this,"environment variable 'tmp' is not defined.");
-            
-            return $Json['env']['tmp'];
+            $Config = json_decode(file_get_contents($Path),true);
+            return $Config;
         };
         
-        self::$HOME = $_home();     // обязательно первым
-        self::$TMP = $_tmp();
-        self::$INSTANCE = $this;    // обязательно последним
+        $_whome = function($сonfig){
+            if(!isset($сonfig['web']) || !isset($сonfig['web']['home'])) throw new ex\Error($this,"configure variable 'web.home' is not defined.");
+            return $сonfig['web']['home'];
+        };
+        
+        $_tmp = function($сonfig){
+            if(!isset($сonfig['env']) || !isset($сonfig['env']['tmp'])) throw new ex\Error($this,"configure variable 'env.tmp' is not defined.");
+            return $сonfig['env']['tmp'];
+        };
+        
+        self::$HOME  = $_home();     // обязательно первым
+        $Config = $_config();        // обязательно вторым
+        self::$WHOME = $_whome($Config);
+        self::$TMP   = $_tmp($Config);
+        self::$INSTANCE = $this;     // обязательно последним
     }
 
     // --- --- --- --- --- --- --- ---

@@ -64,7 +64,9 @@ class Config extends Reflection {
      */
     public function getValue($path=null,$default=null){
         if($path === null) return $this->Data;
-
+        
+        //return arrayGetValue(explode("/",$path),$this->Data);
+        
         $_fun = function($arr,$ini) use(&$_fun,$default){
             if(count($arr)>1){
                 $ind = $arr[0];
@@ -73,8 +75,8 @@ class Config extends Reflection {
             }
             else return isset($ini[$arr[0]]) ? $ini[$arr[0]] : ($default || is_array($default) ? $default : false);
         };
-
         return $_fun(explode("/",$path),$this->Data);
+        
     }
 
     // --- --- --- --- --- --- --- ---

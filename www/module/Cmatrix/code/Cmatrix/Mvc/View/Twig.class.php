@@ -17,7 +17,7 @@ class Twig extends \Cmatrix\Mvc\View {
     function __get($name){
         switch($name){
             case 'PathCache' : return $this->getMyPathCache();
-            default : parent::__get($name);
+            default : return parent::__get($name);
         }
     }
     

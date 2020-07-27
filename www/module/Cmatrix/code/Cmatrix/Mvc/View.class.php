@@ -28,7 +28,8 @@ class View {
 
     // --- --- --- --- --- --- --- ---
     protected function getMyData(){
-        return;
+        dump('custom getMyData');
+        return '76767';
     }
 }
 

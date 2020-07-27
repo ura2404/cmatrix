@@ -1,5 +1,5 @@
 {
-    "type" : "twig",
+    "type" : "html",
     "_parent" : null,
-    "parent" : "Cmatrix/custom/f2"
+    "parent" : null
 }

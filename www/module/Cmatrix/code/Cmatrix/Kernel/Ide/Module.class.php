@@ -17,6 +17,7 @@ class Module extends cm\Kernel\Reflection{
     protected $Url;
     protected $Path;
     
+    protected $_Wpath;
     // --- --- --- --- --- --- --- ---
     function __construct($url){
         kernel\Kernel::get();
@@ -31,6 +32,7 @@ class Module extends cm\Kernel\Reflection{
     function __get($name){
         switch($name){
             case 'Path' : return $this->Path;
+            case 'Wpath' : return $this->getMyWpath();
             case 'createCacheForms' :
                 $this->createMyCacheForms();
                 break;
@@ -53,6 +55,16 @@ class Module extends cm\Kernel\Reflection{
         return $Path;
     }
     
+    // --- --- --- --- --- --- --- ---
+    private function getMyWpath(){
+        return $this->getInstanceValue('_Wpath',function(){
+            return kernel\Kernel::$WHOME .'/module/'. $this->Url;
+        });
+    }
+    
+    /**
+     * Получить список url форм модуля
+     */
     // --- --- --- --- --- --- --- ---
     private function getMyForms(){
         $Root = $this->Path .'/form';

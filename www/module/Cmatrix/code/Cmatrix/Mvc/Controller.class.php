@@ -30,6 +30,7 @@ class Controller {
     
     // --- --- --- --- --- --- --- ---
     protected function getMyData(){
+        //dump('custom getMyData');
         return;
     }
 }

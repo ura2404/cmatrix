@@ -27,6 +27,6 @@ switch(MODE){
         exit(1);
 }
 
-$Page = isset($_REQUEST['cmp']) ? $_REQUEST['cmp'] : null;
+$Page = isset($_REQUEST['cmp']) ? rtrim($_REQUEST['cmp'],'/') : null;
 echo \Cmatrix\Web\Page::get($Page)->Html;
 ?>
