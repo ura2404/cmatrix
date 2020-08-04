@@ -43,7 +43,7 @@ class Page {
         // 404
         //if(!$PageUrl) throw new ex\Error($this,'page [' .$this->_Url. '] is not defined.');
         if(!$PageUrl) $PageUrl = $Pages->getValue('pages/404');
-        if(!$PageUrl) throw new ex\Error($this,'page 404 is not definred.');
+        if(!$PageUrl) throw new ex\Error($this,'page 404 is not defined.');
         
         $FormUrl = ide\Page::get($PageUrl)->Form;
         

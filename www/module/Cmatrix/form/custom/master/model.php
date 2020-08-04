@@ -10,9 +10,9 @@ class MyModel extends \Cmatrix\Mvc\Model {
         return [
             'app' => [
                 'name'    => $this->Config->getValue('app/name'),
-			    'author'  => $this->Config->getValue('app/author'),
-			    'version' => $this->Config->getValue('app/version'),
-			    'period'  => $this->getMyPreiod(),
+                'author'  => $this->Config->getValue('app/author'),
+                'version' => $this->Config->getValue('app/version'),
+                'period'  => $this->getMyPreiod(),
                 
             ],
             'web' => [

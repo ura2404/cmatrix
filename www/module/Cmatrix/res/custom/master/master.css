@@ -1,12 +1,18 @@
 body {
     font: 100% Arsenal, Arial !important;                
     margin: 0;
-    padding: 0 0;
+    padding: 0;
     height: 100vh;
 }
 
 .header {
-    padding: 20px 100px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    margin: 0;
+    padding: 0 100px;
     background-color: #0baf64;
     color: white;
 }
@@ -23,7 +29,8 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 10px;
+    height: 30px;
+    padding: 0;
     color: white;
     background-color: #505050;
     text-align: center;
@@ -33,7 +40,7 @@ a {
     color: white;
     text-decoration: none;
 }
-
+/*
             h2{
                 margin:0;
                 padding:0;
@@ -52,3 +59,4 @@ a {
                 background-color: #505050;
                 text-align: center;
             }
+*/
