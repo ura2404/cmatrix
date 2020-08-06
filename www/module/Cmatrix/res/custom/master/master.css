@@ -1,3 +1,7 @@
+html {
+    font-size: 16px;
+}
+
 body {
     font: 100% Arsenal, Arial !important;                
     margin: 0;
@@ -7,6 +11,7 @@ body {
 
 .header {
     position: fixed;
+    display: flex;
     top: 0;
     left: 0;
     right: 0;
@@ -17,15 +22,25 @@ body {
     color: white;
 }
 
-.home {
-    float:right;
+.header .app {
+    margin: auto auto auto 0;
+}
+
+.header .home {
+    margin: auto 0 auto auto;
 }
 
 .body {
-    padding: 0 100px;
+    position: fixed;
+    top: 50px;
+    bottom: 30px;
+    left: 0;
+    right: 0;
+    /*padding: 50px 100px 30px 100px;*/
 }
 .footer {
     position: fixed;
+    display: flex;
     bottom: 0;
     left: 0;
     right: 0;
@@ -34,6 +49,11 @@ body {
     color: white;
     background-color: #505050;
     text-align: center;
+    font-size: 0.8rem;
+}
+
+.footer > div {
+    margin : auto;
 }
 
 a {

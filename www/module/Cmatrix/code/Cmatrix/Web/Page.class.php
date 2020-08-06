@@ -21,6 +21,7 @@ class Page {
         kernel\Kernel::get();
         
         $this->_Url = $url;
+        kernel\Kernel::$PAGE = $url;
     }
 
     // --- --- --- --- --- --- --- ---

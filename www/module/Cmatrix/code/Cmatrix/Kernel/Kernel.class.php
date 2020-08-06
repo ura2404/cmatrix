@@ -14,6 +14,7 @@ class Kernel {
     static $HOME;
     static $WHOME;
     static $TMP;
+    static $PAGE;
     
     // --- --- --- --- --- --- --- ---
     function __construct(){

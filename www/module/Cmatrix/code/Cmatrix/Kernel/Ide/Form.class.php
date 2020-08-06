@@ -34,6 +34,7 @@ class Form extends cm\Kernel\Reflection{
     // --- --- --- --- --- --- --- ---
     function __get($name){
         switch($name){
+            case 'createCache' : return $this->createMyCache();
             case 'Path' : return $this->Path;
             case 'Json' : return $this->getMyJson();
             case 'Type' : return $this->getMyType();
@@ -75,10 +76,9 @@ class Form extends cm\Kernel\Reflection{
     }
     
     // --- --- --- --- --- --- --- ---
-    // --- --- --- --- --- --- --- ---
-    // --- --- --- --- --- --- --- ---
-    public function createCache(){
+    private function createMyCache(){
         $Fs = [
+            'html' => function(){ },
             'twig' => function(){
                 $Path = $this->Path .'/form.twig';
                 if(!file_exists($Path)) throw new ex\Error($this,'form [' .$this->Url. '] template is not defined.');
@@ -90,11 +90,18 @@ class Form extends cm\Kernel\Reflection{
                     $Data = '{% extends "'. str_replace('/','_',$this->Parent).'.twig' .'" %}'."\n" . $Data;
                 }
                 
-                if(count($this->Json['rearHead'])){
+                if(isset($this->Json['rearHead']) && count($this->Json['rearHead'])){
                     $Arr = array_map(function($value){
                         return ide\Resource::get($value)->Link;
                     },$this->Json['rearHead']);
-                    $Data = str_replace('{% block blockRearHead %}{% endblock %}',implode('',$Arr),$Data);
+                    
+                    if(($Pos=strpos($Data,'parent()'))!==false){
+                        $Pos1 = strpos(substr($Data,$Pos),'}}');
+                        $Data = substr($Data,0,$Pos+$Pos1+2) . implode('',$Arr) . substr($Data,$Pos+$Pos1+2);
+                    }
+                    else{
+                        $Data = str_replace('{% block blockRearHead %}{% endblock %}','{% block blockRearHead %}'. implode('',$Arr) .'{% endblock %}',$Data);
+                    }
                 }
                 
                 return [$Key,$Data];
@@ -113,6 +120,11 @@ class Form extends cm\Kernel\Reflection{
     // --- --- --- --- --- --- --- ---
     static function get($url){
         return new self($url);
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    static function cache($url){
+        return (new self($url))->createCache;
     }
 }
 ?>

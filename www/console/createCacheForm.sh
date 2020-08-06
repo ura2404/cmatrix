@@ -5,5 +5,5 @@
 sudo -u www-data php -r "
     require_once '../common.php';
     \Cmatrix\Kernel\Ide\Cache::get('forms')->clear();
-    \Cmatrix\Kernel\Ide\Module::createCacheAll();
+    \Cmatrix\Kernel\Ide\Modules::cache();
 "

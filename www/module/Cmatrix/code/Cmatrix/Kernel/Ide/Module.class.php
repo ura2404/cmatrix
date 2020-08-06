@@ -33,9 +33,9 @@ class Module extends cm\Kernel\Reflection{
         switch($name){
             case 'Path' : return $this->Path;
             case 'Wpath' : return $this->getMyWpath();
-            case 'createCacheForms' :
-                $this->createMyCacheForms();
-                break;
+            case 'FormsUrl' : return $this->getMyFormsUrl();
+            case 'ResourcesUrl' : return $this->getResourcesUrl();
+            case 'createCache' : return $this->createMyCache();
             default : return parent::__get($name);
         }
     }
@@ -62,11 +62,24 @@ class Module extends cm\Kernel\Reflection{
         });
     }
     
+    // --- --- --- --- --- --- --- ---
+    private function createMyCache(){
+        // --- --- ---
+        // forms
+        array_map(function($value){
+            ide\Form::cache($this->Url .'/'. $value);
+        },$this->FormsUrl);
+        
+        // --- --- ---
+        // resource
+        //$_resource($this->Path .'/res');
+    }
+    
     /**
      * Получить список url форм модуля
      */
     // --- --- --- --- --- --- --- ---
-    private function getMyForms(){
+    private function getFormsUrl(){
         $Root = $this->Path .'/form';
         
         $_rec = function($root=null,&$arr=[]) use($Root,&$_rec){
@@ -87,15 +100,9 @@ class Module extends cm\Kernel\Reflection{
         
         return file_exists($Root) && is_dir($Root) ? $_rec() : [];
     }
-
+    
     // --- --- --- --- --- --- --- ---
-    private function createMyCacheForms(){
-        $Paths = $this->getMyForms();
-        
-        array_map(function($value){
-            echo $value;
-            ide\Form::get($this->Url .'/'. $value)->createCache();
-        },$Paths);
+    private function getResourcesUrl(){
         
     }
     
@@ -106,6 +113,12 @@ class Module extends cm\Kernel\Reflection{
         return new self($url);
     }
     
+    // --- --- --- --- --- --- --- ---
+    static function cache($url){
+        self::get($url)->createCache;
+    }
+
+    /* 
     // --- --- --- --- --- --- --- ---
     static function createCacheForms(){
         $Root = kernel\Kernel::$HOME .'/module';
@@ -120,8 +133,15 @@ class Module extends cm\Kernel\Reflection{
         },$Files);
     }
     // --- --- --- --- --- --- --- ---
+    static function createCacheResources(){
+        
+    }
+    
+    // --- --- --- --- --- --- --- ---
     static function createCacheAll(){
         self::createCacheForms();
+        self::createCacheResources();
     }
+    */
 }
 ?>

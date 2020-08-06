@@ -9,6 +9,7 @@
 namespace Cmatrix\Mvc\View;
 use \Cmatrix as cm;
 use \Cmatrix\Kernel as kernel;
+use \Cmatrix\Kernel\Ide as ide;
 use \Cmatrix\Kernel\Exception as ex;
 
 class Twig extends \Cmatrix\Mvc\View {
@@ -24,7 +25,7 @@ class Twig extends \Cmatrix\Mvc\View {
     // --- --- --- --- --- --- --- ---
     protected function getMyPathCache(){
         $Path = str_replace('/','_',$this->Url) .'.twig';
-        if(!file_exists(kernel\Ide\Cache::get('forms')->Path .'/'. $Path)) throw new ex\Error($this,'twig template cache file [' .$this->Url. '] is not found.');
+        if(!file_exists(ide\Cache::get('forms')->Path .'/'. $Path)) throw new ex\Error($this,'twig template cache file [' .$this->Url. '] is not found.');
         return $Path;
     }
 

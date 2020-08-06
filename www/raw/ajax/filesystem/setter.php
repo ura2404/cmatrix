@@ -48,7 +48,7 @@ try{
             return $Project .'/'.$Form;
         };
         
-        \Cmatrix\Kernel\Ide\Form::get($fun_project($path))->createCache();
+        \Cmatrix\Kernel\Ide\Form::cache($fun_project($path));
 	}
 	
 	/*

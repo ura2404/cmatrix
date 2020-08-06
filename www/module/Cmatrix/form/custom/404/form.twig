@@ -1,13 +1,23 @@
+{% block blockFavicon %}{{ web.favicon }}{% endblock %}
+
 {% block blockPageName %}{{ page.name }}{% endblock %}
 
 {% block blockTitle %}{{ page.name }}{% endblock %}
 
+{% block blockRearHead %}{{ parent() }}{% endblock %}
+
 {% block blockBody %}
-
-
-<p>Ты вступаешь в реку,</p>
-<p>Но река не остаётся прежней...</p>
-<p>Этой web-страницы здесь уже нет.</p>
-
-<img src="{{ pic.404 }}"/>
+    <div class="page">
+        {% if web.page == '' %}Главная страница ...{% else %}Страница <b>{{ web.page }}</b> ...{% endif %}
+    </div>
+    <div class="container">
+        <div class="message">
+            {% for p in text %}
+                <p>{{ p }}</p>
+            {% endfor %}
+        </div>
+        <div class="pic">
+            <img src="{{ pic.random }}"/>
+        </div>
+    </div>
 {% endblock %}
