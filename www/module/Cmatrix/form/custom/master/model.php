@@ -15,8 +15,10 @@ class MyModel extends \Cmatrix\Mvc\Model {
                 'period'  => $this->getMyPreiod(),
                 
             ],
-            'web' => [
+            'page' => [
                 'favicon' => \Cmatrix\Kernel\Ide\Resource::get('Cmatrix/icons/def.ico')->Wpath,
+            ],
+            'url' => [
                 'home' => \Cmatrix\Web\Page::get()->Url
             ]
         ];

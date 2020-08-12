@@ -6,7 +6,7 @@
 
 namespace Cmatrix\Kernel;
 
-class Exception extends \Exception{
+class Exception extends \Exception {
     private $Ob;
 
     // --- --- --- --- --- --- --- ---

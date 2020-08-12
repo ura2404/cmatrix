@@ -2,7 +2,7 @@
     "type" : "twig",
     "parent" : "Cmatrix/custom/master",
     "rearHead" : [
-        "Cmatrix/custom/404/main.css"
+        "Cmatrix/custom/session/main.css"
     ],
     "rearBody" : []
 }

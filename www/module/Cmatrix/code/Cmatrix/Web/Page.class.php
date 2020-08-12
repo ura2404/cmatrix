@@ -21,7 +21,7 @@ class Page {
         kernel\Kernel::get();
         
         $this->_Url = $url;
-        kernel\Kernel::$PAGE = $url;
+        kernel\Kernel::$PAGE = $url;    // для 404
     }
 
     // --- --- --- --- --- --- --- ---
@@ -42,7 +42,6 @@ class Page {
         $PageUrl = $this->_Url === '' ? $Pages->getValue('def') : $Pages->getValue('pages/'. $this->_Url);
         
         // 404
-        //if(!$PageUrl) throw new ex\Error($this,'page [' .$this->_Url. '] is not defined.');
         if(!$PageUrl) $PageUrl = $Pages->getValue('pages/404');
         if(!$PageUrl) throw new ex\Error($this,'page 404 is not defined.');
         
@@ -57,6 +56,14 @@ class Page {
         return kernel\Kernel::$WHOME.'/'.$this->_Url;
     }
 
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    public function setData(array $value){
+        return $this;
+    }
+    
+    
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---

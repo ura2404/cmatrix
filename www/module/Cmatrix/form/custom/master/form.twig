@@ -4,7 +4,7 @@
         <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <meta http-equiv="Cache-Control" content="no-cache">
         <title>{{ app.name }} | {% block blockTitle %}{% endblock %}</title>
-        <link rel="icon" href="{% block blockFavicon %}{{ web.favicon }}{% endblock %}" type="image/x-icon"/>
+        <link rel="icon" href="{% block blockFavicon %}{{ page.favicon }}{% endblock %}" type="image/x-icon"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>        
         <meta charset="UTF-8"/>
         <link rel="stylesheet" href="{{ awesome }}/css/font-awesome.css"/>
@@ -14,7 +14,7 @@
         <h2 class="header">
             <div class="app"><span>{% block blockAppName %}{{ app.name }}{% endblock %}</span> <span> &bull; {% block blockPageName %}{% endblock %}</span></div>
             {# <a href="{{ home }}">{{ name }}</a> <span> &bull; 404</span> #}
-            <a class="home" href="{{ web.home }}" title="Главная страница"><i class="fas fa-home"></i></a>            
+            <a class="home" href="{{ url.home }}" title="Главная страница"><i class="fas fa-home"></i></a>            
         </h2>
         
         <div class="body">

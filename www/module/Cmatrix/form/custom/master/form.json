@@ -2,7 +2,7 @@
     "type" : "twig",
     "parent" : null,
     "rearHead" : [
-        "Cmatrix/custom/master/master.css",
+        "Cmatrix/custom/master/main.css",
         "Vendor/fontawesome.com/5.14.0/css/all.css"
     ],
     "rearBody" : [

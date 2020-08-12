@@ -1,4 +1,4 @@
-{% block blockFavicon %}{{ web.favicon }}{% endblock %}
+{% block blockFavicon %}{{ page.favicon }}{% endblock %}
 
 {% block blockPageName %}{{ page.name }}{% endblock %}
 
@@ -8,11 +8,11 @@
 
 {% block blockBody %}
     <div class="page">
-        {% if web.page == '' %}Главная страница ...{% else %}Страница <b>{{ web.page }}</b> ...{% endif %}
+        {% if page.refer == '' %}Главная страница ...{% else %}Страница <b>{{ page.refer }}</b> ...{% endif %}
     </div>
     <div class="container">
         <div class="message">
-            {% for p in text %}
+            {% for p in text.random %}
                 <p>{{ p }}</p>
             {% endfor %}
         </div>

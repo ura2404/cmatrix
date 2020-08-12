@@ -5,19 +5,20 @@ class MyModel extends \Cmatrix\Mvc\Model {
     
     // --- --- --- --- --- --- --- ---
     public function getData(){
+        header('HTTP/1.1 404 Page not found.',true,404);
+        
         return [
             'page' => [
-                'name' => '404'
-            ],
-            'web' => [
+                'name' => '404',
                 'favicon' => \Cmatrix\Kernel\Ide\Resource::get('Cmatrix/icons/404.ico')->Wpath,
-                'page' => \Cmatrix\Kernel\Kernel::$PAGE
+                'refer' => \Cmatrix\Kernel\Kernel::$PAGE
             ],
             'pic' => [
                 'random' => $this->getMyPic(),
-                //'404' => \Cmatrix\Kernel\Ide\Resource::get('Cmatrix/custom/404/404-1.jpg')->Wpath
             ],
-            'text' => $this->getMyText()
+            'text' => [
+                'random' => $this->getMyText()
+            ]
         ];
     }
     
@@ -42,7 +43,7 @@ class MyModel extends \Cmatrix\Mvc\Model {
         
         $Arr = [
             "Ты вступаешь в реку,\nНо река не остаётся прежней...\nЭтой web-страницы здесь уже нет.",
-            "Страница, которую ты ищешь\nНайти невозможно, но\nВедь не счесть других…"
+            "Страницу, которую ты ищешь\nНайти невозможно, но\nВедь не счесть других…"
         ];
         
         $Key = array_rand($Arr);
