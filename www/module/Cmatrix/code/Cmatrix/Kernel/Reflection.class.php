@@ -30,6 +30,13 @@ class Reflection {
     }
 
     // --- --- --- --- --- --- ---
+    function __set($name,$value){
+        switch($name){
+            default : throw new ex\Error($this,'class [' .get_class($this). '] property [' .$name. '] is not defined.');
+        }
+    }
+    
+    // --- --- --- --- --- --- ---
     protected function createInstance(){
         //dump(get_class($this),'createInstance');
         static::$INSTANCES[$this->Key] = $this;

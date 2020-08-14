@@ -47,9 +47,9 @@ class Config extends Reflection {
     private function getMyFile(){
         $Path = $this->getMyPath();
         $Fullpath = Kernel::$HOME . $Path;
-
+        
         if(!file_exists($Fullpath)) throw new ex\Error($this,'config file path ['.$Path.'] not validate.');
-
+        
         return json_decode(file_get_contents($Fullpath),true);
     }
 

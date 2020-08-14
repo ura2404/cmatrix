@@ -63,12 +63,19 @@ class Page {
         return $this;
     }
     
-    
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     static function get($url=''){
         return new self($url);
+    }
+    
+    static function reload(){
+        if(kernel\Kernel::$REWRITE) $Page = kernel\Kernel::$PAGE;
+        else $Page = '/?page='. kernel\Kernel::$PAGE;
+        
+        header('Location: '. kernel\Kernel::$WHOME .'/'. $Page);
+        exit();
     }
 }
 

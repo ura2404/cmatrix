@@ -12,6 +12,7 @@
         "tmp" : "/var/tmp"
     },
     "web" : {
-        "home" : "/cmatrix"
+        "home" : "/cmatrix",
+        "rewrite" : true
     }
 }

@@ -5,6 +5,9 @@ class MyModel extends \Cmatrix\Mvc\Model {
     
     // --- --- --- --- --- --- --- ---
     public function getData(){
+        $Session = \Cmatrix\Core\Session::get();
+        dump($Session->Instance,'Instance');
+
         return [
             'page' => [
                 'name' => 'Session',
