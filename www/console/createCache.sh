@@ -1,7 +1,8 @@
 #!/bin/bash
 #echo "--- --- --- --- --- --- --- ---"
-#echo "Form cache creator for Cmatrix by © ura@itx.ru"
+#echo "Cache creator for Cmatrix by © ura@itx.ru v0.1"
 
+# form, css, datamodel
 sudo -u www-data php -r "
     require_once '../common.php';
     \Cmatrix\Kernel\Ide\Cache::get('forms')->clear();
