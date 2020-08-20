@@ -33,8 +33,9 @@ class Module extends cm\Kernel\Reflection{
         switch($name){
             case 'Path' : return $this->Path;
             case 'Wpath' : return $this->getMyWpath();
-            case 'FormsUrl' : return $this->getMyFormsUrl();
-            case 'ResourcesUrl' : return $this->getResourcesUrl();
+            case 'FormsList' : return $this->getMyFormsList();
+            case 'ResourcesList' : return $this->getMyResourcesList();
+            case 'DatamodelsList' : return $this->getMyDatamodelsList();
             case 'createCache' : return $this->createMyCache();
             default : return parent::__get($name);
         }
@@ -64,22 +65,22 @@ class Module extends cm\Kernel\Reflection{
     
     // --- --- --- --- --- --- --- ---
     private function createMyCache(){
-        // --- --- ---
-        // forms
+        // forms --- --- ---
         array_map(function($value){
             ide\Form::cache($this->Url .'/'. $value);
-        },$this->FormsUrl);
+        },$this->FormsList);
         
-        // --- --- ---
-        // resource
+        // resource --- --- ---
         //$_resource($this->Path .'/res');
+        
+        // datamodel --- --- ---
+        array_map(function($value){
+            ide\Datamodel::cache($this->Url .'/'. $value);
+        },$this->DatamodelsList);
     }
     
-    /**
-     * Получить список url форм модуля
-     */
     // --- --- --- --- --- --- --- ---
-    private function getFormsUrl(){
+    private function getMyFormsList(){
         $Root = $this->Path .'/form';
         
         $_rec = function($root=null,&$arr=[]) use($Root,&$_rec){
@@ -102,8 +103,43 @@ class Module extends cm\Kernel\Reflection{
     }
     
     // --- --- --- --- --- --- --- ---
-    private function getResourcesUrl(){
+    private function getMyResourcesList(){
+        return [];
+    }
+
+    // --- --- --- --- --- --- --- ---
+    private function getMyDatamodelsList(){
+        $Root = $this->Path .'/dm';
         
+        $_classes = function($root) use($Root){
+            $Files = array_diff(scandir($Root .'/'. $root),['.','..']);
+            $Files = array_filter($Files,function($value) use($Root,$root){
+                $Path = $Root .'/'. $root .'/'. $value;
+                return is_dir($Path) || strpos($value,'.class.php') === false || !filesize($Path) ? false : true;
+            });
+            $Files = array_map(function($value) use($root){
+                return $root .'/'. substr($value,0,strpos($value,'.'));
+            },$Files);
+            return $Files;
+        };
+        
+        $_rec = function($root=null,&$arr=[]) use($Root,$_classes,&$_rec){
+            $Files = array_diff(scandir($Root .'/'. $root),['.','..']);
+            $Files = array_filter($Files,function($value) use($Root,$root){
+                $Path = $Root .'/'. $root .'/'. $value;
+                return is_dir($Path) && $value{0} !== '_' ? true : false;
+            });
+            array_map(function($value) use($Root,$root,$_classes,&$_rec,&$arr){
+                $Path = ltrim($root .'/'. $value,'/');
+                $Arr = $_classes($Path);
+                $arr = array_merge($arr,$Arr);
+                $_rec($Path,$arr);
+            },$Files);
+            
+            return $arr;
+        };
+        
+        return file_exists($Root) && is_dir($Root) ? $_rec() : [];
     }
     
     // --- --- --- --- --- --- --- ---
@@ -117,7 +153,7 @@ class Module extends cm\Kernel\Reflection{
     static function cache($url){
         self::get($url)->createCache;
     }
-
+    
     /* 
     // --- --- --- --- --- --- --- ---
     static function createCacheForms(){

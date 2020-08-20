@@ -6,12 +6,20 @@ class MyModel extends \Cmatrix\Mvc\Model {
     // --- --- --- --- --- --- --- ---
     public function getData(){
         $Session = \Cmatrix\Core\Session::get();
-        dump($Session->Instance,'Instance');
-
+        //dump($Session,'Session');
+        //dump($Session->Instance,'Instance');
+        //dump($Session->Instance->Json,'Json');
+        //dump($Session->Instance->Props,'Props');
+        //dump($Session->Instance->OwnProps,'OwnProps');
+        //dump($Session->Instance->id,'Instance id');
+        
         return [
             'page' => [
                 'name' => 'Session',
             ],
+            //'id' => $Session->Instance->id,
+            
+            //'ip' => $Session->Instance->ip
         ];
     }
 }

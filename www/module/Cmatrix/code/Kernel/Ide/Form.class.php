@@ -12,7 +12,7 @@ use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Ide as ide;
 use \Cmatrix\Kernel\Exception as ex;
 
-class Form extends cm\Kernel\Reflection{
+class Form extends cm\Kernel\Reflection {
     static $INSTANCES = [];
     protected $Url;
     protected $Path;
@@ -112,7 +112,7 @@ class Form extends cm\Kernel\Reflection{
         
         $_fun = $Fs[$this->Type];
         list($key,$value) = $_fun();
-        if($key && $value) Cache::get('forms')->put($key,$value);
+        if($key && $value) Cache::get('forms')->putValue($key,$value);
     }
 
     // --- --- --- --- --- --- --- ---

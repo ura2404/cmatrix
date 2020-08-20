@@ -2,22 +2,19 @@
 require_once dirname(__FILE__) .'/module/Cmatrix/code/utils.php';
 
 spl_autoload_register(function($className){
-    $isDm = 'cmDatamodel' === substr($className,0,11) ? true : false;
-    $className = $isDm ? substr($className,11) : $className;
+    if(class_exists($className)) return;
     
-    $ClassPath = str_replace("\\",DIRECTORY_SEPARATOR,$className).'.class.php';
-    //dump($ClassPath,'ClassPath');
-    $Root = dirname(__FILE__).'/module';
+    $Pos = strpos($className,"\\");
+    $Module = substr($className,0,$Pos);
+    $ClassName = substr($className,$Pos+1);
     
-    array_map(function($value) use($isDm,$Root,$ClassPath){
-        if($value == '.' || $value == '..' || !is_dir($Root .'/'. $value)) return;
-        $Path = $Root.'/'.$value .($isDm ? '/dm/' : '/code/'). $ClassPath;
-        dump($Path);
-        if(file_exists($Path)) {
-            dump($Path,'require'.($isDm?1:0));
-            require_once $Path;
-        }
-    },scandir($Root));
+    if(!$Module) return;
+    
+    $ClassPath = str_replace("\\",DIRECTORY_SEPARATOR,$ClassName);
+    $ClassPath = 'Datamodel' === substr($ClassPath,0,9) ? 'dm'.DIRECTORY_SEPARATOR.substr($ClassPath,10) : 'code'.DIRECTORY_SEPARATOR.$ClassPath;
+    $ClassPath = dirname(__FILE__) .DIRECTORY_SEPARATOR.'module'.DIRECTORY_SEPARATOR.$Module .DIRECTORY_SEPARATOR. $ClassPath.'.class.php';
+    
+    if(file_exists($ClassPath)) require_once($ClassPath);
 },true,true);
 
 ?>

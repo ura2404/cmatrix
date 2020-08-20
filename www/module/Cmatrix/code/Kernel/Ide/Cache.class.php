@@ -66,7 +66,7 @@ class Cache extends cm\Kernel\Reflection{
     }
 
     // --- --- --- --- --- --- --- ---
-    public function put($key,$value){
+    public function putValue($key,$value){
         $Path = $this->Path .'/'. $key;
 
         try{
@@ -78,6 +78,18 @@ class Cache extends cm\Kernel\Reflection{
         catch(\Exception $e){
             
         }
+    }
+
+    // --- --- --- --- --- --- --- ---
+    public function getValue($key){
+        $Path = $this->Path .'/'. $key;
+        return file_exists($Path) ? file_get_contents($Path) : false;
+    }    
+    
+    // --- --- --- --- --- --- --- ---
+    public function isExists($key){
+        $Path = $this->Path .'/'. $key;
+        return file_exists($Path);
     }
     
     // --- --- --- --- --- --- --- ---

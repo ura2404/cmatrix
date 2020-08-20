@@ -23,19 +23,26 @@ class Modules{
     }
     
     // --- --- --- --- --- --- --- ---
-    function createMyCache(){
+    private function getModulesList(){
         $Root = kernel\Kernel::$HOME .'/module';
         $Files = array_diff(scandir($Root),['.','..']);
         $Files = array_filter($Files,function($value) use($Root){
             $Path = $Root .'/'. $value;
             return is_dir($Path) && $value{0} !== '_' ? true : false;
         });
-        
-        array_map(function($value){
-            ide\Module::cache($value);
-        },$Files);
+        return $Files;
     }
     
+    // --- --- --- --- --- --- --- ---
+    private function createMyCache(){
+        $Modules = $this->getModulesList();
+        array_map(function($value){
+            ide\Module::cache($value);
+        },$Modules);
+    }
+
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     static function cache(){
         (new self())->createCache;

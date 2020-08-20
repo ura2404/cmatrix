@@ -3,39 +3,41 @@
  * Class Session
  *
  * @author ura@itx.ru 
- * @version 1.0 2020-08-14
+ * @version 1.0 2020-08-18
  */
-
+ 
 namespace Cmatrix\Datamodel\Core;
 use \Cmatrix as cm;
+use \Cmatrix\Orm as orm;
 
-class Session extends Entity{
+class Entity extends orm\Datamodel{
     
     // --- --- --- --- --- --- --- ---
     function __construct($id=null){
         parent::__construct($id);
-        
-        //dump(cm\Kernel\Ide\Datamodel::get('Cmatrix/Core/Session')->Path);
     }
     
     // --- --- --- --- --- --- ---
     protected function getMyName(){
-        return 'Сессия';
+        return 'Сущность';
     }
     
     // --- --- --- --- --- --- --- ---
     /*protected function createJson(){
-        dump('session create json');
-        
         return [
-            'code' => $this->getMyUrl(),
-            'name' => $this->getMyName(),
-            'parent' => $this->getMyParentUrl(),
+            'code' => 'Cmatrix/Core/Entity',
             'props' => [
-                'ip' => [],
+                'id' => [],
+                'parent_id' => [],
+                'chain_id' => [],
+                'status' => [],
+                'active' => [],
+                'hidden' => [],
+                'deleted' => [],
+                'info' => [],
             ]
         ];
-        
     }*/
+    
 }
 ?>

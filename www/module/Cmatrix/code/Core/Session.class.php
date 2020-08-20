@@ -45,15 +45,16 @@ class Session extends cm\Kernel\Reflection {
     
     // --- --- --- --- --- --- --- ---
     protected function getMyInstance(){
+        dump('getMyInstance');
         return $this->getInstanceValue('_Instance',function() {
             if(kernel\Kernel::$DB){
                 
             }
             else{
-                //dump($this->Hid,'Hid');
-                //orm\Datamodel::get('Cmatrix/Core/Session');
-                new \cmDatamodel\Cmatrix\Core\Session();
-                
+                $Ob = kernel\Ide\Datamodel::get('Cmatrix/Core/Session',[ 'hid' => $this->Hid ])->Instance;
+                //$Ob = new \Cmatrix\Datamodel\Core\Session([ 'hid' => $this->Hid ]);
+                //dump($Ob->Props);
+                return $Ob;
             }
         });
     }
