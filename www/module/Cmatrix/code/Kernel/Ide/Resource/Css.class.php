@@ -13,6 +13,7 @@ use \Cmatrix\Kernel\Ide as ide;
 use \Cmatrix\Kernel\Exception as ex;
 
 class Css {
+    private $Url;
     
     // --- --- --- --- --- --- --- ---
     function __construct($url){
@@ -29,7 +30,8 @@ class Css {
     
     // --- --- --- --- --- --- --- ---
     private function getMyLink(){
-        return '<link rel="stylesheet" type="text/css" href="'. ide\Resource::get($this->Url)->Wpath .'"/>';
+        //return '<link rel="stylesheet" type="text/css" href="'. ide\Resource::get($this->Url)->Wpath .'"/>';
+        return '<link rel="stylesheet" media="none" type="text/css" href="'. ide\Resource::get($this->Url)->Wpath .'" onload="if(media!=\'all\')media=\'all\'"/>';
     }
     
 }

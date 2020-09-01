@@ -15,6 +15,47 @@ use \Cmatrix\Kernel\Ide as ide;
 use \Cmatrix\Kernel\Exception as ex;
 
 class Ob {
+    protected $Dm;
+    protected $Id;
+    protected $Data = [];
+    protected $Changed = [];    // массив изменённых свойств
+    
+    // --- --- --- --- --- --- --- ---
+    function __construct(ide\Datamodel $dm,$id=null){
+        $this->Dm = $dm;
+        $this->Id = $id;
+        
+        $this->init();
+    }
+    
+    // --- --- --- --- --- --- ---
+    function __get($name){
+        switch($name){
+            default : 
+                $MyName = $name{0} === '_' ? substr($name,1) : $name;
+                if(!array_key_exists($MyName,$this->Data)) throw new ex\Error($this,'property ['.$MyName.'] of entity ['.$this->Url.'] is not defined.');
+                
+                if($name{0} === '_' and array_key_exists($MyName,$this->Changed)) return $this->Changed[$MyName];
+                else return $this->Data[$MyName];
+        }
+    }
+    
+    // --- --- --- --- --- --- ---
+    protected function init(){
+        $this->Data = array_map(function($prop){ return null; },$this->Dm->Props);
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    static function get($url,$id=null){
+        return new self($url,$id);
+    }
+}
+
+
+class __Ob {
+    protected $Dm;
     protected $Id;
     protected $Data = [];
     protected $Changed = [];    // массив изменённых свойств
@@ -22,10 +63,11 @@ class Ob {
     protected $_Props;
     
     // --- --- --- --- --- --- --- ---
-    function __construct($id=null){
+    function __construct(ide\Datamodel $dm,$id=null){
+        $this->Dm = $dm;
         $this->Id = $id;
         
-        $this->init();
+        //$this->init();
     }
     
     // --- --- --- --- --- --- ---
@@ -56,6 +98,5 @@ class Ob {
     protected function getMyProps(){
         return ide\Datamodel::get($this->Url)->Props;
     }
-    
 }
 ?>

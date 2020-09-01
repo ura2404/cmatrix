@@ -64,10 +64,21 @@ class Cache extends cm\Kernel\Reflection{
         
         $_rec($this->Path);
     }
+    
+    // --- --- --- --- --- --- --- ---
+    public function getKey($key){
+        return str_replace('/','^',$key);
+    }
+    // --- --- --- --- --- --- --- ---
+    public function getPath($key){
+        $Path = $this->Path .'/'. $this->getKey($key);
+        return $Path;
+    }
 
     // --- --- --- --- --- --- --- ---
     public function putValue($key,$value){
-        $Path = $this->Path .'/'. $key;
+        $Key = str_replace('/','^',$key);
+        $Path = $this->Path .'/'. $Key;
 
         try{
             file_put_contents($Path,$value);
@@ -75,20 +86,45 @@ class Cache extends cm\Kernel\Reflection{
             chown($Path,'www-data');
             chgrp($Path,'www-data');
         }
+        catch(\Throwable $e){
+        }
         catch(\Exception $e){
-            
         }
     }
 
     // --- --- --- --- --- --- --- ---
+    public function putJsonValue($key,array $value){
+        $Value = json_encode($value,
+            JSON_PRETTY_PRINT             // форматирование пробелами
+            | JSON_UNESCAPED_SLASHES      // не экранировать /
+            | JSON_UNESCAPED_UNICODE      // не кодировать текст
+        );
+        
+        $this->putValue($key,$Value);
+    }
+    
+    // --- --- --- --- --- --- --- ---
     public function getValue($key){
-        $Path = $this->Path .'/'. $key;
+        $Key = str_replace('/','^',$key);
+        $Path = $this->Path .'/'. $Key;
         return file_exists($Path) ? file_get_contents($Path) : false;
     }    
     
     // --- --- --- --- --- --- --- ---
+    public function getJsonValue($key){
+        $Value = $this->getValue($key);
+        return json_decode($Value,true,
+            JSON_PRETTY_PRINT             // форматирование пробелами
+            | JSON_UNESCAPED_SLASHES      // не экранировать /
+            | JSON_UNESCAPED_UNICODE      // не кодировать текст
+        );
+    }
+    
+    
+    // --- --- --- --- --- --- --- ---
     public function isExists($key){
-        $Path = $this->Path .'/'. $key;
+        $Key = str_replace('/','^',$key);
+        $Path = $this->Path .'/'. $Key;
         return file_exists($Path);
     }
     

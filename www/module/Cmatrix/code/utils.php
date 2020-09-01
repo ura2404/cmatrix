@@ -175,6 +175,9 @@ function arrayIntersect($arr1,$arr2){
  * 
  */
 function arrayKeing(array $arr,$code){
+    return array_combine(array_column($arr,$code), $arr);
+    
+    
     $arr_res = [];
     /*
     foreach($arr as $key=>$value){

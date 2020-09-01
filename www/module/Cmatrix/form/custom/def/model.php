@@ -18,9 +18,9 @@ class MyModel extends \Cmatrix\Mvc\Model {
             ],
             'web' => [
                 'home'    => $this->getMyUrl(),
-                'session' => \Cmatrix\Web\Page::get('session')->Url,
-                'browser' => \Cmatrix\Web\Page::get('browser')->Url,
-                'admin'   => \Cmatrix\Web\Page::get('admin')->Url,
+                'session' => \Cmatrix\Web\Page::get('session')->Wpath,
+                'browser' => \Cmatrix\Web\Page::get('browser')->Wpath,
+                'admin'   => \Cmatrix\Web\Page::get('admin')->Wpath,
                 'favicon' => \Cmatrix\Kernel\Ide\Resource::get('Cmatrix/icons/def.ico')->Wpath,
             ]
         ];

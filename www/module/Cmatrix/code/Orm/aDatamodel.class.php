@@ -7,8 +7,9 @@
 namespace Cmatrix\Orm;
 
 abstract class aDatamodel {
-    abstract protected function getMyUrl();
-    abstract protected function getMyName();
-    abstract protected function getMyParentUrl();
+    abstract protected function setMyJson();
+    abstract protected function setMyCode();
+    abstract protected function setMyName();
+    abstract protected function setMyProps();
 }
 ?>

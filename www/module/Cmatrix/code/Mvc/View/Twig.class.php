@@ -17,16 +17,17 @@ class Twig extends \Cmatrix\Mvc\View {
     // --- --- --- --- --- --- --- ---
     function __get($name){
         switch($name){
-            case 'PathCache' : return $this->getMyPathCache();
+            case 'CacheKey' : return $this->getMyCacheKey();
             default : return parent::__get($name);
         }
     }
     
     // --- --- --- --- --- --- --- ---
-    protected function getMyPathCache(){
-        $Path = str_replace('/','_',$this->Url) .'.twig';
-        if(!file_exists(ide\Cache::get('forms')->Path .'/'. $Path)) throw new ex\Error($this,'twig template cache file [' .$this->Url. '] is not found.');
-        return $Path;
+    protected function getMyCacheKey(){
+        $Key = $this->Url .'.twig';
+        
+        if(!ide\Cache::get('forms')->isExists($Key)) throw new ex\Error($this,'twig template cache file [' .$this->Url. '] is not found.');
+        return ide\Cache::get('dms')->getKey($Key);
     }
 
 }

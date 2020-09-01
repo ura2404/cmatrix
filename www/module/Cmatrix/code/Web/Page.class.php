@@ -14,13 +14,13 @@ use \Cmatrix\Kernel\Exception as ex;
 use \Cmatrix\Mvc as mvc;
 
 class Page {
-    protected $_Url;
+    protected $Url;
 
     // --- --- --- --- --- --- --- ---
     function __construct($url){
         kernel\Kernel::get();
         
-        $this->_Url = $url;
+        $this->Url = $url;
         kernel\Kernel::$PAGE = $url;    // для 404
     }
 
@@ -28,7 +28,7 @@ class Page {
     function __get($name){
         switch($name){
             case 'Html' : return $this->getMyHtml();
-            case 'Url' : return $this->getMyUrl();
+            case 'Wpath' : return $this->getMyWpath();
             default : throw new ex\Error($this,'class [' .get_class($this). '] property [' .$name. '] is not defined.');
         }
     }
@@ -39,7 +39,7 @@ class Page {
     private function getMyHtml(){
         $Pages = cm\Kernel\Config::get('pages');
         
-        $PageUrl = $this->_Url === '' ? $Pages->getValue('def') : $Pages->getValue('pages/'. $this->_Url);
+        $PageUrl = $this->Url === '' ? $Pages->getValue('def') : $Pages->getValue('pages/'. $this->Url);
         
         // 404
         if(!$PageUrl) $PageUrl = $Pages->getValue('pages/404');
@@ -52,8 +52,8 @@ class Page {
     }
     
     // --- --- --- --- --- --- --- ---
-    private function getMyUrl(){
-        return kernel\Kernel::$WHOME.'/'.$this->_Url;
+    private function getMyWpath(){
+        return kernel\Kernel::$WHOME.'/'.$this->Url;
     }
 
     // --- --- --- --- --- --- --- ---

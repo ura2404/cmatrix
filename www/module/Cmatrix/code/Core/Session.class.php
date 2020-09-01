@@ -7,7 +7,8 @@
 namespace Cmatrix\Core;
 use \Cmatrix as cm;
 use \Cmatrix\Kernel as kernel;
-use \Cmatrix\Kernel\Orm as orm;
+use \Cmatrix\Orm as orm;
+use \Cmatrix\Kernel\Ide as ide;
 use \Cmatrix\Kernel\Exception as ex;
 
 class Session extends cm\Kernel\Reflection {
@@ -45,17 +46,23 @@ class Session extends cm\Kernel\Reflection {
     
     // --- --- --- --- --- --- --- ---
     protected function getMyInstance(){
-        dump('getMyInstance');
         return $this->getInstanceValue('_Instance',function() {
+            $Dm = ide\Datamodel::get('Cmatrix/Core/Session');
             if(kernel\Kernel::$DB){
-                
+                $Ob = orm\Ob::get($Dm,[ 'hid' => $this->Hid ]);
             }
             else{
+                $Ob = orm\Ob::get($Dm,[ 'hid' => $this->Hid ]);
+                
+                /*
                 $Ob = kernel\Ide\Datamodel::get('Cmatrix/Core/Session',[ 'hid' => $this->Hid ])->Instance;
                 //$Ob = new \Cmatrix\Datamodel\Core\Session([ 'hid' => $this->Hid ]);
+                dump($Ob);
                 //dump($Ob->Props);
                 return $Ob;
+                */
             }
+            return $Ob;
         });
     }
     

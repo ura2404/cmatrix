@@ -34,7 +34,6 @@ class Form extends cm\Kernel\Reflection {
     // --- --- --- --- --- --- --- ---
     function __get($name){
         switch($name){
-            case 'createCache' : return $this->createMyCache();
             case 'Path' : return $this->Path;
             case 'Json' : return $this->getMyJson();
             case 'Type' : return $this->getMyType();
@@ -76,18 +75,20 @@ class Form extends cm\Kernel\Reflection {
     }
     
     // --- --- --- --- --- --- --- ---
-    private function createMyCache(){
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    private function createCache(){
         $Fs = [
             'html' => function(){ },
             'twig' => function(){
                 $Path = $this->Path .'/form.twig';
                 if(!file_exists($Path)) throw new ex\Error($this,'form [' .$this->Url. '] template is not defined.');
                 
-                $Key = str_replace('/','_',$this->Url) .'.twig';
+                $Key = $this->Url .'.twig';
                 $Data = file_get_contents($Path);
                 
                 if($this->Parent){
-                    $Data = '{% extends "'. str_replace('/','_',$this->Parent).'.twig' .'" %}'."\n" . $Data;
+                    $Data = '{% extends "'. Cache::get('forms')->getKey($this->Parent).'.twig' .'" %}'."\n" . $Data;
                 }
                 
                 if(isset($this->Json['rearHead']) && count($this->Json['rearHead'])){
@@ -124,7 +125,7 @@ class Form extends cm\Kernel\Reflection {
     
     // --- --- --- --- --- --- --- ---
     static function cache($url){
-        return (new self($url))->createCache;
+        return (new self($url))->createCache();
     }
 }
 ?>

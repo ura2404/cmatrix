@@ -122,7 +122,7 @@ class Twig extends \Cmatrix\Mvc\Controller {
         $Twig = $this->Instance;
         
         try{
-            $Data = $Twig->render($this->View->PathCache,$this->Model->Data);
+            $Data = $Twig->render($this->View->CacheKey,$this->Model->Data);
             return $Data;
         }
         catch(\Exception $e){

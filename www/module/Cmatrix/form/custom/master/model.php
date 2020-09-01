@@ -19,7 +19,7 @@ class MyModel extends \Cmatrix\Mvc\Model {
                 'favicon' => \Cmatrix\Kernel\Ide\Resource::get('Cmatrix/icons/def.ico')->Wpath,
             ],
             'url' => [
-                'home' => \Cmatrix\Web\Page::get()->Url
+                'home' => \Cmatrix\Web\Page::get()->Wpath
             ]
         ];
     }

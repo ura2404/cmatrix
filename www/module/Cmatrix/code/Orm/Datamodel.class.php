@@ -11,14 +11,13 @@
 namespace Cmatrix\Orm;
 use \Cmatrix as cm;
 use \Cmatrix\Kernel\Ide as ide;
+use \Cmatrix\Kernel\Ide\Generator\Datamodel as generator;
 use \Cmatrix\Kernel\Exception as ex;
 
-abstract class Datamodel extends aDatamodel{
+abstract class __Datamodel extends aDatamodel{
     protected $Id;
     protected $Data = [];
     protected $Changed = [];    // массив изменённых свойств
-    
-    protected $_Props;
     
     // --- --- --- --- --- --- --- ---
     function __construct($id=null){
@@ -31,7 +30,7 @@ abstract class Datamodel extends aDatamodel{
     function __get($name){
         switch($name){
             case 'Name' : return $this->getMyName();
-            case 'Url' : return $this->getMyUrl();
+            case 'Url' : return $this->getMyCode();
             case 'Json' : return $this->getMyJson();
             case 'Props' : return $this->getMyProps();
             case 'OwnProps' : return $this->getMyOwnProps();
@@ -49,70 +48,69 @@ abstract class Datamodel extends aDatamodel{
         $this->Data = array_map(function($prop){ return null; },$this->Props);
     }
     
-    // --- --- --- --- --- --- --- ---
-    protected function createJson(){
-        return [
-            'code' => $this->Url,
-            'name' => $this->Name,
-            'props' => [
-                'id' => [],
-                'parent_id' => [],
-                'chain_id' => [],
-                'status' => [],
-                'active' => [],
-                'hidden' => [],
-                'deleted' => [],
-                'info' => [],
-            ]
-        ];
-    }
-
     // --- --- --- --- --- --- ---
-    protected function getMyName(){
-        return $this->Url;
-    }
-
     // --- --- --- --- --- --- ---
-    protected function getMyUrl(){
-        return str_replace(["\\",'/Datamodel'],['/',null],get_class($this));
-    }
-
     // --- --- --- --- --- --- ---
-    protected function getMyParentUrl(){
-        $Parent = get_parent_class($this);
-        return $Parent ? (new $Parent())->Url : null;
+    protected function setMyJson(){
+        $_parent = function(){
+            $Parent = get_parent_class($this);
+            return $Parent && $Parent != __CLASS__ ? (new $Parent())->Url : null;
+        };
+            
+        return (ide\Generator\Datamodel::get($this->setMyCode())
+            ->setParent($_parent())
+            ->setName($this->setMyName())
+            ->setProps($this->setMyProps())
+        )->Data;
     }
     
+    // --- --- --- --- --- --- ---
+    protected function setMyCode(){
+        return str_replace(["\\",'/Datamodel'],['/',null],get_class($this));
+    }
+    
+    // --- --- --- --- --- --- ---
+    protected function setMyName(){
+        return $this->Url;
+    }
+    
+    // --- --- --- --- --- --- ---
+    protected function setMyProps(){
+        return (generator\Props::get()
+            ->setProp(generator\Prop::get('id','::id::',-1))
+            ->setProp(generator\Prop::get('hid','::hid::'))
+            ->setProp(generator\Prop::get('pid','::pid::'))
+            ->setProp(generator\Prop::get('act','::act::'))
+            ->setProp(generator\Prop::get('dlt','::dlt::'))
+            ->setProp(generator\Prop::get('hdn','::hdn::'))
+        );
+    }
+    
+    // --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     private function getMyJson(){
-        $Key = str_replace('/','_',$this->Url).'.dm.json';
+        //$Key = str_replace("\\",'/',get_class($this));
+        //$Key = str_replace('/','_',$Key).'.dm.json';
+        //$Key = str_replace('\\','_',get_class($this)).'.dm.json';
+        $Key = $this->setMyCode().'.dm.json';
         
         if(ide\Cache::get('dms')->isExists($Key)){
-            return ide\Cache::get('dms')->getValue($Key);
+            return ide\Cache::get('dms')->getJsonValue($Key);
         }
-        
         else{
-            return $this->createJson();
-            
-            //dump(get_class($this));
-            //$ClassName = $this->ClassName;
-            //return $ClassName::json();
+            return $this->setMyJson();
         }
-        
-        /*
-        return $this->getInstanceValue('_Json',function(){
-            $Key = str_replace('/','_',$this->Url).'.dm.json';
-            
-            if(Cache::get('dms')->isExists($Key)){
-                return ide\Cache::get('dms')->getValue($Key);
-            }
-            
-            else{
-                $ClassName = $this->ClassName;
-                return $ClassName::json();
-            }
-        });
-        */
+    }
+    
+    // --- --- --- --- --- --- ---
+    protected function getMyCode(){
+        return $this->Json['code'];
+    }
+    
+    // --- --- --- --- --- --- ---
+    protected function getMyName(){
+        return $this->Json['name'];
     }
     
     // --- --- --- --- --- --- --- ---
