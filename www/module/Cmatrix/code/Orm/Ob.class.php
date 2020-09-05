@@ -14,6 +14,7 @@ use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Ide as ide;
 use \Cmatrix\Kernel\Exception as ex;
 
+// --- --- --- --- --- --- --- ---
 class Ob {
     protected $Dm;
     protected $Id;
@@ -26,14 +27,17 @@ class Ob {
         $this->Id = $id;
         
         $this->init();
+        if($id) $this->_get();
+        else $this->_create();
     }
     
     // --- --- --- --- --- --- ---
     function __get($name){
         switch($name){
+            case 'Values' : return $this->Data;
             default : 
                 $MyName = $name{0} === '_' ? substr($name,1) : $name;
-                if(!array_key_exists($MyName,$this->Data)) throw new ex\Error($this,'property ['.$MyName.'] of entity ['.$this->Url.'] is not defined.');
+                if(!array_key_exists($MyName,$this->Data)) throw new ex\Error($this,'property ['.$MyName.'] of entity ['.$this->Dm->Url.'] is not defined.');
                 
                 if($name{0} === '_' and array_key_exists($MyName,$this->Changed)) return $this->Changed[$MyName];
                 else return $this->Data[$MyName];
@@ -41,9 +45,39 @@ class Ob {
     }
     
     // --- --- --- --- --- --- ---
+    function __set($name,$value){
+        switch($name){
+            default : 
+                if(!array_key_exists($name,$this->Data)) throw new ex\Error($this,'property ['.$name.'] of entity ['.$this->Dm->Url.'] is not defined.');
+                $this->Data[$name] = $value;
+                
+        }
+    }
+    
+    // --- --- --- --- --- --- ---
     protected function init(){
         $this->Data = array_map(function($prop){ return null; },$this->Dm->Props);
     }
+
+    // --- --- --- --- --- --- ---
+    protected function _get(){
+    }
+
+    // --- --- --- --- --- --- ---
+    protected function _create(){
+        if($this->Dm->beforeCreate($this) === false) throw new ex\Warning($this,'Невозможно создать экземпляр сущности ' .$this->Dm->Url. '.');
+        if($this->Dm->afterCreate($this) === false) throw new ex\Warning($this,'Невозможно создать экземпляр сущности ' .$this->Dm->Url. '.');
+    }
+
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    public function setValues(array $values){
+        array_map(function($key,$value){
+            $this->$key = $value;
+        },array_keys($values),array_values($values));
+    }
+    
     
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
@@ -52,6 +86,8 @@ class Ob {
         return new self($url,$id);
     }
 }
+
+
 
 
 class __Ob {

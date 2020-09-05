@@ -7,5 +7,12 @@
 {% block blockRearHead %}{{ parent() }}{% endblock %}
 
 {% block blockBody %}
->{{id}}<>{{ip}}<
+    <table class="session">
+        <tr><td>HID</td><td>{{ session.hid }}</td></tr>
+        <tr><td>CTS</td><td>{{ session.ts }}</td></tr>
+        <tr><td>UTS</td><td>{{ session.uts }}</td></tr>
+        <tr><td>IP</td><td>{{ session.ip4 }}</td></tr>
+        <tr><td>Sysuser</td><td>{{ sysuser.name }}</td></tr>
+        <tr><td>Agent</td><td>{{ session.agent }}</td></tr>
+    </table>
 {% endblock %}

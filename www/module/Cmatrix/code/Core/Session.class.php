@@ -52,7 +52,7 @@ class Session extends cm\Kernel\Reflection {
                 $Ob = orm\Ob::get($Dm,[ 'hid' => $this->Hid ]);
             }
             else{
-                $Ob = orm\Ob::get($Dm,[ 'hid' => $this->Hid ]);
+                $Ob = orm\Ob::get($Dm);
                 
                 /*
                 $Ob = kernel\Ide\Datamodel::get('Cmatrix/Core/Session',[ 'hid' => $this->Hid ])->Instance;
@@ -87,7 +87,11 @@ class Session extends cm\Kernel\Reflection {
         $Path = '/';
         $Days = 1;
         
-        setcookie($this->CookieName,hid(),time() + ($Days * 86400),$Path);
+        $Period = time() + ($Days * 86400);
+        
+        setcookie($this->CookieName,hid(),$Period,$Path);
+        setcookie($this->CookieName.'_ts',time(),$Period,$Path);
+        
         cm\Web\Page::reload();
         exit();
     }

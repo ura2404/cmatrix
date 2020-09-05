@@ -34,23 +34,5 @@ class Entity extends ide\Datamodel{
             ->setProp(generator\Prop::get('info','::txt::',999))
         );
     }    
-
-    // --- --- --- --- --- --- --- ---
-    /*protected function createJson(){
-        return [
-            'code' => 'Cmatrix/Core/Entity',
-            'props' => [
-                'id' => [],
-                'parent_id' => [],
-                'chain_id' => [],
-                'status' => [],
-                'active' => [],
-                'hidden' => [],
-                'deleted' => [],
-                'info' => [],
-            ]
-        ];
-    }*/
-    
 }
 ?>

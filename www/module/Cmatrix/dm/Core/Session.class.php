@@ -8,6 +8,7 @@
 
 namespace Cmatrix\Datamodel\Core;
 use \Cmatrix as cm;
+use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Ide\Generator\Datamodel as generator;
 
 class Session extends Entity{
@@ -41,19 +42,42 @@ class Session extends Entity{
         );
     }    
     
-    // --- --- --- --- --- --- --- ---
-    /*protected function createJson(){
-        dump('session create json');
+    // --- --- --- --- --- --- ---
+    protected function getMyIdent(){
+        if(kernel\Kernel::$SAPI === 'CLI'){
+            return [
+                'ip4'   => '0.0.0.0',
+                'agent' => 'Cmatrix local worker'
+            ];
+            
+        }
+        elseif(kernel\Kernel::$SAPI === 'APACHE'){
+            $Arr = [
+                'ip4'      => isset($_SERVER['REMOTE_ADDR'])          ? $_SERVER['REMOTE_ADDR'] : null,
+                'ip4x'     => isset($_SERVER['HTTP_X_FORWARDER_FOR']) ? $_SERVER['HTTP_X_FORWARDER_FOR'] : null,
+                'proxy'    => isset($_SERVER['HTTP_VIA'])             ? $_SERVER['HTTP_VIA'] : null,
+                'agent'    => isset($_SERVER['HTTP_USER_AGENT'])      ? $_SERVER['HTTP_USER_AGENT'] : null,
+                'lang'     => isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : null,
+                'charset'  => isset($_SERVER['HTTP_ACCEPT_CHARSET'])  ? $_SERVER['HTTP_ACCEPT_CHARSET'] : null,
+                'encoding' => isset($_SERVER['HTTP_ACCEPT_ENCODING']) ? $_SERVER['HTTP_ACCEPT_ENCODING'] : null,
+            ];
+            
+            if($Arr['ip4'] === '::1') $Arr['ip4'] = '127.0.0.1';
+            
+            return $Arr;
+        }
+        else return [];
         
-        return [
-            'code' => $this->getMyUrl(),
-            'name' => $this->getMyName(),
-            'parent' => $this->getMyParentUrl(),
-            'props' => [
-                'ip' => [],
-            ]
-        ];
         
-    }*/
+    }
+    
+    // --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- ---
+    public function beforeCreate($ob){
+        parent::beforeCreate($ob);
+        
+        $ob->setValues($this->getMyIdent());
+    }
 }
 ?>

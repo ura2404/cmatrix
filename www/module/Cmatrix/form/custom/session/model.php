@@ -7,7 +7,7 @@ class MyModel extends \Cmatrix\Mvc\Model {
     public function getData(){
         $Session = \Cmatrix\Core\Session::get();
         //dump($Session,'Session');
-        dump($Session->Instance,'Instance');
+        //dump($Session->Instance,'Instance');
         //dump($Session->Instance->Json,'Json');
         //dump($Session->Instance->Props,'Props');
         //dump($Session->Instance->OwnProps,'OwnProps');
@@ -18,9 +18,7 @@ class MyModel extends \Cmatrix\Mvc\Model {
             'page' => [
                 'name' => 'Session',
             ],
-            //'id' => $Session->Instance->id,
-            
-            //'ip' => $Session->Instance->ip
+            'session' => \Cmatrix\Core\Session::get()->Instance->Values
         ];
     }
 }
