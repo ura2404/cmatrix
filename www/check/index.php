@@ -46,6 +46,7 @@ $Database->add('pgsql',shell_exec("psql -V") ? 'true' : 'false');
 $Database->print();
 
 $ApacheModules = apache_get_modules();
+//$ApacheModules = get_loaded_extensions();
 $Apache = new Table('Check Apache modules');
 $Apache->add('mod_rewrite',in_array('mod_rewrite',$ApacheModules) ? 'true' : 'false');
 $Apache->print();
@@ -66,5 +67,5 @@ $Php->print();
 
 echo '</div>';
 
-phpinfo();
+if(PHP_SAPI !== 'cli') phpinfo();
 ?>

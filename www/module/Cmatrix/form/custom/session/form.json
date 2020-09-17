@@ -2,6 +2,7 @@
     "type" : "twig",
     "parent" : "Cmatrix/custom/master",
     "rearHead" : [
+        "Cmatrix/web/cmatrix.css",
         "Cmatrix/custom/session/main.css"
     ],
     "rearBody" : []

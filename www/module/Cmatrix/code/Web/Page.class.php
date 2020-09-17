@@ -70,6 +70,7 @@ class Page {
         return new self($url);
     }
     
+    // --- --- --- --- --- --- --- ---
     static function reload(){
         if(kernel\Kernel::$REWRITE) $Page = kernel\Kernel::$PAGE;
         else $Page = '/?page='. kernel\Kernel::$PAGE;

@@ -7,6 +7,8 @@ class MyModel extends \Cmatrix\Mvc\Model {
     public function getData(){
         $this->Config = \Cmatrix\Kernel\Config::get();
         
+        dump(\Cmatrix\Web\Page::get('check2')->Wpath);
+        
         return [
             'app' => [
                 'name'       => $this->Config->getValue('app/name'),
@@ -21,6 +23,7 @@ class MyModel extends \Cmatrix\Mvc\Model {
                 'session' => \Cmatrix\Web\Page::get('session')->Wpath,
                 'browser' => \Cmatrix\Web\Page::get('browser')->Wpath,
                 'admin'   => \Cmatrix\Web\Page::get('admin')->Wpath,
+                'check'   => \Cmatrix\Web\Page::get('check')->Wpath,
                 'favicon' => \Cmatrix\Kernel\Ide\Resource::get('Cmatrix/icons/def.ico')->Wpath,
             ]
         ];
