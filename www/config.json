@@ -1,0 +1,10 @@
+{
+    "modules" : {
+        "aliases" : {
+            
+        }
+    },
+    "env" : {
+        "tmp" : "/var/tmp"
+    }
+}

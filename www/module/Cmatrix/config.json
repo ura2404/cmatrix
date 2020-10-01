@@ -1,0 +1,11 @@
+{
+    "module" : {
+        "code" : "Cmatrix",
+        "name" : "Cmatrix",
+        "info" : "ECM/CMS/DMS платформа",
+        "author" : "ura@itx.ru",
+        "url" : "http://cmatrox.ru",
+        "since" : "2000",
+        "version" : "4.0"        
+    }
+}

@@ -4,21 +4,21 @@
  * @version 1.0 2020-07-21
  */
 
-namespace Cmatrix\Kernel;
+namespace Cmatrix\Exception;
 
 class Exception extends \Exception {
     private $Ob;
 
     // --- --- --- --- --- --- --- ---
-    function __construct($ob,$message){
+    function __construct($ob=null,$message){
         $this->Ob = $ob;
-        parent::__construct(get_class($this->Ob) .' // '. $message);
+        parent::__construct(($ob ? get_class($this->Ob).' // ' : '') . $message);
     }
     
     // --- --- --- --- --- --- --- ---
     function __get($name){
         switch($name){
-            //case 'Message' : return $this->getMessage();
+            case 'Message' : return $this->getMessage();
         }
     }
 }

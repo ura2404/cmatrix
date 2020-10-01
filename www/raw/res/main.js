@@ -803,7 +803,9 @@ var filesystem = {
                         break;
                         
                     default :
-                        var n_id = 'ace-' + id.replace(/\.|\/|\s|=/g,'_');
+                    console.log(id);
+                    console.log(id.replace(/\.|\/|^|\s|=/g,'_'));
+                        var n_id = 'ace-' + id.replace(/\.|\/|\^|\s|=/g,'_');
                         tab.append('<div id="' +n_id+ '"></div>');
                         
                         $('#'+n_id).panel({

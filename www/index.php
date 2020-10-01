@@ -11,6 +11,8 @@ require_once'common.php';
 
 define('MODE',isset($_SERVER['CM_MODE']) ? $_SERVER['CM_MODE'] : null);
 //define('MODE',isset($_SERVER['CM_MODE']) ? $_SERVER['CM_MODE'] : 'production');
+//define('MODE','production');
+//dump(MODE);
 
 switch(MODE){
     case 'development' :
@@ -31,6 +33,11 @@ switch(MODE){
 try{
     $Page = isset($_REQUEST['cmp']) ? rtrim($_REQUEST['cmp'],'/') : null;
     echo \Cmatrix\Web\Page::get($Page)->Html;
+}
+catch(\Cmatrix\Kernel\Exception $e){
+    //echo '\Cmatrix\Kernel\Exception\Error';
+    //echo $e->getMessage();
+    echo 'Что-то пошло не так';
 }
 catch(\Throwable $e){
     $Page = \Cmatrix\Web\Exception::get($e);
