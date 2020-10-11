@@ -1,0 +1,8 @@
+{
+    "type" : "twig",
+    "parent" : "Cmatrix/custom/master",
+    "rearHead" : [
+        "Cmatrix/custom/404/main.css"
+    ],
+    "rearBody" : []
+}

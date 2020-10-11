@@ -40,20 +40,21 @@ catch(\Cmatrix\Kernel\Exception $e){
     echo 'Что-то пошло не так';
 }
 catch(\Throwable $e){
-    dump($e->getMessage());
+    echo $e->getMessage();
+    //dump($e->getTrace());
     
     $Page = \Cmatrix\Web\Exception::get($e);
     $Page->Exception = $e;
     echo $Page->Html;
 }
 catch(\Error $e){
-    echo 'Error->';
+    echo 'Error->'.$e->getMessage();
 }
 catch(\TypeError $e){
-    echo 'TypeError->';
+    echo 'TypeError->'.$e->getMessage();
 }
 catch(\ParseError $e){
-    echo 'ParseError->';
+    echo 'ParseError->'.$e->getMessage();
 }
 
 /*

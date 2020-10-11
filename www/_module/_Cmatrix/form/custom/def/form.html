@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	    <meta http-equiv="Cache-Control" content="no-cache">
+        <link rel="icon" href="{{ web.favicon }}" type="image/x-icon">
+		<title>{{ app.title }}</title>
+	</head>
+	<body>
+		<div style="text-align: center;">
+			<h1>{{ app.title }}</h1>
+			<h2>{{ app.descriptor }}</h2>
+			
+			<div>
+			    {{ web.home }} | <a href="{{ web.session }}">Сессия</a> | <a href="{{ web.browser }}">Браузер</a> | <a href="{{ web.admin }}">Admin`ка</a> | <a href="{{ web.check }}">Check</a>
+		    </div>
+		    
+			<div style="margin-top:30px;">{{ app.name }} &copy; v{{ app.version }} by {{ app.author }}</div>
+			<div style="margin-top:10px;">{{ app.period }}</div>
+		</div>
+	</body>
+</html>

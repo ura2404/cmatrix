@@ -17,6 +17,8 @@ spl_autoload_register(function($className){
         .DIRECTORY_SEPARATOR.'module'
         .DIRECTORY_SEPARATOR.$Module
         .DIRECTORY_SEPARATOR.$ClassPath.'.class.php';
+
+    //dump($ClassPath);
     
     if(file_exists($ClassPath)) require_once($ClassPath);
 },true,true);

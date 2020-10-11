@@ -1,0 +1,23 @@
+.page {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.container {
+    display: flex;
+}
+
+.container  .message {
+    margin: auto 0 auto auto;
+}
+
+.container .pic {
+    margin: auto auto auto 0;
+    height: 265px;
+    width: 275px;
+    display: flex;
+}
+
+.container .pic img {
+    margin : auto;
+}

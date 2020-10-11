@@ -1,0 +1,16 @@
+{% block blockFavicon %}{{ page.favicon }}{% endblock %}
+
+{% block blockPageName %}{{ page.name }}{% endblock %}
+
+{% block blockTitle %}{{ page.name }}{% endblock %}
+
+{% block blockRearHead %}{{ parent() }}{% endblock %}
+
+{% block blockBody %}
+    <div class="message">
+        {{ error.message }}
+    </div>
+    <div class="trace">
+        <pre>{{ error.trace }}</pre>
+    </div>
+{% endblock %}

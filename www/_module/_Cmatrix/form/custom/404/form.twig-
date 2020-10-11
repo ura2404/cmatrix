@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta http-equiv="Cache-Control" content="no-cache">
+        <title>{{ name }} | 404 page</title>
+        <link rel="icon" href="{{ favicon }}" type="image/x-icon">
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>        
+        <meta charset="UTF-8"/>
+        <link rel="stylesheet" href="{{ awesome }}/css/font-awesome.css">
+        <style>
+            @font-face {
+                font-family : 'Arsenal';
+                font-weight : 400;
+                font-style : normal;
+                src: url('{{ google }}/Arsenal/Arsenal-Regular.ttf') format('truetype')
+            }
+            @font-face {
+                font-family : 'Arsenal';
+                font-weight : 700;
+                font-style : normal;
+                src: url('{{ google }}/Arsenal/Arsenal-Bold.ttf') format('truetype')
+            }
+            @font-face {
+                font-family : 'Arsenal';
+                font-weight : 400;
+                font-style : italic;
+                src: url('{{ google }}/Arsenal/Arsenal-Italic.ttf') format('truetype')
+            }
+            @font-face {
+                font-family : 'Arsenal';
+                font-weight : 700;
+                font-style : italic;
+                src: url('{{ google }}/Arsenal/Arsenal-BoldItalic.ttf') format('truetype')
+            }
+            body {
+                font: 100% Arsenal, Arial !important;                
+            }
+            body{
+                margin:0;
+                padding:0 0 160px 0;
+            } 
+            h2{
+                margin:0;
+                padding:0;
+            }    
+            a {
+                color: white;
+                text-decoration: none;
+            }
+            h2 .back {
+                float:right;
+            }
+            .tilda {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                color: white;
+                margin-top: 20px;
+                padding: 10px;
+                background-color: #505050;
+                text-align: center;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h2 style="padding: 20px 10px;background-color:#0baf64;color:white;">
+            <span>{{ name }}</span> <span> &bull; 404</span>
+            {# <a href="{{ home }}">{{ name }}</a> <span> &bull; 404</span> #}
+            <a class="back" href="{{ home }}" title="Главная страница"><i class="fa fa-home"></i></a>
+        </h2>
+        
+        <div class="container" style="display:flex;">
+            {% if page is contains('.pro') %}
+                <span style="margin: 30px auto; padding: 0 10px;">Запрашиваемый ресурс <b>«{{ page }}»</b> не найден.</span>
+            {% elseif page == null %}
+                <span style="margin: 30px auto; padding: 0 10px;">Вы ищите главную страницу. А её нет.</span>
+            {% else %}
+                <span style="margin: 30px auto; padding: 0 10px;">Вы ищите страницу <b>«{{ page }}»</b>. А её нет.</span>
+            {% endif %}
+            
+        </div>
+        
+        <div class="footer">
+            <div class="tilda">{{ name }} &copy; v{{ version }} by {{ author }} {{ period }}</div>            
+        </div>
+        
+    </body>
+
+</html>

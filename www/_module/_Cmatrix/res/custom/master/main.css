@@ -1,0 +1,82 @@
+html {
+    font-size: 16px;
+}
+
+body {
+    font: 100% Arsenal, Arial !important;                
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+}
+
+.header {
+    position: fixed;
+    display: flex;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    margin: 0;
+    padding: 0 100px;
+    background-color: #0baf64;
+    color: white;
+}
+
+.header .app {
+    margin: auto auto auto 0;
+}
+
+.header .home {
+    margin: auto 0 auto auto;
+}
+
+.body {
+    position: fixed;
+    top: 50px;
+    bottom: 30px;
+    left: 0;
+    right: 0;
+    /*padding: 50px 100px 30px 100px;*/
+}
+.footer {
+    position: fixed;
+    display: flex;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 30px;
+    padding: 0;
+    color: white;
+    background-color: #505050;
+    text-align: center;
+    font-size: 0.8rem;
+}
+
+.footer > div {
+    margin : auto;
+}
+
+a {
+    color: white;
+    text-decoration: none;
+}
+/*
+            h2{
+                margin:0;
+                padding:0;
+            }    
+            h2 .back {
+                float:right;
+            }
+            .tilda {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                color: white;
+                margin-top: 20px;
+                padding: 10px;
+                background-color: #505050;
+                text-align: center;
+            }
+*/

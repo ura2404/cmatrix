@@ -1,0 +1,18 @@
+{
+    "app" : {
+        "code" : "cmatrix",
+        "name" : "Cmatrix",
+        "info" : "ECM/CMS/DMS платформа",
+        "author" : "ura@itx.ru",
+        "url" : "http://cmatrix.ru",
+        "since" : "2000",
+        "version" : "4.0"
+    },
+    "env" : {
+        "tmp" : "/var/tmp"
+    },
+    "web" : {
+        "home" : "/cmatrix",
+        "rewrite" : true
+    }
+}

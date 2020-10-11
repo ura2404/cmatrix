@@ -9,6 +9,12 @@ DefaultLanguage ru
 AddDefaultCharset UTF-8
 php_value default_charset "UTF-8"
 
+#-----------------------------------------------
+<Files *.json>
+    Deny from all
+</Files>
+
+#-----------------------------------------------
 <IfModule mod_rewrite.c>
     RewriteEngine on
     RewriteBase /cmatrix
@@ -52,6 +58,6 @@ php_value default_charset "UTF-8"
 
     # --- --- --- --- --- --- --- ---
     # Global
-    RewriteCond %{REQUEST_URI} (.*)$
+    RewriteCond %{REQUEST_URI} (.*)/$
     RewriteRule ^(.*)$ index.php?cmp=$1 [QSA,L]
 </IfModule>
