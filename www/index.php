@@ -40,6 +40,8 @@ catch(\Cmatrix\Kernel\Exception $e){
     echo 'Что-то пошло не так';
 }
 catch(\Throwable $e){
+    dump($e->getMessage());
+    
     $Page = \Cmatrix\Web\Exception::get($e);
     $Page->Exception = $e;
     echo $Page->Html;

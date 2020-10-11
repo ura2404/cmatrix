@@ -31,7 +31,7 @@ php_value default_charset "UTF-8"
     RewriteRule ^(check) $1/index.php [QSA,L]
 
     RewriteCond %{REQUEST_FILENAME} -f
-    RewriteRule ^(check/index\.php)$ $1 [L]
+    RewriteRule ^(check/index\.php)$ $1 [QSA,L]
     # RewriteRule ^(check/.*\.)(php|js|css|less|png|jpg|gif|ttf|ico)$ $1$2 [L]
 
     # --- --- --- --- --- --- --- ---
@@ -40,13 +40,13 @@ php_value default_charset "UTF-8"
     RewriteRule ^(raw) $1/index.php [QSA,L]
 
     RewriteCond %{REQUEST_FILENAME} -f
-    RewriteRule ^(raw/index\.php)$ $1 [L]
+    RewriteRule ^(raw/index\.php)$ $1 [QSA,L]
     RewriteRule ^(raw/.*\.)(php|js|css|less|png|jpg|gif|ttf|ico)$ $1$2 [L]
 
     # --- --- --- --- --- --- --- ---
     # Resources
     RewriteCond %{REQUEST_FILENAME} -f
-	RewriteRule (robots\.txt|sitemap\.xml)$ $1 [L]
+    RewriteRule (robots\.txt|sitemap\.xml)$ $1 [L]
     # пропустить ресурсы без слеша в конце (к неверным ресурсам добавляется слеш)
     RewriteRule ^(.*\module/.*/res/.*\..*)([^/])$ $1$2 [L]
 

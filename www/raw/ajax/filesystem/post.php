@@ -96,7 +96,9 @@ try{
             }
             
             file_put_contents($newpath,null);
+            $um = umask(0);
             chmod($newpath,0660);
+            umask($um);
             if(!file_exists($newpath)) throw new \Exception('Файл [' .$params['newname']. '] не создан');
             $message = 'Файл успешно создан';
             break;
@@ -109,8 +111,9 @@ try{
                 if($type === 'folder') throw new \Exception('Папка [' .$params['newname']. '] уже существует');
                 else throw new \Exception('Уже существует файл с таким именем');
             }
-            
+            $um = umask(0);
             if(mkdir($newpath,0770) === false) throw new \Exception('Папка [' .$params['newname']. '] не создана');
+            umask($um);
             $message = 'Папка успешно создана';
             break;
             
