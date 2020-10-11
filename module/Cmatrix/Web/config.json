@@ -1,0 +1,10 @@
+{
+    "part" : {
+        "code" : "Web",
+        "version" : "4.0",
+        "build" : "1",
+        "requiries" : [
+            "Kernel"
+        ]
+    }
+}

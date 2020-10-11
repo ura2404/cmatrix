@@ -27,7 +27,7 @@ class Result {
     }
 }
 
-echo PHP_EOL.'Checking the required environment for platform constructor «CMatrix».'.PHP_EOL;
+echo PHP_EOL.'Checking the required environment for platform constructor «Cmatrix».'.PHP_EOL;
 
 // ---
 $Database = new Result('Check Databases');

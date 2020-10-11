@@ -1,0 +1,8 @@
+{
+    "part" : {
+        "code" : "Kernel",
+        "version" : "4.0",
+        "build" : "1",
+        "requiries" : null
+    }
+}
