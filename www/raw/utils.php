@@ -1,32 +1,35 @@
 <?php
 
 /**
-* Набор PHP-функций
-* 
-* array2string     - конвертировать массив в строковое представление
-* array2line       - вытянуть массив с струну
-* arrayIntersect   - пересеч массивы
-* arrayKeing       - создания массива ключ:значение - замена ключа значением
-* arrayDReflection - отразить массив по диагонали
-* arrayDefs        - дополнить массив
-* arrayFilter      - фильтровать массив по ключу и значению 
-* 
-* isArrayPlain - проверить массив на плоскость (нехешированный одноуровневый массив)
-* 
-* strFupper  - заглавная буква строчная (большая)
-* strFlover  - заглавная буква пропистная (маленькая)
-* strStart   - проверка начинается ли строка на указанную подстроку
-* strEnd     - проверка заканчивается ли строка на указанную подстроку
-* strBetween - выделение подстроки из строки между указанными подстроками
-* strAfter   - выделение подстроки из строки после первой указанной подстроки
-* strRAfter  - выделение подстроки из строки после последней указанной подстроки
-* strBefore  - выделение подстроки из строки до первой указанной подстроки
-* strRBefore - выделение подстроки из строки до последней указанной подстроки
-* 
-*
-* @author ura ura@itx.ru
-* @version 1.0 2013-01-01
-*/
+ * Набор PHP-функций
+ * 
+ * array2string      - конвертировать массив в строковое представление
+ * array2line        - вытянуть массив с струну
+ * arrayIntersect    - пересеч массивы
+ * arrayKeing        - создания массива ключ:значение - замена ключа значением
+ * arrayDReflection  - отразить массив по диагонали
+ * arrayDefs         - дополнить массив
+ * arrayMergeReplace - рекурсивно слить массивы заменяя, а не дублируя элементы
+ * 
+ * arrayFilter      - фильтровать массив по ключу и значению 
+ * 
+ * isArrayPlain - проверить массив на плоскость (нехешированный одноуровневый массив)
+ * 
+ * strFupper  - заглавная буква строчная (большая)
+ * strFlover  - заглавная буква пропистная (маленькая)
+ * strStart   - проверка начинается ли строка на указанную подстроку
+ * strEnd     - проверка заканчивается ли строка на указанную подстроку
+ * strBetween - выделение подстроки из строки между указанными подстроками
+ * strAfter   - выделение подстроки из строки после первой указанной подстроки
+ * strRAfter  - выделение подстроки из строки после последней указанной подстроки
+ * strBefore  - выделение подстроки из строки до первой указанной подстроки
+ * strRBefore - выделение подстроки из строки до последней указанной подстроки
+ * cmStrToLower - привести строку к нижнему регистру
+ * cmStrToUpper - привести строку к верхнему регистру
+ *
+ * @author ura ura@itx.ru
+ * @version 1.0 2013-01-01
+ */
 
 // --- --- --- --- --- --- --- --- --- ---
 // --- Общие - --- --- --- --- --- --- ---
@@ -69,7 +72,23 @@ function array2string($data){
  * Вытянуть массив с струну
  * 
  * @params array $data - входящий массив
- *     [ 100, [a=>200],[c=>300],400,500,[d=>600,[dd=>700]]]
+ * [ 
+ *   100,
+ *   [
+ *     a=>200
+ *   ],
+ *   [
+ *     c=>300
+ *   ],
+ *   400,
+ *   500,
+ *   [
+ *     d=>600,
+ *     [
+ *       dd=>700
+ *     ]
+ *   ]
+ * ]
  * @return array
  *     [100,200,300,400,500,600,700]
  * 
@@ -78,14 +97,18 @@ function array2string($data){
  */
 function array2line($data){
     if(!is_array($data)) return $data;
+    //dump($data);
     
 	$arr = [];
-	foreach($data as $val)
+	foreach($data as $val){
 		if(is_array($val)){
 			$l = array2line($val);
 			foreach($l as $ll) $arr[] = $ll;
 		}
 		else $arr[] = $val;
+	}
+	
+	//dump($arr);
 	return $arr;
 };
 
@@ -152,12 +175,24 @@ function arrayIntersect($arr1,$arr2){
  * 
  */
 function arrayKeing(array $arr,$code){
+    return array_combine(array_column($arr,$code), $arr);
+    
+    
+    $arr_res = [];
+    /*
     foreach($arr as $key=>$value){
         if(!is_array($value) || !isset($value[$code])) continue;
         $arr[$value[$code]] = $value; 
         unset($arr[$key]);
     }
     return $arr;
+    */
+    
+    foreach($arr as $key=>$value){
+        if(!is_array($value) || !isset($value[$code])) $arr_res[$key] = $value;
+        else $arr_res[$value[$code]] = $value; 
+    }
+    return $arr_res;
 }
 
 // --- --- --- --- --- --- --- --- --- ---
@@ -215,6 +250,7 @@ function arrayDReflection(array $arr){
  * 
  * Дополнить массив
  * К первому массиву добавляются по очереди !!недостающие!! элементы из последующих
+ * !!! НЕ рекурсивно
  */
 /*function array_defs(...$arrays){
     return arrayDefs($arrays);
@@ -229,9 +265,93 @@ function arrayDefs(...$arrays){
         $arr = array_diff_key($arr,$first);     // находим элементы последующего массива, отсутствующие в первом массиве
         $first = array_merge($first,$arr);      // добавим в первый массив недостающие элелементы из последующего
     }
-    
     return $first;
 }
+
+/**
+ * Рекурсивно слить массивы заменяя, а не дублируя элементы
+ */
+function arrayMergeReplace(...$arrays){
+    if(!count($arrays)) return [];
+    
+    $first = array_shift($arrays);
+    if(!count($arrays)) return $first;
+
+    $_rec = function($first,$second) use(&$_rec){
+        foreach($second as $key=>$value){
+            if(!array_key_exists($key,$first)) $first[$key] = $value;
+            else{
+                // если массивы, то слить
+                if(is_array($first[$key]) && is_array($value)) $first[$key] = $_rec($first[$key],$value);
+                //elseif(is_array($first[$key]) && !is_array($value)) $first[$key][] = $value;
+                //elseif(!is_array($first[$key]) && is_array($value)){
+                //    $first[$key] = $value;
+                //    $first[$key][] = $first[$key];
+                //}
+                // если кто-то не массив, то изпользовать второй
+                elseif(!is_array($first[$key]) && is_array($value))  $first[$key] = $value;
+                elseif(is_array($first[$key]) && !is_array($value))  $first[$key] = $value;
+                elseif(!is_array($first[$key]) && !is_array($value)) $first[$key] = $value;
+            }
+        }
+        return $first;
+    };
+
+    foreach($arrays as $arr){
+        $first = $_rec($first,$arr);
+    }    
+    return $first;
+}
+
+/**
+ * Получить значение по ключу
+ * 
+ * arrayGetValue(['a','b','c'],[
+ *     'a' => [
+ *         'b'=> [
+ *             'c' => 'value1',
+ *             'd' => 'value2'
+ *         ]
+ *     ]
+ * ])
+ * 
+ */
+function arrayGetValue(array $key,array $data,$default=null){
+    // 1. получить первый индекс цепочки
+    $K = array_shift($key);
+    
+    // 2. если значение есть и индексов больше нет, то вывести значение
+    // если индексы ещё есть и значение массив, то рекурсия
+    // если индексы ещё есть и значение НЕ массив, то false
+    //
+    // если значения нет, то вывести default
+    if(array_key_exists($K,$data)){
+        if(!count($key)) return $data[$K];
+        else{
+            if(is_array($data[$K])) return arrayGetValue($key,$data[$K]);
+            else return false;
+        }
+    }
+    else return $default;
+}
+
+/*
+    public function getValue($path=null,$default=null){
+        if($path === null) return $this->Data;
+
+        $_fun = function($arr,$ini) use(&$_fun,$default){
+            if(count($arr)>1){
+                $ind = $arr[0];
+                array_shift($arr);
+                return isset($ini[$ind]) ? $_fun($arr,$ini[$ind]) : $default;
+            }
+            else return isset($ini[$arr[0]]) ? $ini[$arr[0]] : ($default || is_array($default) ? $default : false);
+        };
+
+        return $_fun(explode("/",$path),$this->Data);
+    }
+*/
+
 
 // --- --- --- --- --- ---
 /**
@@ -296,7 +416,7 @@ function str_fupper($str){
     return strFupper($str);
 }
 function strFupper($str){
-    return str_toupper(str_substr($str,0,1)) . str_substr($str,1); 
+    return str_toupper(str_substr($str,0,1)) . str_tolower(str_substr($str,1)); 
 }
 
 /**
@@ -327,6 +447,9 @@ function str_start($str,$mask){
     return strStart($str,$mask);
 }
 function strStart($str,$mask){
+    if(gettype($str)!=='string') return false;
+    //dump($str,'UTILS');
+    
     $encoding = mb_detect_encoding($str);
 	$mask = is_array($mask) ? $mask : array($mask);
 
@@ -356,6 +479,8 @@ function str_end($str,$mask){
     return strEnd($str,$mask);
 }
 function strEnd($str,$mask){
+    if(gettype($str)!=='string') return false;
+
 	$encoding = mb_detect_encoding($str);
 	$mask = is_array($mask) ? $mask : array($mask);
 
@@ -412,7 +537,8 @@ function strBetween($str,$char1,$char2,$fl=false){
  * @param string $str	строка для анализа
  * @oaram string $char	искомая подстрока
  * @param bool $fl		если true, то выделять с подстрокой поиска, false - только после неё
- * @return string|null	результирующая строка или null, если искомая подстрока не входит в строку
+ * @return string|null	результирующая строка или null, если не найден разделитель
+ * 
  *
  * @author ura ura@itx.ru
  * @version 1.0
@@ -424,7 +550,7 @@ function strAfter($str,$char,$fl=false){
     $encoding = mb_detect_encoding($str);
 	$slen = mb_strlen($str,$encoding);
 
-	if(($pos=mb_strrpos($str,$char,0,$encoding))!==false){
+	if(($pos=mb_strpos($str,$char,0,$encoding))!==false){
         if($fl){
             return mb_substr($str,$pos,$slen-$pos,$encoding);
         }else{
@@ -432,7 +558,7 @@ function strAfter($str,$char,$fl=false){
             return mb_substr($str,$pos+$len,$slen-$pos-$len,$encoding);
         }
     }
-	else return $str;
+	else return null;
 }
 
 /**
@@ -443,7 +569,7 @@ function strAfter($str,$char,$fl=false){
  * @param string $str	строка для анализа
  * @oaram string $char	искомая подстрока
  * @param bool $fl		если true, то выделять с подстрокой поиска, false - только после неё
- * @return string|null	результирующая строка или null, если искомая подстрока не входит в строку
+ * @return string|null	результирующая строка или null, если не найден разделитель
  *
  * @author ura ura@itx.ru
  * @version 1.0 2014-05-06
@@ -465,7 +591,7 @@ function strRAfter($str,$char,$fl=false){
             return mb_substr($str,$pos+$len,$slen-$pos-$len,$encoding);
         }
     }
-    else return $str;
+    else return null;
 }
 
 /**
@@ -476,7 +602,7 @@ function strRAfter($str,$char,$fl=false){
  * @param string $str	строка для анализа
  * @param string $char	искомая подстрока
  * @param bool $fl		если true, то выделять с подстрокой поиска, false - только до неё
- * @return string|null	результирующая строка или null, если искомая подстрока не входит в строку
+ * @return string       результирующая строка или исходная строка, если не найден разделитель
  *
  * @author ura ura@itx.ru
  * @version 1.0
@@ -522,6 +648,31 @@ function strRBefore($str,$char,$fl=false){
     else return $str;
 }
 
+/**
+ * Функция cmStrToLower
+ *
+ * Привести строку к нижнему регистру
+ * 
+ * @author ura ura@itx.ru
+ * @version 1.0
+ */
+function cmStrToLower($str){
+	$encoding = mb_detect_encoding($str);
+    return mb_strtolower($str,$encoding);
+}
+ 
+/**
+ * Функция cmStrToUpper
+ *
+ * Привести строку к верхнему регистру
+ * 
+ * @author ura ura@itx.ru
+ * @version 1.0
+ */
+function cmStrToUpper($str){
+	$encoding = mb_detect_encoding($str);
+    return mb_strtoupper($str,$encoding);
+}
 
 
 
@@ -757,6 +908,7 @@ function isHID($str){
 	}
 	return $result;
     }
+
 
 
 

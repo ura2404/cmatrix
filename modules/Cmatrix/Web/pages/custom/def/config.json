@@ -1,0 +1,9 @@
+{
+    "page" : {
+        "code" : "Cmatrix/Web/pages/custom/def",
+        "parent" : null,
+        "name" : "default page",
+        "info" : "Информационная страница по умолчанию",
+        "form" : "Cmatrix/Web/forms/custom/def"
+    }
+}

@@ -1,9 +1,24 @@
 {
-    "def" : "Cmatrix/custom/def",
+    "app" : {
+        "code" : "cmatrix",
+        "name" : "Cmatrix",
+        "info" : "Конструктор платформ",
+        "author" : "ura@itx.ru",
+        "url" : "http://cmatrix.ru",
+        "since" : "2000",
+        "version" : "4.0"
+    },
+    "web" : {
+        "root" : "/cmatrix",
+        "rewrite" : true
+    },
     "pages" : {
-        "main" : "Cmatrix/custom/def",
-        "404" : "Cmatrix/custom/404",
-        "exception" : "Cmatrix/custom/exception",
-        "session" : "Cmatrix/custom/session"
+        "def" : "Cmatrix/Web/pages/custom/def",
+        "aliases" : {
+            "main"      : "Cmatrix/Web/pages/custom/def",
+            "404"       : "Cmatrix/Web/pages/custom/404",
+            "exception" : "Cmatrix/Web/pages/custom/exception",
+            "session"   : "Cmatrix/Web/pages/custom/session"
+        }
     }
 }

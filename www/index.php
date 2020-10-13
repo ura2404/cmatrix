@@ -1,20 +1,12 @@
 <?php
-/**
- * Cmatrix
- *
- * ECM/CMS/DMS платформа
- *
- * @author ura@itx.ru
- */
-
 require_once'common.php';
 
-define('MODE',isset($_SERVER['CM_MODE']) ? $_SERVER['CM_MODE'] : null);
-//define('MODE',isset($_SERVER['CM_MODE']) ? $_SERVER['CM_MODE'] : 'production');
-//define('MODE','production');
-//dump(MODE);
+define('CM_MODE',isset($_SERVER['CM_MODE']) ? $_SERVER['CM_MODE'] : null);
+//define('CM_MODE',isset($_SERVER['CM_MODE']) ? $_SERVER['CM_MODE'] : 'production');
+//define('CM_MODE','production');
+dump(CM_MODE);
 
-switch(MODE){
+switch(CM_MODE){
     case 'development' :
         ini_set('display_errors',1);
         error_reporting(-1);
@@ -24,7 +16,7 @@ switch(MODE){
         error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_USER_NOTICE);
         //E_CORE_WARNING
         break;
-    default:
+    default :
         header('HTTP/1.1 503 Service Unavailable.',true,503);
         echo 'Cmatrix fatal error: wrong environment or environment isn\'t defined.';
         exit(1);
@@ -39,7 +31,7 @@ catch(\Cmatrix\Kernel\Exception $e){
     //echo $e->getMessage();
     echo 'Что-то пошло не так';
 }
-catch(\Throwable $e){
+catch(\Throwable2 $e){
     echo $e->getMessage();
     //dump($e->getTrace());
     
@@ -47,7 +39,7 @@ catch(\Throwable $e){
     $Page->Exception = $e;
     echo $Page->Html;
 }
-catch(\Error $e){
+catch(\Error2 $e){
     echo 'Error->'.$e->getMessage();
 }
 catch(\TypeError $e){

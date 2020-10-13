@@ -7,31 +7,34 @@
  */
 
 namespace Cmatrix\Web;
-//use \Cmatrix as cm;
 use \Cmatrix\Kernel as kernel;
-//use \Cmatrix\Kernel\Ide as ide;
 use \Cmatrix\Kernel\Exception as ex;
-//use \Cmatrix\Mvc as mvc;
+use \Cmatrix\Web\Ide as ide;
+use \Cmatrix\Web\Mvc as mvc;
 
-class Page{
+class Page extends kernel\Reflection{
+    static $INSTANCES = [];
     /**
      * url страницы, переданный в браузер
      */
     protected $Url;
+    
+    protected $_Root;
+    protected $_Path;
 
     // --- --- --- --- --- --- --- ---
     function __construct($url){
-        //kernel\Kernel::get();
-        
         $this->Url = $url;
         //kernel\Kernel::$PAGE = $url;    // для 404
+        parent::__construct($this->Url);
     }
 
     // --- --- --- --- --- --- --- ---
     function __get($name){
         switch($name){
+            case 'Root' : return $this->getMyRoot();
             case 'Html' : return $this->getMyHtml();
-            case 'Wpath' : return $this->getMyWpath();
+            case 'Path' : return $this->getMyPath();
             default : throw new ex\Error($this,'class [' .get_class($this). '] property [' .$name. '] is not defined.');
         }
     }
@@ -39,31 +42,33 @@ class Page{
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
+    private function getMyRoot(){
+        return $this->getInstanceValue('_Root',function(){
+            $Config = \Cmatrix\Kernel\Config::get('/www/config.json');
+            if(!($Home = $Config->getValue('web/root'))) throw new ex\Error($this,"configure variable 'web.root' is not defined.");
+            return $Home;
+        });
+    }
+    
+    // --- --- --- --- --- --- --- ---
     private function getMyHtml(){
         $Config = kernel\Config::get('/www/config.json');
         
-        $Url = $this->Url === '' ? $Config->getValue('def') : $Config->getValue('pages/'. $this->Url);
+        $PageUrl = $this->Url === '' ? $Config->getValue('pages/def') : $Config->getValue('pages/aliases'. $this->Url);
         
         // 404
-        if(!$Url) $Url = $Config->getValue('pages/404');
-        if(!$Url) throw new ex\Error($this,'page 404 is not defined.');
-        
-        dump($Url);
-        
-        /*
-        $Pages = cm\Kernel\Config::get('pages');
-        
-        $PageUrl = $this->Url === '' ? $Pages->getValue('def') : $Pages->getValue('pages/'. $this->Url);
-        
-        // 404
-        if(!$PageUrl) $PageUrl = $Pages->getValue('pages/404');
+        if(!$PageUrl) $PageUrl = $Config->getValue('pages/aliases/404');
         if(!$PageUrl) throw new ex\Error($this,'page 404 is not defined.');
         
         $FormUrl = ide\Page::get($PageUrl)->Form;
         
         $Html = mvc\Mvc::get($FormUrl)->Html;
         return $Html;
-        */
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    private function getMyPath(){
+        return $this->Root.'/'.$this->Url;
     }
     
     // --- --- --- --- --- --- --- ---
