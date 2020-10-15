@@ -1,0 +1,10 @@
+{
+    "form" : {
+        "type" : "twig",
+        "parent" : "Cmatrix/Web/custom/forms/master",
+        "style" : [
+            "Cmatrix/Web/custom/404/resources/main.css"
+        ],
+        "js" : []
+    }
+}

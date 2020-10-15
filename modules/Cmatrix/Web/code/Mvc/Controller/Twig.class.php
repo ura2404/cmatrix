@@ -5,10 +5,11 @@
  * @author ura@itx.ru 
  * @version 1.0 2020-07-23
  */
-
 namespace Cmatrix\Web\Mvc\Controller;
 use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Exception as ex;
+use \Cmatrix\Web\Ide as ide;
+use \Cmatrix\Web\Vendor as vendor;
 
 class Twig extends \Cmatrix\Web\Mvc\Controller {
     private $Instance;
@@ -17,13 +18,13 @@ class Twig extends \Cmatrix\Web\Mvc\Controller {
     function __construct($view, $model){
         parent::__construct($view, $model);
         
-        cm\Kernel\Vendor::reg('Twig');
+        vendor\Vendor::reg('Twig');
         
-        $Loader = new \Twig_Loader_Filesystem(kernel\Ide\Cache::get('forms')->Path);
+        $Loader = new \Twig_Loader_Filesystem(ide\Cache::get('forms')->Path);
         
         // --- --- --- --- --- ---
         $Twig = new \Twig_Environment($Loader, [
-            'cache' => kernel\Kernel::$TMP,
+            'cache' => ide\Cache::get('twig')->Path,
             'debug' => true,
             'auto_reload' => true
         ]);

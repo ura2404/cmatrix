@@ -1,0 +1,17 @@
+{% extends "Cmatrix^custom^master.twig" %}
+{% block blockFavicon %}{{ page.favicon }}{% endblock %}
+
+{% block blockPageName %}{{ page.name }}{% endblock %}
+
+{% block blockTitle %}{{ page.name }}{% endblock %}
+
+{% block blockRearHead %}{{ parent() }}<link rel="stylesheet" media="none" type="text/css" href="/cmatrix/module/Cmatrix/res/custom/exception/main.css" onload="if(media!='all')media='all'"/>{% endblock %}
+
+{% block blockBody %}
+    <div class="message">
+        {{ error.message }}
+    </div>
+    <div class="trace">
+        <pre>{{ error.trace }}</pre>
+    </div>
+{% endblock %}
