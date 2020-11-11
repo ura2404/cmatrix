@@ -1,7 +1,19 @@
 <?php
 /**
- * Загружает autoloader из каждого модуля, если есть
+ * 1. Определение констант
+ *   - CM_MODE - режим:
+ *     - development - разработка
+ *     - production - штатаная эксплуатация
+ * 
+ *   - CM_DS - directory separator, разделитель директорый в файловых путях
+ * 
+ *   - CM_ROOT - корневыя директория в нотации web-сервера
+ * 
+ * 2. Загрузка autoloader`ов из каждого модуля, если есть
  */
+ 
+define('CM_MODE',isset($_SERVER['CM_MODE']) ? $_SERVER['CM_MODE'] : null);
+//define('CM_MODE','production');
 
 define('CM_DS',DIRECTORY_SEPARATOR);
 define('CM_ROOT',realpath(dirname(__FILE__).CM_DS.'..'));

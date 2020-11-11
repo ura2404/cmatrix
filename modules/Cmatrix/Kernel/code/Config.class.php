@@ -14,24 +14,11 @@ class Config extends Reflection {
     protected $Data;
     
     // --- --- --- --- --- --- --- ---
-    function __construct($key,$data=null){
-        //Kernel::get();
-        
+    function __construct($key,$data){
         $this->Key = $key;
-        $this->Data = !$data ? $this->getMyFile() : $data;
+        $this->Data = $data;
         
         parent::__construct($this->Key);
-    }
-    
-    // --- --- --- --- --- --- --- ---
-    // --- --- --- --- --- --- --- ---
-    // --- --- --- --- --- --- --- ---
-    private function getMyFile(){
-        $Path = CM_ROOT . $this->Key;
-        
-        if(!file_exists($Path)) throw new ex\Error($this,'config file path ['.$Path.'] not validate.');
-        
-        return json_decode(file_get_contents($Path),true);
     }
     
     // --- --- --- --- --- --- --- ---
@@ -62,8 +49,12 @@ class Config extends Reflection {
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
-    static function get($key){
-        return new self($key);
+    static function get($url){
+        $Path = CM_ROOT.CM_DS .str_replace('/',CM_DS,$url);
+        
+        if(!file_exists($Path)) throw new ex\Error($this,'config file path ['.$Path.'] not validate.');
+
+        return self::reg($url,Json::decode(file_get_contents($Path)));
     }
     
     // --- --- --- --- --- --- --- ---

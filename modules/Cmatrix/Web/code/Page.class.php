@@ -19,9 +19,8 @@ class Page extends kernel\Reflection{
      */
     protected $Url;
     
-    protected $_Root;
     protected $_Path;
-
+    
     // --- --- --- --- --- --- --- ---
     function __construct($url){
         $this->Url = $url;
@@ -32,33 +31,23 @@ class Page extends kernel\Reflection{
     // --- --- --- --- --- --- --- ---
     function __get($name){
         switch($name){
-            case 'Root' : return $this->getMyRoot();
             case 'Html' : return $this->getMyHtml();
             case 'Path' : return $this->getMyPath();
-            default : throw new ex\Error($this,'class [' .get_class($this). '] property [' .$name. '] is not defined.');
+            default : throw new ex\Error($this,'class "' .get_class($this). '" property "' .$name. '" is not defined.');
         }
     }
     
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
-    private function getMyRoot(){
-        return $this->getInstanceValue('_Root',function(){
-            $Config = \Cmatrix\Kernel\Config::get('/www/config.json');
-            if(!($Home = $Config->getValue('web/root'))) throw new ex\Error($this,"configure variable 'web.root' is not defined.");
-            return $Home;
-        });
-    }
-    
-    // --- --- --- --- --- --- --- ---
     private function getMyHtml(){
-        $Config = kernel\Config::get('/www/config.json');
+        $Config = kernel\Config::get('www/config.json');
         
-        $PageUrl = $this->Url === '' ? $Config->getValue('pages/def') : $Config->getValue('pages/aliases'. $this->Url);
+        $PageUrl = $this->Url === '' ? $Config->getValue('pages/def') : $Config->getValue('pages/aliases/'. $this->Url);
         
         // 404
         if(!$PageUrl) $PageUrl = $Config->getValue('pages/aliases/404');
-        if(!$PageUrl) throw new ex\Error($this,'page 404 is not defined.');
+        if(!$PageUrl) throw new ex\Error($this,'page "404" is not defined.');
         
         $FormUrl = ide\Page::get($PageUrl)->Form;
         
@@ -68,7 +57,12 @@ class Page extends kernel\Reflection{
     
     // --- --- --- --- --- --- --- ---
     private function getMyPath(){
-        return $this->Root.'/'.$this->Url;
+        $Config = kernel\Config::get('/www/config.json');
+        
+        $Url = $Config->getValue('pages/aliases/'. $this->Url);
+        if(!$Url) throw new ex\Error($this,'page "'.$this->Url.'" is not defined.');
+        
+        return \Cmatrix\Web\Kernel::get()->Home.'/'.$this->Url;
     }
     
     // --- --- --- --- --- --- --- ---

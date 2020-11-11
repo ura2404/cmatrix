@@ -1,10 +1,7 @@
 <?php
 require_once'common.php';
 
-define('CM_MODE',isset($_SERVER['CM_MODE']) ? $_SERVER['CM_MODE'] : null);
-//define('CM_MODE',isset($_SERVER['CM_MODE']) ? $_SERVER['CM_MODE'] : 'production');
-//define('CM_MODE','production');
-dump(CM_MODE);
+//dump(CM_MODE);
 
 switch(CM_MODE){
     case 'development' :

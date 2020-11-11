@@ -18,7 +18,11 @@
             "main"      : "Cmatrix/Web/pages/custom/def",
             "404"       : "Cmatrix/Web/pages/custom/404",
             "exception" : "Cmatrix/Web/pages/custom/exception",
-            "session"   : "Cmatrix/Web/pages/custom/session"
+            "session"   : "Cmatrix/Web/pages/custom/session",
+            "browser"   : "Cmatrix/Web/pages/custom/browser",
+            "check"     : "Cmatrix/Web/pages/custom/check",
+            "admin"     : "Cmatrix/Web/pages/custom/admin"
+            
         }
     }
 }

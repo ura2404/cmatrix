@@ -21,7 +21,7 @@ class MyModel extends \Cmatrix\Web\Mvc\Model {
                 'browser' => \Cmatrix\Web\Page::get('browser')->Path,
                 'admin'   => \Cmatrix\Web\Page::get('admin')->Path,
                 'check'   => \Cmatrix\Web\Page::get('check')->Path,
-                //'favicon' => \Cmatrix\Kernel\Ide\Resource::get('Cmatrix/icons/def.ico')->Wpath,
+                'favicon' => \Cmatrix\Web\Resource::get('Cmatrix/Web/resources/icons/def.ico')->Path,
             ]
         ];
     }

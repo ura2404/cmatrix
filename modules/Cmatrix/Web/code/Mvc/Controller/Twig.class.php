@@ -8,7 +8,6 @@
 namespace Cmatrix\Web\Mvc\Controller;
 use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Exception as ex;
-use \Cmatrix\Web\Ide as ide;
 use \Cmatrix\Web\Vendor as vendor;
 
 class Twig extends \Cmatrix\Web\Mvc\Controller {
@@ -20,11 +19,11 @@ class Twig extends \Cmatrix\Web\Mvc\Controller {
         
         vendor\Vendor::reg('Twig');
         
-        $Loader = new \Twig_Loader_Filesystem(ide\Cache::get('forms')->Path);
+        $Loader = new \Twig_Loader_Filesystem(kernel\Ide\Cache::get('forms')->Path);
         
         // --- --- --- --- --- ---
         $Twig = new \Twig_Environment($Loader, [
-            'cache' => ide\Cache::get('twig')->Path,
+            'cache' => kernel\Ide\Cache::get('twig')->Path,
             'debug' => true,
             'auto_reload' => true
         ]);
