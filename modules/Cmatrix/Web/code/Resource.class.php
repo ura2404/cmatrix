@@ -17,18 +17,25 @@ class Resource extends kernel\Reflection{
     protected $Url;
     
     protected $_Path;
+    protected $_CacheName;
     
     // --- --- --- --- --- --- --- ---
     function __construct($url){
         $this->Url = $url;
+        
         parent::__construct($this->Url);
+        
+        if(CM_MODE === 'development'){
+            $this->createCache();
+        }
     }
     
     // --- --- --- --- --- --- --- ---
     function __get($name){
         switch($name){
             case 'Path' : return $this->getMyPath();
-            default : throw new ex\Error($this,'class [' .get_class($this). '] property [' .$name. '] is not defined.');
+            case 'CacheName' : return $this->getMyCacheName();
+            default : throw new ex\Error('class "' .get_class($this). '" property "' .$name. '" is not defined.');
         }
     }
     
@@ -36,8 +43,11 @@ class Resource extends kernel\Reflection{
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     private function getMyPath(){
+        return \Cmatrix\Web\Kernel::get()->Home .'/res/'. $this->CacheName;
+        
+        /*
         $Path = CM_ROOT.CM_DS.'modules'.CM_DS . $this->Url;
-        if(!file_exists($Path)) throw new ex\Error($this,'resource "'.$this->Url.'" is not defined.');
+        if(!file_exists($Path)) throw new ex\Error('resource "'.$this->Url.'" is not defined.');
         
         $Pos = strrpos($this->Url,'.');
         $Name = substr($this->Url,0,$Pos);
@@ -51,30 +61,27 @@ class Resource extends kernel\Reflection{
         }
         
         return \Cmatrix\Web\Kernel::get()->Home .'/res/'. $CachName;
+        */
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    private function getMyCacheName(){
+        return $this->getInstanceValue('_CacheName',function(){
+            $Pos = strrpos($this->Url,'.');
+            $Name = substr($this->Url,0,$Pos);
+            $Ext = substr($this->Url,$Pos+1);
+            
+            return md5($Name) .'.'. $Ext;
+        });
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    private function createCache(){
+        $Path = CM_ROOT.CM_DS.'modules'.CM_DS . $this->Url;
+        if(!file_exists($Path)) throw new ex\Error('resource "'.$this->Url.'" is not defined.');
         
-        dump($Name);
-        dump($Ext);
-        
-        
-        
-        dump(basename($this->Url));
-        
-        
-        dump($Path);
-        $info = new \SplFileInfo($Path);
-        dump($info->getExtension());
-        
-        $Hash = md5($this->Url);
-        
-        return \Cmatrix\Web\Kernel::get()->Home .'/res/'. $Hash;
-        
-        
-        $Config = kernel\Config::get('/www/config.json');
-        
-        $Url = $Config->getValue('pages/aliases/'. $this->Url);
-        if(!$Url) throw new ex\Error($this,'page "'.$this->Url.'" is not defined.');
-        
-        return $this->Root.'/'.$this->Url;
+        $Cache = web\Ide\Cache::get('res');
+        if(!$Cache->isExists($this->CacheName)) $Cache->copy($this->CacheName,$Path);
     }
     
     // --- --- --- --- --- --- --- ---

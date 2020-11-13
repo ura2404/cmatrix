@@ -41,7 +41,7 @@ class Page extends kernel\Reflection{
     private function getMyPath(){
         return $this->getInstanceValue('_Path',function(){
             $Path = CM_ROOT.CM_DS. 'modules' .CM_DS. $this->Url;
-            if(!file_exists($Path) || !file_exists($Path .'/config.json')) throw new ex\Error($this,'page descriptor [' .$this->Url. '] is not found.');
+            if(!file_exists($Path) || !file_exists($Path .'/config.json')) throw new ex\Error('page descriptor [' .$this->Url. '] is not found.');
             return $Path;
         });
     }
@@ -55,7 +55,7 @@ class Page extends kernel\Reflection{
     
     private function getMyForm(){
         return $this->getInstanceValue('_Form',function(){
-            if(!isset($this->Json['page']['form'])) throw new ex\Error($this,'page [' .$this->Url. '] form url is not defined.');
+            if(!isset($this->Json['page']['form'])) throw new ex\Error('page [' .$this->Url. '] form url is not defined.');
             return $this->Json['page']['form'];
         });
     }

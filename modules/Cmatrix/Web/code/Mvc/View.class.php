@@ -21,7 +21,7 @@ class View {
     function __get($name){
         switch($name){
             case 'Data' : return $this->getMyData();
-            default : throw new ex\Error($this,'class [' .get_class($this). '] property [' .$name. '] is not defined.');
+            default : throw new ex\Error('class [' .get_class($this). '] property [' .$name. '] is not defined.');
         }
     }
 

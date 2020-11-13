@@ -15,7 +15,8 @@ class Result {
         array_map(function($value) use($fun){
             $this->add($value,$fun($value) ? 'true' : 'false');
         },$key);
-    }    function type(){
+    }
+    function type(){
         if(!count($this->Data)) return;
         echo PHP_EOL;
         echo $this->Name;
@@ -25,9 +26,16 @@ class Result {
             echo "\t".$key.' -> '.$value.PHP_EOL;
         },array_keys($this->Data),array_values($this->Data));
     }
+    public function print($data){
+        if(gettype($data) === 'string') echo $data .PHP_EOL;
+    }
 }
 
-echo PHP_EOL.'Checking the required environment for platform constructor «Cmatrix».'.PHP_EOL;
+//Result::print(PHP_EOL);
+Result::print('---------------------------------------------------------------------');
+Result::print('Checking the required environment for platform constructor «Cmatrix».');
+
+//echo PHP_EOL.'Checking the required environment for platform constructor «Cmatrix».'.PHP_EOL;
 
 // ---
 $Database = new Result('Check Databases');
@@ -52,9 +60,7 @@ $Php->addBoolResult('extension_loaded',[
     'PDO',
     'pgsql',
     'pdo_pgsql'
-
 ]);
 $Php->type();
-
-echo PHP_EOL;
+Result::print('---------------------------------------------------------------------');
 ?>

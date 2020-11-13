@@ -19,6 +19,10 @@ switch(CM_MODE){
         exit(1);
 }
 
+$Page = isset($_REQUEST['cmp']) ? rtrim($_REQUEST['cmp'],'/') : null;
+echo \Cmatrix\Web\Page::get($Page)->Html;
+
+/*
 try{
     $Page = isset($_REQUEST['cmp']) ? rtrim($_REQUEST['cmp'],'/') : null;
     echo \Cmatrix\Web\Page::get($Page)->Html;
@@ -45,6 +49,7 @@ catch(\TypeError $e){
 catch(\ParseError $e){
     echo 'ParseError->'.$e->getMessage();
 }
+*/
 
 /*
 catch(\Exception $e){

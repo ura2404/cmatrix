@@ -9,8 +9,7 @@
 namespace Cmatrix\Web;
 use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Exception as ex;
-use \Cmatrix\Web\Ide as ide;
-use \Cmatrix\Web\Mvc as mvc;
+use \Cmatrix\Web as web;
 
 class Page extends kernel\Reflection{
     static $INSTANCES = [];
@@ -18,11 +17,12 @@ class Page extends kernel\Reflection{
      * url страницы, переданный в браузер
      */
     protected $Url;
+    protected $StaticContent;
     
     protected $_Path;
     
     // --- --- --- --- --- --- --- ---
-    function __construct($url){
+    function __construct($url=''){
         $this->Url = $url;
         //kernel\Kernel::$PAGE = $url;    // для 404
         parent::__construct($this->Url);
@@ -33,7 +33,18 @@ class Page extends kernel\Reflection{
         switch($name){
             case 'Html' : return $this->getMyHtml();
             case 'Path' : return $this->getMyPath();
-            default : throw new ex\Error($this,'class "' .get_class($this). '" property "' .$name. '" is not defined.');
+            default : throw new web\Exception('class "' .get_class($this). '" property "' .$name. '" is not defined.');
+        }
+    }
+
+    // --- --- --- --- --- --- --- ---
+    function __set($name,$value){
+        switch($name){
+            case 'StaticContent' : 
+                $this->StaticContent = $value;
+                break;
+                
+            default : throw new web\Exception('class "' .get_class($this). '" property "' .$name. '" is not defined.');
         }
     }
     
@@ -41,18 +52,48 @@ class Page extends kernel\Reflection{
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     private function getMyHtml(){
+        if($this->StaticContent) return $this->StaticContent;
+        
         $Config = kernel\Config::get('www/config.json');
         
         $PageUrl = $this->Url === '' ? $Config->getValue('pages/def') : $Config->getValue('pages/aliases/'. $this->Url);
         
         // 404
         if(!$PageUrl) $PageUrl = $Config->getValue('pages/aliases/404');
-        if(!$PageUrl) throw new ex\Error($this,'page "404" is not defined.');
+        if(!$PageUrl) throw new web\Exception('page "404" is not defined.');
         
-        $FormUrl = ide\Page::get($PageUrl)->Form;
+        //dump($PageUrl);
         
-        $Html = mvc\Mvc::get($FormUrl)->Html;
-        return $Html;
+        try{
+            $FormUrl = web\Ide\Page::get($PageUrl)->Form;
+            $Html = web\Mvc\Mvc::get($FormUrl)->Html;
+            return $Html;
+        }
+        catch(ex\Error $e){
+            $_noweb = function() use($e){
+                $Message = \Cmatrix\Kernel\Exception::createMessage($e);
+                return $Message;
+            };
+            
+            $_web = function() use($e,$_noweb){
+                try{
+                    $FormUrl = web\Ide\Page::get('exception')->Form;
+                    $Html = web\Mvc\Mvc::get($FormUrl)->Html;
+                    return $Html;
+                }
+                catch(ex\Error $e){
+                    return $_noweb();
+                }
+            };
+            
+            $PageUrl = $Config->getValue('pages/aliases/exception');
+            if($PageUrl) return $_web();
+            else return $_noweb();
+        }
+        catch(\Throwable $e){
+            //echo $e->getMessage();
+            return \Cmatrix\Kernel\Exception::createMessage($e);
+        }
     }
     
     // --- --- --- --- --- --- --- ---
@@ -62,7 +103,7 @@ class Page extends kernel\Reflection{
         $Url = $Config->getValue('pages/aliases/'. $this->Url);
         if(!$Url) throw new ex\Error($this,'page "'.$this->Url.'" is not defined.');
         
-        return \Cmatrix\Web\Kernel::get()->Home.'/'.$this->Url;
+        return web\Kernel::get()->Home.'/'.$this->Url;
     }
     
     // --- --- --- --- --- --- --- ---

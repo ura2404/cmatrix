@@ -6,11 +6,11 @@
 
 namespace Cmatrix\Kernel\Exception;
 
-class Warning extends Exception{
+class Warning extends \Cmatrix\Kernel\Exception {
 
     // --- --- --- --- --- --- --- ---
-    function __construct($ob=null,$message){
-        parent::__construct($ob,'Warning // '. $message);
+    function __construct($message,$code = 0,\Exception $previous = null){
+        parent::__construct('Warning // '. $message,$code,$previous);
     }
 }
 

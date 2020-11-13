@@ -22,7 +22,7 @@ class Model {
     function __get($name){
         switch($name){
             case 'Data' : return $this->getMyData();
-            default : throw new ex\Error($this,'class [' .get_class($this). '] property [' .$name. '] is not defined.');
+            default : throw new ex\Error('class [' .get_class($this). '] property [' .$name. '] is not defined.');
         }
     }
 
@@ -35,7 +35,7 @@ class Model {
             
             $Pos1 = strpos($Text,'MyModel');
             $Pos2 = strrpos($Text,'}');
-            if($Pos1 === false) throw new ex\Error($this,'form [' .$this->Url. '] model is wrong.');
+            if($Pos1 === false) throw new ex\Error('form [' .$this->Url. '] model is wrong.');
             
             $Text = substr($Text,$Pos1,$Pos2-$Pos1+1);
             $Text = str_replace('MyModel',$name,$Text);
@@ -45,7 +45,7 @@ class Model {
         
         $ClassName = str_replace('/','_',$this->Url) .'_model';
         $PathModel = ide\Form::get($this->Url)->Path .'/model.php';
-        if(!file_exists($PathModel)) throw new ex\Error($this,'form [' .$this->Url. '] model is not defined.');
+        if(!file_exists($PathModel)) throw new ex\Error('form [' .$this->Url. '] model is not defined.');
         
         if(!class_exists($ClassName)) $_content($ClassName,$PathModel);
         

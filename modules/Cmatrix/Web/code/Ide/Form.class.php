@@ -19,10 +19,17 @@ class Form extends kernel\Reflection {
     protected $_Type;
     protected $_Parent;
     
+    protected $_CacheName;
+    
     // --- --- --- --- --- --- --- ---
     function __construct($url){
         $this->Url = $url;
         parent::__construct($url);
+        
+        if(CM_MODE === 'development'){
+            $this->createCache();
+        }
+        
     }
     
     // --- --- --- --- --- --- --- ---
@@ -32,6 +39,7 @@ class Form extends kernel\Reflection {
             case 'Json' : return $this->getMyJson();
             case 'Type' : return $this->getMyType();
             case 'Parent' : return $this->getMyParent();
+            case 'CacheName' : return $this->getMyCacheName();
             default : return parent::__get($name);
         }
     }
@@ -43,7 +51,7 @@ class Form extends kernel\Reflection {
     private function getMyPath(){
         return $this->getInstanceValue('_Path',function(){
             $Path = CM_ROOT.CM_DS. 'modules' .CM_DS. $this->Url;
-            if(!file_exists($Path) || !file_exists($Path .'/config.json')) throw new ex\Error($this,'form descriptor [' .$this->Url. '] is not found.');
+            if(!file_exists($Path) || !file_exists($Path .'/config.json')) throw new ex\Error('form descriptor [' .$this->Url. '] is not found.');
             return $Path;
         });
     }
@@ -58,7 +66,7 @@ class Form extends kernel\Reflection {
     // --- --- --- --- --- --- --- ---
     private function getMyType(){
         return $this->getInstanceValue('_Type',function(){
-            if(!isset($this->Json['form']['type'])) throw new ex\Error($this,'form [' .$this->Url. '] type is not defined.');
+            if(!isset($this->Json['form']['type'])) throw new ex\Error('form [' .$this->Url. '] type is not defined.');
             return $this->Json['form']['type'];
         });
     }
@@ -66,11 +74,32 @@ class Form extends kernel\Reflection {
     // --- --- --- --- --- --- --- ---
     private function getMyParent(){
         return $this->getInstanceValue('_Parent',function(){
-            if(isset($this->Json['form']) && !array_key_exists('parent',$this->Json['form'])) throw new ex\Error($this,'form [' .$this->Url. '] parent is not defined.');
+            if(isset($this->Json['form']) && !array_key_exists('parent',$this->Json['form'])) throw new ex\Error('form [' .$this->Url. '] parent is not defined.');
             return $this->Json['form']['parent'];
         });
     }
     
+    // --- --- --- --- --- --- --- ---
+    private function getMyCacheName(){
+        return $this->getInstanceValue('_CacheName',function(){
+            $Pos = strrpos($this->Url,'.');
+            $Name = substr($this->Url,0,$Pos);
+            $Ext = substr($this->Url,$Pos+1);
+            
+            return md5($Name) .'.'. $Ext;
+        });
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    private function createCache(){
+        $Cache = kernel\Ide\Cache::get('forms');
+        dump($this->CacheName);
+        dump($this->Path);
+        if(!$Cache->isExists($this->CacheName)) $Cache->copy($this->CacheName,$Path);
+        
+         
+    }
+
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
@@ -116,7 +145,7 @@ class __Form extends kernel\Reflection {
     // --- --- --- --- --- --- --- ---
     private function getMyPath($url){
         $Path = Module::get($this->Url)->Path .'/form/'. strAfter($this->Url,'/');
-        if(!file_exists($Path) || !file_exists($Path .'/form.json')) throw new ex\Error($this,'form descriptor [' .$this->Url. '] is not found.');
+        if(!file_exists($Path) || !file_exists($Path .'/form.json')) throw new ex\Error('form descriptor [' .$this->Url. '] is not found.');
         return $Path;
     }
     
@@ -130,7 +159,7 @@ class __Form extends kernel\Reflection {
     // --- --- --- --- --- --- --- ---
     private function getMyType(){
         return $this->getInstanceValue('_Type',function(){
-            if(!isset($this->Json['type'])) throw new ex\Error($this,'form [' .$this->Url. '] type is not defined.');
+            if(!isset($this->Json['type'])) throw new ex\Error('form [' .$this->Url. '] type is not defined.');
             return $this->Json['type'];
         });
     }
@@ -138,7 +167,7 @@ class __Form extends kernel\Reflection {
     // --- --- --- --- --- --- --- ---
     private function getMyParent(){
         return $this->getInstanceValue('_Parent',function(){
-            if(!array_key_exists('parent',$this->Json)) throw new ex\Error($this,'form [' .$this->Url. '] parent is not defined.');
+            if(!array_key_exists('parent',$this->Json)) throw new ex\Error('form [' .$this->Url. '] parent is not defined.');
             return $this->Json['parent'];
         });
     }
@@ -151,7 +180,7 @@ class __Form extends kernel\Reflection {
             'html' => function(){ },
             'twig' => function(){
                 $Path = $this->Path .'/form.twig';
-                if(!file_exists($Path)) throw new ex\Error($this,'form [' .$this->Url. '] template is not defined.');
+                if(!file_exists($Path)) throw new ex\Error('form [' .$this->Url. '] template is not defined.');
                 
                 $Key = $this->Url .'.twig';
                 $Data = file_get_contents($Path);

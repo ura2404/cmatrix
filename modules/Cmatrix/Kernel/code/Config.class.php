@@ -52,7 +52,7 @@ class Config extends Reflection {
     static function get($url){
         $Path = CM_ROOT.CM_DS .str_replace('/',CM_DS,$url);
         
-        if(!file_exists($Path)) throw new ex\Error($this,'config file path ['.$Path.'] not validate.');
+        if(!file_exists($Path)) throw new ex\Error('config file path ['.$Path.'] not validate.');
 
         return self::reg($url,Json::decode(file_get_contents($Path)));
     }

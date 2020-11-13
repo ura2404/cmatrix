@@ -126,19 +126,19 @@ class Twig extends \Cmatrix\Web\Mvc\Controller {
         }
         catch(\Exception $e){
             //throw new cm\Exception\Fatal('Twig templater error<br/>Message: "'.$e->getMessage().'"');
-            throw new ex\Error($this,$e->getMessage());
+            throw new ex\Error($e->getMessage());
         }
         catch(\Twig_Error $e){
-            throw new ex\Error($this,'Twig templater error // '.$e->getRawMessage());
+            throw new ex\Error('Twig templater error // '.$e->getRawMessage());
         }
         catch(\Twig_Error_Loader $e){
-            throw new ex\Error($this,'Twig templater error // '.$e->getRawMessage());
+            throw new ex\Error('Twig templater error // '.$e->getRawMessage());
         }
         catch(\Twig_Error_Runtime $e){
-            throw new ex\Error($this,'Twig templater error // '.$e->getRawMessage());
+            throw new ex\Error('Twig templater error // '.$e->getRawMessage());
         }
         catch(\Twig_Error_Syntax $e){
-            throw new ex\Error($this,'Twig templater error // '.$e->getRawMessage());
+            throw new ex\Error('Twig templater error // '.$e->getRawMessage());
         }
     }
 }

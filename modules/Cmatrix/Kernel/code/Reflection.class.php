@@ -25,14 +25,14 @@ class Reflection {
     function __get($name){
         switch($name){
             case 'Instance' : return $this->Instance;
-            default : throw new ex\Error($this,'class [' .get_class($this). '] property [' .$name. '] is not defined.');
+            default : throw new ex\Error('class [' .get_class($this). '] property [' .$name. '] is not defined.');
         }
     }
 
     // --- --- --- --- --- --- ---
     function __set($name,$value){
         switch($name){
-            default : throw new ex\Error($this,'class [' .get_class($this). '] property [' .$name. '] is not defined.');
+            default : throw new ex\Error('class [' .get_class($this). '] property [' .$name. '] is not defined.');
         }
     }
     
@@ -64,7 +64,9 @@ class Reflection {
     
     // --- --- --- --- --- --- ---
     protected function getInstanceValue($key,$_fun){
-        if(!$_fun instanceof \Closure) throw new ex\Error($this,'invalid instance [' .$key. '] of function');
+        //dump(static::$INSTANCES[$this->Key]);
+        
+        if(!$_fun instanceof \Closure) throw new ex\Error('invalid instance [' .$key. '] of function');
         
         if(static::$INSTANCES[$this->Key]->$key) return static::$INSTANCES[$this->Key]->$key;
         return static::$INSTANCES[$this->Key]->$key = $this->$key = $_fun();

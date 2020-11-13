@@ -1,7 +1,8 @@
 {
     "form" : {
         "type" : "twig",
-        "parent" : "Cmatrix/Web/custom/forms/master",
+        "_parent" : "Cmatrix/Web/custom/forms/master",
+        "parent" : "",
         "style" : [
             "Cmatrix/Web/custom/404/resources/main.css"
         ],

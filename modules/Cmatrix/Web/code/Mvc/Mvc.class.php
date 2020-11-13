@@ -62,9 +62,9 @@ class Mvc {
     private function getMyController(){
         $Type = ide\Form::get($this->Url)->Type;
         
-        if(!isset(self::$CONTROLLES[$Type])) throw new ex\Error($this,'controller class [' .$Type. '] is not defined.');
-        if(!isset(self::$VIEWS[$Type]))      throw new ex\Error($this,'view class [' .$Type. '] is not defined.');
-        if(!isset(self::$MODELS[$Type]))     throw new ex\Error($this,'modell class [' .$Type. '] is not defined.');
+        if(!isset(self::$CONTROLLES[$Type])) throw new ex\Error('controller class [' .$Type. '] is not defined.');
+        if(!isset(self::$VIEWS[$Type]))      throw new ex\Error('view class [' .$Type. '] is not defined.');
+        if(!isset(self::$MODELS[$Type]))     throw new ex\Error('modell class [' .$Type. '] is not defined.');
         
         $ControllerClass = self::$CONTROLLES[$Type];
         $ViewClass       = self::$VIEWS[$Type];
