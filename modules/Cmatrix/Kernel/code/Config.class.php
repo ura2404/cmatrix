@@ -40,10 +40,9 @@ class Config extends Reflection {
                 array_shift($arr);
                 return isset($ini[$ind]) ? $_fun($arr,$ini[$ind]) : $default;
             }
-            else return isset($ini[$arr[0]]) ? $ini[$arr[0]] : ($default || is_array($default) ? $default : false);
+            else return array_key_exists($arr[0],$ini) ? $ini[$arr[0]] : ($default ? $default : false);
         };
         return $_fun(explode("/",$path),$this->Data);
-        
     }
     
     // --- --- --- --- --- --- --- ---
@@ -52,8 +51,8 @@ class Config extends Reflection {
     static function get($url){
         $Path = CM_ROOT.CM_DS .str_replace('/',CM_DS,$url);
         
-        if(!file_exists($Path)) throw new ex\Error('config file path ['.$Path.'] not validate.');
-
+        if(!file_exists($Path)) throw new ex\Error('config file path ['.$Path.'] not found.');
+        
         return self::reg($url,Json::decode(file_get_contents($Path)));
     }
     

@@ -83,6 +83,7 @@ class Cache extends kernel\Reflection{
     public function getKey($key){
         return str_replace('/','^',$key);
     }
+    
     // --- --- --- --- --- --- --- ---
     public function getPath($key){
         $Path = $this->Path .'/'. $this->getKey($key);
@@ -91,8 +92,7 @@ class Cache extends kernel\Reflection{
 
     // --- --- --- --- --- --- --- ---
     public function putValue($key,$value){
-        $Key = str_replace('/','^',$key);
-        $Path = $this->Path .'/'. $Key;
+        $Path = $this->getPath($key);
 
         try{
             file_put_contents($Path,$value);
@@ -109,14 +109,12 @@ class Cache extends kernel\Reflection{
     // --- --- --- --- --- --- --- ---
     public function putJsonValue($key,array $value){
         $Value = Json::encode($value);
-        
         $this->putValue($key,$Value);
     }
     
     // --- --- --- --- --- --- --- ---
     public function getValue($key){
-        $Key = str_replace('/','^',$key);
-        $Path = $this->Path .'/'. $Key;
+        $Path = $this->getPath($key);
         return file_exists($Path) ? file_get_contents($Path) : false;
     }    
     
@@ -128,16 +126,28 @@ class Cache extends kernel\Reflection{
     
     // --- --- --- --- --- --- --- ---
     public function isExists($key){
-        $Key = str_replace('/','^',$key);
-        $Path = $this->Path .'/'. $Key;
+        $Path = $this->getPath($key);
         return file_exists($Path);
     }
 
     // --- --- --- --- --- --- --- ---
     public function copy($key,$path){
-        $Path = $this->Path .'/'. $key;
+        $Path = $this->getPath($key);
         copy($path,$Path);
     }
+    
+    // --- --- --- --- --- --- --- ---
+    public function updateFile($key,$path){
+        $Path = $this->getPath($key);
+        
+        if(
+            file_exists($path) && (
+                !$this->isExists($key)
+                || filesize($path) != filesize($Path)
+            )
+        ) $this->copy($key,$path);
+    }
+    
     
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---

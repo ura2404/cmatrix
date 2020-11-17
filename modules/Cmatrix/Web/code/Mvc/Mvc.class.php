@@ -8,7 +8,7 @@
 
 namespace Cmatrix\Web\Mvc;
 use \Cmatrix\Kernel\Exception as ex;
-use \Cmatrix\Web\Ide as ide;
+use \Cmatrix\Web as web;
 
 class Mvc {
 
@@ -60,7 +60,7 @@ class Mvc {
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     private function getMyController(){
-        $Type = ide\Form::get($this->Url)->Type;
+        $Type = web\Ide\Form::get($this->Url)->Type;
         
         if(!isset(self::$CONTROLLES[$Type])) throw new ex\Error('controller class [' .$Type. '] is not defined.');
         if(!isset(self::$VIEWS[$Type]))      throw new ex\Error('view class [' .$Type. '] is not defined.');

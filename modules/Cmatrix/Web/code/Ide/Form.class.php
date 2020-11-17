@@ -9,36 +9,42 @@
 namespace Cmatrix\Web\Ide;
 use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Exception as ex;
+use \Cmatrix\Web as web;
 
 class Form extends kernel\Reflection {
+    static $C;
     static $INSTANCES = [];
     protected $Url;
     
     protected $_Path;
-    protected $_Json;
+    protected $_Config;
     protected $_Type;
     protected $_Parent;
-    
+    protected $_Styles;
+    protected $_Jss;
     protected $_CacheName;
+    
+    private $Types = ['html','php','element','twig'];
     
     // --- --- --- --- --- --- --- ---
     function __construct($url){
         $this->Url = $url;
         parent::__construct($url);
         
-        if(CM_MODE === 'development'){
+        if(CM_MODE === 'development' && !self::$C++){
             $this->createCache();
         }
-        
     }
     
     // --- --- --- --- --- --- --- ---
     function __get($name){
         switch($name){
-            case 'Path' : return $this->getMyPath();
-            case 'Json' : return $this->getMyJson();
-            case 'Type' : return $this->getMyType();
-            case 'Parent' : return $this->getMyParent();
+            case 'Path'      : return $this->getMyPath();
+            case 'Config'    : return $this->getMyConfig();
+            case 'Type'      : return $this->getMyType();
+            case 'Parent'    : return $this->getMyParent();
+            case 'Styles'    : return $this->getMyStyles();
+            case 'Jss'       : return $this->getMyJss();
             case 'CacheName' : return $this->getMyCacheName();
             default : return parent::__get($name);
         }
@@ -57,47 +63,83 @@ class Form extends kernel\Reflection {
     }
     
     // --- --- --- --- --- --- --- ---
-    private function getMyJson(){
-        return $this->getInstanceValue('_Json',function(){
-            return json_decode(file_get_contents($this->Path.'/config.json'),true);
+    private function getMyConfig(){
+        return $this->getInstanceValue('_Config',function(){
+            return kernel\Config::get('/modules/'. $this->Url .'/config.json');
         });
     }
     
     // --- --- --- --- --- --- --- ---
     private function getMyType(){
         return $this->getInstanceValue('_Type',function(){
-            if(!isset($this->Json['form']['type'])) throw new ex\Error('form [' .$this->Url. '] type is not defined.');
-            return $this->Json['form']['type'];
+            if(($Type = $this->Config->getValue('form/type'))===false) throw new ex\Error('form "' .$this->Url. '" type is not defined.');
+            if(!in_array($Type,$this->Types)) throw new ex\Error('form "' .$this->Url. '" type "' .$Type. '"is not valid.');
+            return $Type;
         });
     }
     
     // --- --- --- --- --- --- --- ---
     private function getMyParent(){
         return $this->getInstanceValue('_Parent',function(){
-            if(isset($this->Json['form']) && !array_key_exists('parent',$this->Json['form'])) throw new ex\Error('form [' .$this->Url. '] parent is not defined.');
-            return $this->Json['form']['parent'];
+            if(($Parent = $this->Config->getValue('form/parent'))===false) throw new ex\Error('form "' .$this->Url. '" parent is not defined.');
+            return $Parent;
+        });
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    private function getMyStyles(){
+        return $this->getInstanceValue('_Styles',function(){
+            if(($Styles = $this->Config->getValue('form/styles'))===false) throw new ex\Error('form "' .$this->Url. '" styles is not defined.');
+            return is_array($Styles) ? $Styles : [];
+        });
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    private function getMyJss(){
+        return $this->getInstanceValue('_Jss',function(){
+            if(($Jss = $this->Config->getValue('form/jss'))===false) throw new ex\Error('form "' .$this->Url. '" jss is not defined.');
+            return is_array($Jss) ? $Jss : [];
         });
     }
     
     // --- --- --- --- --- --- --- ---
     private function getMyCacheName(){
         return $this->getInstanceValue('_CacheName',function(){
-            $Pos = strrpos($this->Url,'.');
-            $Name = substr($this->Url,0,$Pos);
-            $Ext = substr($this->Url,$Pos+1);
-            
-            return md5($Name) .'.'. $Ext;
+            return md5($this->Url.'/form') .'.'. $this->Type;
         });
     }
     
     // --- --- --- --- --- --- --- ---
     private function createCache(){
         $Cache = kernel\Ide\Cache::get('forms');
-        dump($this->CacheName);
-        dump($this->Path);
-        if(!$Cache->isExists($this->CacheName)) $Cache->copy($this->CacheName,$Path);
+        $Form = file_get_contents($this->Path.'/form.'.$this->Type);
         
-         
+        $_styles = function() use(&$Form){
+            $Styles = $this->Styles;
+            $Arr = array_map(function($value){
+                return web\Resource::get($value)->Link;
+            },$this->Styles);
+            dump($Arr);
+            
+            
+            //dump($Styles,444);
+            
+            /*
+            //if(!array_key_exists('styles',$this->Config) || !count($this->Config['styles'])) return; 
+            
+            
+            $Content = str_replace('{% block blockStyle %}{% endblock %}','{% block blockStyle %}'. implode('',$Arr) .'{% endblock %}',$Content);
+            */
+        };
+        
+        $_jss = function() use(&$Form){
+            if(!array_key_exists('jss',$this->Config) || !count($this->Config['jss'])) return;
+        };
+        
+        $_styles();
+        $_jss();
+        
+        $Cache->putValue($this->CacheName,$Form);
     }
 
     // --- --- --- --- --- --- --- ---
@@ -107,6 +149,10 @@ class Form extends kernel\Reflection {
         return new self($url);
     }
 }
+
+
+
+
 
 
 

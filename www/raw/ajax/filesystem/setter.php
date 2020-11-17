@@ -25,6 +25,7 @@ try{
 	$length = file_put_contents($path,$content);
 	if($length !== strlen($content)) throw new \Exception('Файл [' .$file. '] записан не верно');
 	
+	/*
     // --- временный костыль
 	// --- файл *.twig скопировать в кэш
 	//\Cmatrix\Kernel\Ide\Module::get();
@@ -50,6 +51,7 @@ try{
         
         \Cmatrix\Kernel\Ide\Form::cache($fun_project($path));
 	}
+	*/
 	
 	/*
     $fun_name = function($arr){

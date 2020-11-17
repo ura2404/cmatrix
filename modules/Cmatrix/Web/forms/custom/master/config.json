@@ -1,0 +1,13 @@
+{
+    "form" : {
+        "type" : "twig",
+        "parent" : null,
+        "styles" : [
+            "Cmatrix/Web/forms/custom/master/master.css"
+        ],
+        "vendorStyles" : [
+            "/www/res/fonts/fontawesome.com/5.14.0/css/all.css"
+        ],
+        "jss" : null
+    }
+}

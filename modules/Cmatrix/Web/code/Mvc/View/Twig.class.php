@@ -9,6 +9,7 @@
 namespace Cmatrix\Web\Mvc\View;
 use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Exception as ex;
+use \Cmatrix\Web as web;
 
 class Twig extends \Cmatrix\Web\Mvc\View {
 
@@ -22,9 +23,9 @@ class Twig extends \Cmatrix\Web\Mvc\View {
     
     // --- --- --- --- --- --- --- ---
     protected function getMyCacheKey(){
-        $Key = $this->Url .'.twig';
-        
+        $Key = web\Ide\Form::get($this->Url)->CacheName;
         $Cache = kernel\Ide\Cache::get('forms');
+        
         if(!$Cache->isExists($Key)) throw new ex\Error('twig template cache file [' .$this->Url. '] is not found.');
         return $Cache->getKey($Key);
     }

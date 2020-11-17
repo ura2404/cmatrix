@@ -4,6 +4,7 @@
         "parent" : null,
         "name" : "default page",
         "info" : "Страница 404",
-        "form" : "Cmatrix/Web/forms/custom/404"
+        "form" : "Cmatrix/Web/forms/custom/master",
+        "_form" : "Cmatrix/Web/forms/custom/404"
     }
 }

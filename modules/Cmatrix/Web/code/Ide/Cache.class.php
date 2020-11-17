@@ -13,8 +13,6 @@ use \Cmatrix\Kernel\Exception as ex;
 class Cache extends kernel\Ide\Cache {
     static $INSTANCES = [];
     
-    protected $_Root;
-    
     // --- --- --- --- --- --- --- ---
     function __get($name){
         switch($name){

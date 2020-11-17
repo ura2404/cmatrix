@@ -51,6 +51,7 @@ class Model {
         
         $Ob = new $ClassName($this->Url);
         $Data = $Ob->getData();
+        if(!is_array($Data)) return [];
         
         $UrlParent = ide\Form::get($this->Url)->Parent;
         $DataParent = $UrlParent ? (new Model($UrlParent))->Data : [];

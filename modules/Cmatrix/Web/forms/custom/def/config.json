@@ -1,6 +1,8 @@
 {
     "form" : {
         "type" : "html",
-        "parent" : null
+        "parent" : null,
+        "styles" : null,
+        "jss" : null
     }
 }
