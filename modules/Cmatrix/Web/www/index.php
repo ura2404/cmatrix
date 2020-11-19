@@ -3,9 +3,6 @@ require_once'common.php';
 
 //dump(CM_MODE);
 
-dump(php_uname());
-dump(uniqid('q_',true));
-
 switch(CM_MODE){
     case 'development' :
         ini_set('display_errors',1);
