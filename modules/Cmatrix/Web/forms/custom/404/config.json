@@ -1,11 +1,11 @@
 {
     "form" : {
         "type" : "twig",
-        "_parent" : "Cmatrix/Web/forms/custom/master",
-        "parent" : null,
+        "parent" : "Cmatrix/Web/forms/custom/master",
+        "_parent" : null,
         "styles" : [
             "Cmatrix/Web/forms/custom/404/404.css"
         ],
-        "jss" : []
+        "jss" : null
     }
 }

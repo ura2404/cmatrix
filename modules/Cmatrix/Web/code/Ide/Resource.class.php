@@ -12,11 +12,11 @@ use \Cmatrix\Kernel\Exception as ex;
 use \Cmatrix\Web as web;
 
 class Resource extends kernel\Reflection{
-    static $C;
     static $INSTANCES = [];
     
     protected $Url;
     
+    protected $_isRaw;
     protected $_Path;
     protected $_Type;
     protected $_CacheName;
@@ -28,7 +28,7 @@ class Resource extends kernel\Reflection{
         $this->Url = $url;
         parent::__construct($url);
         
-        if(CM_MODE === 'development' && !self::$C++){
+        if(!$this->isRaw && CM_MODE === 'development' && !isset(self::$INSTANCES[$this->Url])){
             $this->createCache();
         }
     }
@@ -36,6 +36,7 @@ class Resource extends kernel\Reflection{
     // --- --- --- --- --- --- --- ---
     function __get($name){
         switch($name){
+            case 'isRaw' : return $this->getMyRaw();
             case 'Path' : return $this->getMyPath();
             case 'Type' : return $this->getMyType();
             case 'CacheName' : return $this->getMyCacheName();
@@ -47,10 +48,23 @@ class Resource extends kernel\Reflection{
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
+    private function getMyRaw(){
+        return $this->getInstanceValue('_isRaw',function(){
+            return strStart($this->Url,'raw::') ? true : false;
+        });
+    }
+    
+    // --- --- --- --- --- --- --- ---
     private function getMyPath(){
         return $this->getInstanceValue('_Path',function(){
-            $Path = CM_ROOT.CM_DS. 'modules' .CM_DS. $this->Url;
-            if(!file_exists($Path)) throw new ex\Error('resource file [' .$this->Url. '] is not found.');
+            if(!$this->isRaw){
+                $Path = CM_ROOT.CM_DS. 'modules' .CM_DS. $this->Url;
+                if(!file_exists($Path)) throw new ex\Error('resource file [' .$this->Url. '] is not found.');
+            }
+            else{
+                $Path = strAfter($this->Url,'raw::');
+                dump($Path);
+            }
             return $Path;
         });
     }

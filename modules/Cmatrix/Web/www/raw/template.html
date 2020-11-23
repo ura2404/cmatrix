@@ -1,0 +1,135 @@
+<html>
+    <head>
+        <title>RAW Editor | Cmatrix</title>
+        
+        <meta name="whome" content="{{ whome }}"/>
+        <link rel="icon" href="res/favicon.ico" type="image/x-icon">
+        
+        <script type="text/javascript" src="res/jquery/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript" src="res/jquery/jquery.md5.js"></script>
+        <script type="text/javascript" src="res/jquery/jquery-cm.js"></script>
+
+	<!-- 
+        <script type="text/javascript" src="res/jeasyui/1.5.3/jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="res/jeasyui/1.5.3/locale/easyui-lang-ru.js"></script>
+        <link rel="stylesheet" type="text/css" href="res/jeasyui/1.5.3/themes/icon.css"/>
+        <link rel="stylesheet" type="text/css" href="res/jeasyui/1.5.1/themes/bootstrap/theme-cm.css"/>
+	-->
+
+        <script type="text/javascript" src="res/jeasyui/1.5.5.2/jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="res/jeasyui/1.5.5.2/locale/easyui-lang-ru.js"></script>
+        <link rel="stylesheet" type="text/css" href="res/jeasyui/1.5.5.2/themes/icon.css"/>
+        <!-- <link rel="stylesheet" type="text/css" href="res/jeasyui/1.5.5.2/themes/default/easyui.css"/> -->
+	    <link rel="stylesheet" type="text/css" href="res/jeasyui/1.5.5.2/themes/material-teal/easyui.css"/>
+
+        <!-- <link rel="stylesheet" type="text/css" href="res/jeasyui/jeasyui-cm.css"/> -->
+        <script type="text/javascript" src="res/jeasyui/jeasyui-cm.js"></script>
+        <!-- <link rel="stylesheet" type="text/css" href="/dev31/.pro/easyui/res/widget.css"/> -->
+        
+        <link rel="stylesheet" href="res/fonts/awesome/css/font-awesome.css">
+        
+        <script type="text/javascript" src="res/ace/1.2.3/src-noconflict/ace.js"></script>
+        <script type="text/javascript" src="res/ace/1.2.3/src-noconflict/ext-language_tools.js"></script>
+        <script type="text/javascript" src="res/ace/1.2.3/src-noconflict/ext-emmet.js"></script>
+        <script type="text/javascript" src="res/ace/emmet.js"></script>
+        
+        <link rel="stylesheet" type="text/css" href="res/main.css"/>
+        <script type="text/javascript" src="res/main.js"></script>
+        <script type="text/javascript" src="res/wi.eu.js"></script>
+    </head>
+
+    <body class="easyui-layout">
+        <!--
+        <div class="top" data-options="region:'north',border:false">
+            <i class="fa fa-1x fa-delicious"></i>
+            <span>RAW Editor</span>
+        </div>
+        -->
+        <div class="center" data-options="region:'center',border:false">
+            <div class="easyui-tabs" data-options="fit:true,plain:true,_pill:true">
+                
+                <div id="filesystem" title="Файловая система [ {{ home }} ]">
+                    <div class="easyui-layout" data-options="fit:true">
+                        
+                        <div class="tree" data-options="region:'west',border:false,split:true,width:200">
+                            <div id="filesystem-tree" class="easyui-tree" data-options="fit:true,_lines:true,url:'ajax/filesystem/tree.php',onClick:filesystem.tree.onClick,onContextMenu:filesystem.tree.onContextMenu">
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="tabs" data-options="region:'center',border:false">
+                            <div id="filesystem-tabs" class="easyui-tabs" 
+                                data-options="fit:true,plain:true,_pill:true,onAdd:filesystem.tabs.onAdd,onSelect:filesystem.tabs.onSelect,onClose:filesystem.tabs.onClose,onBeforeClose:filesystem.tabs.onBeforeClose"
+                            >
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+        <div class="bottom" data-options="region:'south',border:false">
+            <span>RAW Editor v {{ version }} // Cmatrix &copy; 2012 - {{ now }}</span>
+        </div>
+        
+        <!-- меню для неизменяемой папки -->
+        <div id="menu-folder0" class="easyui-menu">
+            <div data-options="name:'reload',iconCls:'fa fa-refresh'">Обновить</div>
+            <div class="menu-sep"></div>
+            <div data-options="name:'folder'">Добавить папку</div>
+            <div data-options="name:'file'">Добавить файл</div>
+            <div class="menu-sep"></div>
+            <div class="raw-paste" data-options="name:'paste',disabled:true,iconCls:'fa fa-paste'">Вставить</div>
+            <div class="raw-empty" data-options="name:'empty',disabled:true,iconCls:'fa fa-trash-o'">Очистить буфер</div>
+            <div class="menu-sep"></div>
+            <div data-options="name:'upload',iconCls:'fa fa-upload'">Загрузить</div>
+        </div>
+        
+        <!-- меню для изменяемой папки -->
+        <div id="menu-folder1" class="easyui-menu">
+            <div data-options="name:'reload',iconCls:'fa fa-refresh'">Обновить</div>
+            <div class="menu-sep"></div>
+            <div data-options="name:'folder'">Добавить папку</div>
+            <div data-options="name:'file'">Добавить файл</div>
+            <div class="menu-sep"></div>
+            <div data-options="name:'rename',iconCls:'fa fa-pencil'">Переименовать</div>
+            <div class="menu-sep"></div>
+            <div class="raw-copy" data-options="name:'copy',disabled:false,iconCls:'fa fa-copy'">Копировать</div>
+            <div class="raw-move" data-options="name:'move',disabled:false,iconCls:'fa fa-cut'">Вырезать</div>
+            <div class="raw-paste" data-options="name:'paste',disabled:true,iconCls:'fa fa-paste'">Вставить</div>
+            <div class="raw-empty" data-options="name:'empty',disabled:true,iconCls:'fa fa-trash-o'">Очистить буфер</div>
+            <div class="menu-sep"></div>
+            <div data-options="name:'upload',iconCls:'fa fa-upload'">Загрузить</div>
+            <div class="menu-sep"></div>
+            <div data-options="name:'delete',iconCls:'fa fa-remove '">Удалить</div>
+        </div>
+
+        <!-- меню для файла -->
+        <div id="menu-file" class="easyui-menu">
+            <div data-options="name:'rename',iconCls:'fa fa-pencil'">Переименовать</div>
+            <div class="menu-sep"></div>
+            <div class="raw-copy" data-options="name:'copy',disabled:false,iconCls:'fa fa-copy'">Копировать</div>
+            <div class="raw-move" data-options="name:'move',disabled:false,iconCls:'fa fa-cut'">Вырезать</div>
+            <!-- <div class="raw-paste" data-options="name:'paste',disabled:true,iconCls:'fa fa-paste'">Вставить</div> -->
+            <div class="raw-empty" data-options="name:'empty',disabled:true,iconCls:'fa fa-trash-o'">Очистить буфер</div>
+            <div class="menu-sep"></div>
+            <div data-options="name:'delete',iconCls:'fa fa-remove '">Удалить</div>
+        </div>
+        
+        <!-- загрузка -->
+        <div class="raw-upload hidden _easyui-dialog" title="Загрузить файл..." style="_width:500px;_height:400px;text-align:center;padding:20px;" 
+            data-options="iconCls:'icon-redo',resizable:true,modal:true,onBeforeOpen:filesystem.dialog.onBeforeOpen,onClose:filesystem.dialog.onClose"
+        >
+            <form class="raw-form" enctype="multipart/form-data" _method="post" data-options="url:'ajax/filesystem/upload.php',iframe:false">
+                <input name="files[]" class="raw-filebox _easyui-filebox" data-options="validType:'maxFileSize[1024000000]',buttonText:'Выберите файл',buttonAlign:'left'" style="width:450px" />
+                <div class="raw-progressbar _easyui-progressbar" _data-options="value:60" style="width:450px;;margin-top:15px;"></div>
+                <div>
+                    <a href="#" class="raw-linkbutton" data-options="plain:true,disabled:true" style="width:250px;margin-top:15px;outline:1px solid #eee">Загрузить</a>
+                </div>
+            </form>
+        </div>
+        
+    </body>
+</html>

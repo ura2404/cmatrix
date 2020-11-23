@@ -1,0 +1,121 @@
+a img { border: none; }
+a, a:focus { outline: none; }
+
+.clear { clear: both; }
+
+body {
+    font: 110% Arsenal, Arial !important;
+}
+
+@font-face {
+    font-family : 'Arsenal';
+    font-weight : 400;
+    font-style : normal;
+    src: url('fonts/google/Arsenal-Regular.ttf') format('truetype')
+}
+
+@font-face {
+    font-family : 'Arsenal';
+    font-weight : 700;
+    font-style : normal;
+    src: url('fonts/google/Arsenal-Bold.ttf') format('truetype')
+}
+
+@font-face {
+    font-family : 'Arsenal';
+    font-weight : 400;
+    font-style : italic;
+    src: url('fonts/google/Arsenal-Italic.ttf') format('truetype')
+}
+
+@font-face {
+    font-family : 'Arsenal';
+    font-weight : 700;
+    font-style : italic;
+    src: url('fonts/google/Arsenal-BoldItalic.ttf') format('truetype')
+}
+
+.top {
+    padding : 8px 10px;
+    font-size : 1.2rem;
+    
+}
+
+.center{
+    padding : 0 10px;
+}
+
+.bottom {
+    padding : 0 10px;
+    text-align : center;
+}
+
+.hidden {
+    display : none;
+}
+
+.fa {
+    color: #5d5d5d;
+}
+.menu-item.menu-active .fa { color: white; }
+.menu-item.menu-active.menu-item-disabled .fa { color: #5d5d5d; }
+
+/* линия split */
+.layout-split-west {    
+    border-right: 5px solid #f7f7f7;
+}
+
+.window-shadow {
+    display : none !important;
+}
+
+.window .window-body {
+    border-width: 0;
+    background-color : white;
+}
+
+.window-header {
+    padding: 5px 10px !important;
+}
+
+.window .window-header .panel-tool {
+    top: 50%;
+    margin-top: -8px;
+    margin-right: 5px;
+}
+
+.panel-header {
+    background: #dfdfdf !important;
+    /* border-width: 1px 1px 1px 1px; */
+    border-width: 0;
+}
+.dialog-toolbar, .dialog-button {
+    border-width: 0;
+    background-color : white;
+}
+
+.tabs {
+    border-width: 0;
+    _margin-bottom : 7px;
+    padding-left: 0;
+}
+
+.tabs-panels {
+    border-width: 1px 0 1px 0;
+}
+
+.tabs li.tabs-selected a.tabs-inner {
+    border-bottom: 2px solid #39c;
+}
+
+.messager-body {
+    padding: 10px 10px 10px 10px;
+}
+
+/* дерево */
+.tree-icon.tree-file,
+.tree-icon.tree-folder {
+    font-size: 1.2em;
+    background : none;
+    /* width : 0; */
+}

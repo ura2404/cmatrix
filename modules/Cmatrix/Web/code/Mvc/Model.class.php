@@ -50,8 +50,10 @@ class Model {
         if(!class_exists($ClassName)) $_content($ClassName,$PathModel);
         
         $Ob = new $ClassName($this->Url);
-        $Data = $Ob->getData();
-        if(!is_array($Data)) return [];
+        //$Data = $Ob->getData();
+        
+        //if(!is_array($Data)) return [];
+        if(!is_array($Data = $Ob->getData())) $Data = [];
         
         $UrlParent = ide\Form::get($this->Url)->Parent;
         $DataParent = $UrlParent ? (new Model($UrlParent))->Data : [];

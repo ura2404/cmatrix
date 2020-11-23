@@ -58,26 +58,24 @@ class Page extends kernel\Reflection{
         $Config = kernel\Config::get('www/config.json');
         $PageUrl = $this->Url === '' ? $Config->getValue('pages/def') : $Config->getValue('pages/aliases/'. $this->Url);
         
-        // 2. если нет url в конфиге, то найти url 404-ой страницв 
-        //404
-        if(!$PageUrl) $PageUrl = $Config->getValue('pages/aliases/404');
-        if(!$PageUrl) throw new web\Exception('page "404" is not defined.');
-        
-        //dump($PageUrl);
-        
-        //3. вывести html
-        /*
-        $FormUrl = web\Ide\Page::get($PageUrl)->Form;
-        $Html = web\Mvc\Mvc::get($FormUrl)->Html;
-        return $Html;
-        */
         try{
+            // 2. если нет url в конфиге, то найти url 404-ой страницв 
+            //404
+            if(!$PageUrl) $PageUrl = $Config->getValue('pages/aliases/404');
+            if(!$PageUrl) throw new ex\Error('page "404" is not defined.');
+            
+            //3. вывести html
             $FormUrl = web\Ide\Page::get($PageUrl)->Form;
+            //dump($FormUrl);
+            
             $Html = web\Mvc\Mvc::get($FormUrl)->Html;
+            //dump($Html);
+            
             return $Html;
         }
         // 4. если что-то пошло не так, вывести страницу exception, если она есть, если её нет, то просто вывести текст ошибки в браузерa
         catch(ex\Error $e){
+            
             $_noweb = function() use($e){
                 $Message = \Cmatrix\Kernel\Exception::createMessage($e);
                 return $Message;

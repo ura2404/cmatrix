@@ -3,9 +3,12 @@
         "type" : "twig",
         "parent" : null,
         "styles" : [
-            "Cmatrix/Web/forms/custom/master/master.css",
-            "raw::/www/res/fonts/fontawesome.com/5.14.0/css/all.css"
+            "raw::fonts/google/Arsenal/font.css",
+            "raw::fonts/fontawesome.com/5.14.0/css/all.css",
+            "Cmatrix/Web/forms/custom/master/master.css"
         ],
-        "jss" : null
+        "jss" : [
+            "Cmatrix/Web/forms/custom/master/master.js"
+        ]
     }
 }

@@ -10,7 +10,7 @@
         
         {#<link rel="stylesheet" href="{{ awesome }}/css/font-awesome.css"/>#}
         
-        {% block blockStyle %}{% endblock %}
+        {% block blockStyles %}{% endblock %}
     </head>
     <body>
         <h2 class="header">
@@ -27,6 +27,6 @@
             <div>{{ app.name }} &copy; v{{ app.version }} by {{ app.author }} {{ app.period }}</div>            
         </div>
         
-        {% block blockJs %}{% endblock %}
+        {% block blockJss %}{% endblock %}
     </body>
 </html>

@@ -1,0 +1,164 @@
+/**
+ * jEasyUI css addon by cmatrix.ru
+ */
+ 
+/* ------------------------------------------------------- */
+/*  высота окна ввода текста в messager */
+.messager-input { 
+    padding: 5px 1px !important;
+    border-radius: 3px
+} 
+
+/* ------------------------------------------------------- */
+/* цвет маски для модальности */
+.window-proxy-mask, .window-mask {
+    background: #222;
+}
+
+/* ------------------------------------------------------- */
+/* выравнивание отступа для messenger, по умолчанию 10px 10px 10px 30px*/
+.messager-body {
+    padding: 10px;
+}
+
+/* ------------------------------------------------------- */
+/* --- отработка длинного title (устранения эффекта "наползания" текста title панели на кнопки toolbox'а) --- */
+.panel-title{
+    white-space: nowrap;     /* Запрещаем перенос строк */
+    overflow: hidden;        /* Обрезаем содержимое */
+    text-overflow: ellipsis; /* Многоточие */
+    /* padding-right: 40px; */     /* Место под иконки toolbar */
+}
+
+/* ------------------------------------------------------- */
+/* --- сепаратор для toolbar --- */
+.tb-separator {
+    height: 22px;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #fff;
+    /*margin: 2px 1px;*/
+    margin: 0 12px 0 15px;
+    position: relative;
+    top: 3px;
+}
+
+/* ------------------------------------------------------- */
+/* --- цвет фона выпадающего списка --- */
+.combo-panel, .calendar-dtable {
+    background-color: #EAFDFF;
+}
+
+/* --- жирный текст в шапке таблицы --- */
+.datagrid-view2 td[colspan]{
+    /*background-color:#0081C2;*/
+    background-color:#00B7C2;
+    font-weight: bold;
+    color: white;
+}
+.datagrid-htable .datagrid-header-row{
+    background-color:#20C2CC;
+}
+.datagrid-view2 .datagrid-header-row .datagrid-cell {
+    /*font-weight: bold;*/
+    /*font-family: Arial Tahoma;*/
+    /*color: #002469;*/
+    color: white;
+}
+.datagrid-view2 .datagrid-header-row .datagrid-header-over .datagrid-cell{
+    color:grey !important;
+}
+
+/* ------------------------------------------------------- */
+/* --- сброс радиусов --- */
+/*.l-btn,.l-btn-plain:hover,
+.tabs-header .tabs-pill li a.tabs-inner,
+.textbox, .textbox .textbox-text, .textbox .textbox-button, .textbox .textbox-button:hover,
+.searchbox .l-btn-plain, .searchbox .l-btn-plain:hover, .searchbox a.m-btn-plain-active, .searchbox .m-btn-active, 
+.window,.window-shadow,
+.progressbar, .progressbar-value,
+.menu-active, .menu-shadow,
+.m-btn-plain-active,
+.s-btn-plain-active,
+.switchbutton, .switchbutton-on, .switchbutton-off, .switchbutton-handle
+.switchbutton-on, .switchbutton-reversed .switchbutton-off
+.switchbutton-off, .switchbutton-reversed .switchbutton-on,
+.tooltip,
+.calendar-day
+{
+  -moz-border-radius: 2px 2px 2px 2px !important;
+  -webkit-border-radius: 2px 2px 2px 2px !important;
+  border-radius: 2px 2px 2px 2px !important;
+}*/
+
+/* --- суббота в календаре --- */
+.calendar-saturday {
+    color: #00B3EE;
+}
+
+/* ------------------------------------------------------- */
+/* --- ширина окна номера страницы в пейджинаторе --- */
+.pagination-num {
+    width : 3em !important;
+    text-align: center;
+}
+
+/* ------------------------------------------------------- */
+/* --- ширина колонки номера строки датагрида --- */
+.datagrid-view1 .datagrid-cell-rownumber, .datagrid-header-rownumber{
+    width: 42px !important;
+}
+.datagrid-view1, .datagrid-view1 .datagrid-btable {
+    width: 43px !important;
+}
+
+/* --- для высоты ячейки таблицы --- */
+.datagrid-cell, .datagrid-cell-group {
+    padding: 1px 5px !important;
+}
+
+/* --- высота полоски progressbar --- */
+.progressbar {
+    height: 26px !important;
+}
+
+
+/** --- --- Tabs --- --- **/
+/* --- --- --- --- --- --- */
+/* настройка панели табы */
+.tabs-panels > .panel {
+    padding-top: 2px;        /* отступ свержу для панели табы */
+}
+
+/* --- --- --- --- --- --- */
+/* настройка кнопок скролинга табов */
+.tabs-scroller-right, .tabs-scroller-left {
+    background-color : white;        /* белый фон */
+}
+
+/* --- --- --- --- --- --- */
+/*  настройка tabs-pill */
+.tabs.tabs-pill {
+    /* border: none; */            /* убрать подчёркивание под табой */
+    padding-bottom: 4px;     /* отступ снизу для контейнера табов */
+}
+
+/* --- --- --- --- --- --- */
+/* настройка кнопки управления табами */
+.tabs-tool {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    border-bottom : 1px solid #d4d4d4;
+    background-color : white;
+}
+
+/** смещение */
+.tabs-closable {
+    padding-right: 12px !important;
+}
+
+
+.window-shadow {
+    display : none !important;
+}

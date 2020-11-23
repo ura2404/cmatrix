@@ -12,7 +12,6 @@ use \Cmatrix\Kernel\Exception as ex;
 use \Cmatrix\Web as web;
 
 class Form extends kernel\Reflection {
-    static $C;
     static $INSTANCES = [];
     protected $Url;
     
@@ -28,10 +27,11 @@ class Form extends kernel\Reflection {
     
     // --- --- --- --- --- --- --- ---
     function __construct($url){
+        
         $this->Url = $url;
         parent::__construct($url);
         
-        if(CM_MODE === 'development' && !self::$C++){
+        if(CM_MODE === 'development' && !isset(self::$INSTANCES[$this->Url])){
             $this->createCache();
         }
     }
@@ -57,7 +57,7 @@ class Form extends kernel\Reflection {
     private function getMyPath(){
         return $this->getInstanceValue('_Path',function(){
             $Path = CM_ROOT.CM_DS. 'modules' .CM_DS. $this->Url;
-            if(!file_exists($Path) || !file_exists($Path .'/config.json')) throw new ex\Error('form descriptor [' .$this->Url. '] is not found.');
+            if(!file_exists($Path) || !file_exists($Path .CM_DS.'config.json')) throw new ex\Error('form descriptor [' .$this->Url. '] is not found.');
             return $Path;
         });
     }
@@ -65,7 +65,7 @@ class Form extends kernel\Reflection {
     // --- --- --- --- --- --- --- ---
     private function getMyConfig(){
         return $this->getInstanceValue('_Config',function(){
-            return kernel\Config::get('/modules/'. $this->Url .'/config.json');
+            return kernel\Config::get(CM_DS.'modules'. CM_DS.$this->Url .'/config.json');
         });
     }
     
@@ -111,35 +111,45 @@ class Form extends kernel\Reflection {
     
     // --- --- --- --- --- --- --- ---
     private function createCache(){
-        $Cache = kernel\Ide\Cache::get('forms');
-        $Form = file_get_contents($this->Path.'/form.'.$this->Type);
         
-        $_styles = function() use(&$Form){
-            $Styles = $this->Styles;
+        $Cache = kernel\Ide\Cache::get('forms');
+        $Content = file_get_contents($this->Path.'/form.'.$this->Type);
+        
+        $_parent = function() use(&$Content){
+            if(!$this->Parent) return;
+            $Content = '{% extends "'. self::get($this->Parent)->CacheName .'" %}'."\n\n" . $Content;
+        };
+        
+        $_styles = function() use(&$Content){
             $Arr = array_map(function($value){
                 return web\Resource::get($value)->Link;
             },$this->Styles);
-            dump($Arr);
             
-            
-            //dump($Styles,444);
-            
-            /*
-            //if(!array_key_exists('styles',$this->Config) || !count($this->Config['styles'])) return; 
-            
-            
-            $Content = str_replace('{% block blockStyle %}{% endblock %}','{% block blockStyle %}'. implode('',$Arr) .'{% endblock %}',$Content);
-            */
+            $Content = str_replace(
+                '{% block blockStyles %}{% endblock %}',
+                '{% block blockStyles %}'. ($this->Parent ? '{{ parent() }}' : null) . implode('',$Arr) .'{% endblock %}'
+                ,$Content
+            );
         };
         
-        $_jss = function() use(&$Form){
-            if(!array_key_exists('jss',$this->Config) || !count($this->Config['jss'])) return;
+        $_jss = function() use(&$Content){
+            $Arr = array_map(function($value){
+                return web\Resource::get($value)->Link;
+            },$this->Jss);
+            
+            $Content = str_replace(
+                '{% block blockJss %}{% endblock %}',
+                '{% block blockJss %}'. ($this->Parent ? '{{ parent() }}' : null) . implode('',$Arr) .'{% endblock %}'
+                ,$Content
+            );
         };
         
+        // --- --- --- --- --- --- ---
+        $_parent();
         $_styles();
         $_jss();
         
-        $Cache->putValue($this->CacheName,$Form);
+        $Cache->putValue($this->CacheName,$Content);
     }
 
     // --- --- --- --- --- --- --- ---

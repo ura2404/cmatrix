@@ -29,7 +29,7 @@ php_value default_charset "UTF-8"
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} !(.*)/$
-    RewriteRule ^([^res].*[^/])$ $1/ [L,R=301]
+    RewriteRule ^([^res|^cache].*[^/])$ $1/ [L,R=301]
 
     # непонятно
     #RewriteCond %{REQUEST_FILENAME} -d
@@ -56,14 +56,15 @@ php_value default_charset "UTF-8"
     # --- --- --- --- --- --- --- ---
     # Resources
     RewriteCond %{REQUEST_URI} (.*)$
-    RewriteRule ^(res/.*\..*)$ .cache/$1 [L]
+    RewriteRule ^cache/(.*\..*)$ .cache/res/$1 [L]
 
     RewriteCond %{REQUEST_FILENAME} -f
     RewriteRule (robots\.txt|sitemap\.xml)$ $1 [L]
+    RewriteRule ^(res/.*\..*)$ $1 [L]
     RewriteRule ^(.cache/res/.*\..*)$ $1 [L]
 
-#    # пропустить ресурсы без слеша в конце (к неверным ресурсам добавляется слеш)
-#    RewriteRule ^(.*\module/.*/res/.*\..*)([^/])$ $1$2 [L]
+    # пропустить ресурсы без слеша в конце (к неверным ресурсам добавляется слеш)
+    # RewriteRule ^(.cache/res/.*\..*)([^/])$ $1$2 [L]
 
     # --- --- --- --- --- --- --- ---
     # Global
