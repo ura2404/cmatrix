@@ -60,6 +60,7 @@ class Resource extends kernel\Reflection{
             if(!$this->isRaw){
                 $Path = CM_ROOT.CM_DS. 'modules' .CM_DS. $this->Url;
                 if(!file_exists($Path)) throw new ex\Error('resource file [' .$this->Url. '] is not found.');
+                dump($Path);
             }
             else{
                 $Path = strAfter($this->Url,'raw::');

@@ -11,7 +11,7 @@ class MyModel extends \Cmatrix\Web\Mvc\Model {
                 'name' => '404',
             ],
             'pic' => [
-                //'random' => $this->getMyPic(),
+                'random' => $this->getMyPic(),
             ],
             'text' => [
                 'random' => $this->getMyText()
@@ -21,7 +21,7 @@ class MyModel extends \Cmatrix\Web\Mvc\Model {
     
     // --- --- --- --- --- --- --- ---
     private function getMyPic(){
-        $Root = 'Cmatrix/custom/404/pic';
+        $Root = 'Cmatrix/Web/custom/404/pic';
         $Path = \Cmatrix\Kernel\Ide\Resource::get($Root)->Path;
         
         $Files = array_diff(scandir($Path),['.','..']);
