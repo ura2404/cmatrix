@@ -32,7 +32,7 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
     // --- --- --- --- --- --- --- ---
     protected function getMyHome(){
         return $this->getInstanceValue('_Home',function(){
-            $Config = \Cmatrix\Kernel\Config::get('www/config.json');
+            $Config = \Cmatrix\Kernel\Config::get('Cmatrix/Web/www/config.json');
             if(!($Home = $Config->getValue('web/root'))) throw new ex\Error($this,'configure variable "web.root" is not defined.');
             return $Home;
         });

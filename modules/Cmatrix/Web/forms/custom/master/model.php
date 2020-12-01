@@ -5,7 +5,7 @@ class MyModel extends \Cmatrix\Web\Mvc\Model {
     
     // --- --- --- --- --- --- --- ---
     public function getData(){
-        $this->Config = \Cmatrix\Kernel\Config::get('www/config.json');
+        $this->Config = \Cmatrix\Kernel\Config::get('Cmatrix/Web/www/config.json');
         
         return [
             'app' => [

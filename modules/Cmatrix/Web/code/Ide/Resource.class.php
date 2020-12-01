@@ -58,13 +58,13 @@ class Resource extends kernel\Reflection{
     private function getMyPath(){
         return $this->getInstanceValue('_Path',function(){
             if(!$this->isRaw){
-                $Path = CM_ROOT.CM_DS. 'modules' .CM_DS. $this->Url;
+                $Path = kernel\Ide\Part::get($this->Url)->Path .CM_DS. kernel\Url::get($this->Url)->Path;
                 if(!file_exists($Path)) throw new ex\Error('resource file [' .$this->Url. '] is not found.');
-                dump($Path);
+                dump($Path,1);
             }
             else{
                 $Path = strAfter($this->Url,'raw::');
-                dump($Path);
+                dump($Path,2);
             }
             return $Path;
         });

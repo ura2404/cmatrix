@@ -26,7 +26,7 @@ class Cache extends kernel\Ide\Cache {
     // --- --- --- --- --- --- --- ---
     private function getMyRoot(){
         return $this->getInstanceValue('_Root',function(){
-            return CM_ROOT.CM_DS .'www'. CM_DS .'.cache';
+            return kernel\Ide\Part::get('Cmatrix/Web')->Path .CM_DS.'www' .CM_DS. '.cache';
         });
     }
     

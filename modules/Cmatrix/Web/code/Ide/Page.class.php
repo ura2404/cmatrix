@@ -40,8 +40,8 @@ class Page extends kernel\Reflection{
     // --- --- --- --- --- --- --- ---
     private function getMyPath(){
         return $this->getInstanceValue('_Path',function(){
-            $Path = CM_ROOT.CM_DS. 'modules' .CM_DS. $this->Url;
-            if(!file_exists($Path) || !file_exists($Path .'/config.json')) throw new ex\Error('page descriptor [' .$this->Url. '] is not found.');
+            $Path = kernel\Ide\Part::get($this->Url)->Path .CM_DS. kernel\Url::get($this->Url)->Path;
+            if(!file_exists($Path) || !file_exists($Path .CM_DS. 'config.json')) throw new ex\Error('page descriptor [' .$this->Url. '] is not found.');
             return $Path;
         });
     }

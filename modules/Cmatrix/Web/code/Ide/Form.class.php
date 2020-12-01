@@ -56,7 +56,7 @@ class Form extends kernel\Reflection {
     // --- --- --- --- --- --- --- ---
     private function getMyPath(){
         return $this->getInstanceValue('_Path',function(){
-            $Path = CM_ROOT.CM_DS. 'modules' .CM_DS. $this->Url;
+            $Path = kernel\Ide\Part::get($this->Url)->Path .CM_DS. kernel\Url::get($this->Url)->Path;
             if(!file_exists($Path) || !file_exists($Path .CM_DS.'config.json')) throw new ex\Error('form descriptor [' .$this->Url. '] is not found.');
             return $Path;
         });
@@ -65,7 +65,7 @@ class Form extends kernel\Reflection {
     // --- --- --- --- --- --- --- ---
     private function getMyConfig(){
         return $this->getInstanceValue('_Config',function(){
-            return kernel\Config::get(CM_DS.'modules'. CM_DS.$this->Url .'/config.json');
+            return kernel\Config::get($this->Url .CM_DS. 'config.json');
         });
     }
     

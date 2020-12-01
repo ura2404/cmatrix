@@ -1,8 +1,7 @@
 <?php
-require_once'common.php';
+require_once(realpath(dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'common.php'));
 
 //dump(CM_MODE);
-
 switch(CM_MODE){
     case 'development' :
         ini_set('display_errors',1);

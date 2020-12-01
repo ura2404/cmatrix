@@ -55,7 +55,7 @@ class Page extends kernel\Reflection{
         if($this->StaticContent) return $this->StaticContent;
         
         // 1. найти url в конфиге
-        $Config = kernel\Config::get('www/config.json');
+        $Config = kernel\Config::get('Cmatrix/Web/www/config.json');
         $PageUrl = $this->Url === '' ? $Config->getValue('pages/def') : $Config->getValue('pages/aliases/'. $this->Url);
         
         try{
@@ -104,7 +104,7 @@ class Page extends kernel\Reflection{
     
     // --- --- --- --- --- --- --- ---
     private function getMyPath(){
-        $Config = kernel\Config::get('/www/config.json');
+        $Config = kernel\Config::get('Cmatrix/Web/www/config.json');
         
         $Url = $Config->getValue('pages/aliases/'. $this->Url);
         if(!$Url && $this->Url!='') throw new ex\Error('page "'.$this->Url.'" is not defined.');
