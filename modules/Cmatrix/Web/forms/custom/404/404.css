@@ -1,6 +1,7 @@
 .page {
     margin-top: 30px;
     text-align: center;
+    font-size: 4.2rem;
 }
 
 .container {
@@ -9,6 +10,7 @@
 
 .container  .message {
     margin: auto 0 auto auto;
+    font-size: 1.5rem;
 }
 
 .container .pic {

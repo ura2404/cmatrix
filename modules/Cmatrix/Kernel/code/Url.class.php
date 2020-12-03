@@ -49,7 +49,8 @@ class Url extends Reflection{
         return $this->getInstanceValue('_Module',function(){
             if(count($this->Arr) < 1) return null;
             $Arr = $this->Arr;
-            return array_shift($Arr);
+            $Module = array_shift($Arr);
+            return $Module;
         });
     }
     
@@ -59,7 +60,8 @@ class Url extends Reflection{
             if(count($this->Arr) < 2) return null;
             $Arr = $this->Arr;
             array_shift($Arr);
-            return array_shift($Arr);
+            $Part = array_shift($Arr);
+            return $Part;
         });
     }
 
@@ -70,7 +72,8 @@ class Url extends Reflection{
             $Arr = $this->Arr;
             array_shift($Arr);
             array_shift($Arr);
-            return implode('/',$Arr);
+            $Path = implode('/',$Arr);
+            return $Path;
         });
     }
     

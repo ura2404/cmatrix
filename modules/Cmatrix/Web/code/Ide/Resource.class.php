@@ -29,6 +29,7 @@ class Resource extends kernel\Reflection{
         parent::__construct($url);
         
         if(!$this->isRaw && CM_MODE === 'development' && !isset(self::$INSTANCES[$this->Url])){
+            //dump($url,'need create resource cache');
             $this->createCache();
         }
     }
@@ -57,15 +58,11 @@ class Resource extends kernel\Reflection{
     // --- --- --- --- --- --- --- ---
     private function getMyPath(){
         return $this->getInstanceValue('_Path',function(){
-            if(!$this->isRaw){
-                $Path = kernel\Ide\Part::get($this->Url)->Path .CM_DS. kernel\Url::get($this->Url)->Path;
-                if(!file_exists($Path)) throw new ex\Error('resource file [' .$this->Url. '] is not found.');
-                dump($Path,1);
-            }
-            else{
-                $Path = strAfter($this->Url,'raw::');
-                dump($Path,2);
-            }
+            if(!$this->isRaw) $Path = kernel\Ide\Part::get($this->Url)->Path .CM_DS. kernel\Url::get($this->Url)->Path;
+            else $Path = kernel\Ide\Part::get('Cmatrix/Vendor')->Path .CM_DS. 'resources' .CM_DS. strAfter($this->Url,'raw::');
+            if(!file_exists($Path)) throw new ex\Error('resource file [' .$this->Url. '] is not found.');
+            
+            //dump($Path);
             return $Path;
         });
     }
@@ -89,6 +86,7 @@ class Resource extends kernel\Reflection{
     
     // --- --- --- --- --- --- --- ---
     private function createCache(){
+        //dump($this->Url,'create resource cache');
         $Cache = web\Ide\Cache::get('res');
         $Cache->updateFile($this->CacheName,$this->Path);
     }

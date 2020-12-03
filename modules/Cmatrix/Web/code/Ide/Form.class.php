@@ -111,6 +111,7 @@ class Form extends kernel\Reflection {
     
     // --- --- --- --- --- --- --- ---
     private function createCache(){
+        //dump($this->Url,'create form cache');
         
         $Cache = kernel\Ide\Cache::get('forms');
         $Content = file_get_contents($this->Path.'/form.'.$this->Type);
@@ -121,13 +122,14 @@ class Form extends kernel\Reflection {
         };
         
         $_styles = function() use(&$Content){
+            //dump($this->Styles,'styles for cache');
             $Arr = array_map(function($value){
                 return web\Resource::get($value)->Link;
             },$this->Styles);
             
             $Content = str_replace(
                 '{% block blockStyles %}{% endblock %}',
-                '{% block blockStyles %}'. ($this->Parent ? '{{ parent() }}' : null) . implode('',$Arr) .'{% endblock %}'
+                '{% block blockStyles %}'. ($this->Parent ? '{{ parent() }}' : null) . implode("\n",$Arr) .'{% endblock %}'
                 ,$Content
             );
         };
@@ -149,7 +151,7 @@ class Form extends kernel\Reflection {
         $_styles();
         $_jss();
         
-        $Cache->putValue($this->CacheName,$Content);
+        $Cache->updateValue($this->CacheName,$Content);
     }
 
     // --- --- --- --- --- --- --- ---

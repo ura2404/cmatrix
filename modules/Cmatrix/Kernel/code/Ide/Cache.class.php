@@ -105,7 +105,16 @@ class Cache extends kernel\Reflection{
         catch(\Exception $e){
         }
     }
-
+    // --- --- --- --- --- --- --- ---
+    public function updateValue($key,$value){
+        $Path = $this->getPath($key);
+        
+        if(!$this->isExists($key) || filesize($Path) != strlen($value)){
+            //dump($key,'need update cache value');
+            $this->putValue($key,$value);
+        }
+    }
+    
     // --- --- --- --- --- --- --- ---
     public function putJsonValue($key,array $value){
         $Value = Json::encode($value);
@@ -131,7 +140,7 @@ class Cache extends kernel\Reflection{
     }
 
     // --- --- --- --- --- --- --- ---
-    public function copy($key,$path){
+    public function copyFile($key,$path){
         $Path = $this->getPath($key);
         copy($path,$Path);
     }
@@ -140,12 +149,19 @@ class Cache extends kernel\Reflection{
     public function updateFile($key,$path){
         $Path = $this->getPath($key);
         
+        //dump($path);
+        //dump($Path);
+        //dump(filesize($path));
+        //dump(filesize($Path));
         if(
             file_exists($path) && (
                 !$this->isExists($key)
-                || filesize($path) != filesize($Path)
+                || md5($path) != md5($Path)
             )
-        ) $this->copy($key,$path);
+        ){
+            //dump($key,'need update cache file');
+            $this->copyFile($key,$path);
+        }
     }
     
     // --- --- --- --- --- --- --- ---

@@ -15,6 +15,9 @@ spl_autoload_register(function($className){
     
     $ClassPath = dirname(__FILE__) .CM_DS. $Part .CM_DS. 'code' .CM_DS. str_replace("\\",CM_DS,$ClassName) .'.class.php';
     
-    if(file_exists($ClassPath)) require_once($ClassPath);
+    if(file_exists($ClassPath)){
+        //dump($ClassPath);
+        require_once($ClassPath);
+    }
 },true,true);
 ?>

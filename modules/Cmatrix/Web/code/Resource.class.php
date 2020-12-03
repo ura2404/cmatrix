@@ -9,7 +9,6 @@
 namespace Cmatrix\Web;
 use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Exception as ex;
-use \Cmatrix\Web as web;
 
 class Resource extends kernel\Reflection{
     static $INSTANCES = [];
@@ -23,7 +22,6 @@ class Resource extends kernel\Reflection{
     // --- --- --- --- --- --- --- ---
     function __construct($url){
         $this->Url = $url;
-        
         parent::__construct($this->Url);
     }
     
@@ -49,34 +47,21 @@ class Resource extends kernel\Reflection{
     // --- --- --- --- --- --- --- ---
     private function getMyPath(){
         return $this->getInstanceValue('_Path',function(){
-            return \Cmatrix\Web\Kernel::get()->Home .($this->isRaw ? '/res/'. web\Ide\Resource::get($this->Url)->Path: '/cache/'. web\Ide\Resource::get($this->Url)->CacheName);
+            $Path = \Cmatrix\Web\Kernel::get()->Home .($this->isRaw ? '/res/'. strAfter($this->Url,'raw::') : '/cache/'. Ide\Resource::get($this->Url)->CacheName);
+            return $Path;
         });
     }
     
     // --- --- --- --- --- --- --- ---
-    private function getMyLink(){
-        return $this->getInstanceValue('_Link',function(){
-            $_funs = [
-                'css' => function(){
-                    return '<link rel="stylesheet" media="none" type="text/css" href="'. $this->Path .'" onload="if(media!=\'all\')media=\'all\'"/>';
-                },
-                'js' => function(){
-                    return '<script type="text/javascript" src="' .$this->Path. '"></script>';
-                },
-            ];
-            
-            $Type = web\Ide\Resource::get($this->Url)->Type;
-            
-            if(!array_key_exists($Type,$_funs)) throw new ex\Error('create link function for resource "' .$this->Url. '" is not defined.');
-            return $_funs[$Type]();
-        });
+    protected function getMyLink(){
     }
 
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     static function get($url){
-        return new self($url);
+        $Cl = '\Cmatrix\Web\Resource\\' . ucfirst(Ide\Resource::get($url)->Type);
+        return $Cl::get($url);
     }
 }
 ?>

@@ -8,7 +8,7 @@
 namespace Cmatrix\Web\Mvc\Controller;
 use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Exception as ex;
-use \Cmatrix\Web\Vendor as vendor;
+use \Cmatrix\Vendor as vendor;
 
 class Twig extends \Cmatrix\Web\Mvc\Controller {
     private $Instance;
@@ -17,7 +17,7 @@ class Twig extends \Cmatrix\Web\Mvc\Controller {
     function __construct($view, $model){
         parent::__construct($view, $model);
         
-        vendor\Vendor::reg('Twig');
+        vendor\Kernel::reg('Twig');
         
         $Loader = new \Twig_Loader_Filesystem(kernel\Ide\Cache::get('forms')->Path);
         

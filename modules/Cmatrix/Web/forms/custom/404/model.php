@@ -5,7 +5,7 @@ class MyModel extends \Cmatrix\Web\Mvc\Model {
     public function getData(){
         return [
             'web' => [
-                'favicon' => \Cmatrix\Web\Resource::get('Cmatrix/Web/resources/icons/404.ico')->Path,
+                'favicon' => \Cmatrix\Web\Resource::get('Cmatrix/Web/forms/custom/404/res/favicon.ico')->Path,
             ],
             'page' => [
                 'name' => '404',
@@ -21,18 +21,9 @@ class MyModel extends \Cmatrix\Web\Mvc\Model {
     
     // --- --- --- --- --- --- --- ---
     private function getMyPic(){
-        $Root = 'Cmatrix/Web/custom/404/pic';
-        $Path = \Cmatrix\Kernel\Ide\Resource::get($Root)->Path;
-        
-        $Files = array_diff(scandir($Path),['.','..']);
-        $Files = array_filter($Files,function($value) use($Path){
-            $Path = $Path .'/'. $value;
-            return is_dir($Path) && $value{0} !== '_' ? false : true;
-        });
-        
-        $Key = array_rand($Files);
-        
-        return \Cmatrix\Kernel\Ide\Resource::get($Root.'/'.$Files[$Key])->Wpath;
+        $Pics = \Cmatrix\Kernel\Ide\Form::get('Cmatrix/Web/forms/custom/404/res/404')->Files;
+        $Key = array_rand($Pics);
+        return \Cmatrix\Web\Resource::get('Cmatrix/Web/forms/custom/404/res/404/'.$Pics[$Key])->Path;
     }
     
     // --- --- --- --- --- --- --- ---
