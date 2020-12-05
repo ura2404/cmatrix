@@ -9,6 +9,8 @@ class MyModel extends \Cmatrix\Web\Mvc\Model {
             ],
             'page' => [
                 'name' => '404',
+                'refer' => strpos(\Cmatrix\Web\Page::$PAGE,'/') === false ? \Cmatrix\Web\Page::$PAGE : strRafter(\Cmatrix\Web\Page::$PAGE,'/'),
+                'exception' => CM_MODE === 'development' ? \Cmatrix\Web\Page::$EXCEPTION : null
             ],
             'pic' => [
                 'random' => $this->getMyPic(),
@@ -28,7 +30,6 @@ class MyModel extends \Cmatrix\Web\Mvc\Model {
     
     // --- --- --- --- --- --- --- ---
     private function getMyText(){
-        
         $Arr = [
             "Ты вступаешь в реку,\nНо река не остаётся прежней...\nЭтой web-страницы здесь уже нет.",
             "Страницу, которую ты ищешь\nНайти невозможно, но\nВедь не счесть других…"

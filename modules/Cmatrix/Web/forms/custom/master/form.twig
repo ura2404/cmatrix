@@ -13,6 +13,7 @@
         {% block blockStyles %}{% endblock %}
     </head>
     <body>
+        <div id="wp" class="show" style="width:100vw;height:100vh;position:fixed;background-color:white;opacity:1;"></div>
         <h2 class="header">
             <div class="app"><span>{% block blockAppName %}{{ app.name }}{% endblock %}</span> <span> &bull; {% block blockPageName %}{{ page.name }}{% endblock %}</span></div>
             {# <a href="{{ home }}">{{ name }}</a> <span> &bull; 404</span> #}

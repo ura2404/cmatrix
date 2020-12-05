@@ -1,14 +1,18 @@
 .page {
-    margin-top: 30px;
+    margin-top: 20px;
     text-align: center;
     font-size: 4.2rem;
+}
+
+.body {
+    overflow-y: auto;
 }
 
 .container {
     display: flex;
 }
 
-.container  .message {
+.container .message {
     margin: auto 0 auto auto;
     font-size: 1.5rem;
 }
@@ -22,4 +26,37 @@
 
 .container .pic img {
     margin : auto;
+}
+
+.exception {
+    display: flex;
+    flex-direction: column;
+}
+
+.exception .show,
+.exception .hide {
+    cursor: pointer;
+    border-bottom: 1px dotted black;
+    padding: 0 2px;
+}
+
+.exception .show:hover,
+.exception .hide:hover {
+    color: #4796c4;
+    border-bottom-color: #4796c4;
+}
+
+
+.exception span {
+    margin: auto;
+}
+
+.exception .message {
+    margin: 15px auto 0 auto;
+}
+
+.exception .message.hidden,
+.exception .show.hidden,
+.exception .hide.hidden {
+    display: none;
 }

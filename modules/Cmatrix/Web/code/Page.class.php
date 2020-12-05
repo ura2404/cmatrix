@@ -12,6 +12,9 @@ use \Cmatrix\Kernel\Exception as ex;
 use \Cmatrix\Web as web;
 
 class Page extends kernel\Reflection{
+    static $PAGE;
+    static $EXCEPTION;
+    
     static $INSTANCES = [];
     /**
      * url страницы, переданный в браузер
@@ -54,6 +57,8 @@ class Page extends kernel\Reflection{
     private function getMyHtml(){
         if($this->StaticContent) return $this->StaticContent;
         
+        self::$PAGE = $this->Url;
+        
         // 1. найти url в конфиге
         $Config = kernel\Config::get('Cmatrix/Web/www/config.json');
         $PageUrl = $this->Url === '' ? $Config->getValue('pages/def') : $Config->getValue('pages/aliases/'. $this->Url);
@@ -66,7 +71,6 @@ class Page extends kernel\Reflection{
             
             //3. вывести html
             $FormUrl = web\Ide\Page::get($PageUrl)->Form;
-            //dump($FormUrl);
             
             $Html = web\Mvc\Mvc::get($FormUrl)->Html;
             //dump($Html);
@@ -81,9 +85,10 @@ class Page extends kernel\Reflection{
                 return $Message;
             };
             
-            $_web = function() use($e,$_noweb){
+            $_web = function($url) use($e,$_noweb){
                 try{
-                    $FormUrl = web\Ide\Page::get('exception')->Form;
+                    self::$EXCEPTION = \Cmatrix\Kernel\Exception::createMessage($e);
+                    $FormUrl = web\Ide\Page::get($url)->Form;
                     $Html = web\Mvc\Mvc::get($FormUrl)->Html;
                     return $Html;
                 }
@@ -92,8 +97,8 @@ class Page extends kernel\Reflection{
                 }
             };
             
-            $PageUrl = $Config->getValue('pages/aliases/exception');
-            if($PageUrl) return $_web();
+            $PageUrl = $Config->getValue('pages/aliases/404');
+            if($PageUrl) return $_web($PageUrl);
             else return $_noweb();
         }
         catch(\Throwable $e){

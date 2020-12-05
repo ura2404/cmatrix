@@ -12,6 +12,7 @@
     <div class="page">
         {% if page.refer == '' %}Главная страница ...{% else %}Страница <b>{{ page.refer }}</b> ...{% endif %}
     </div>
+    
     <div class="container">
         <div class="message">
             {% for p in text.random %}
@@ -22,4 +23,14 @@
             <img src="{{ pic.random }}"/>
         </div>
     </div>
+    
+    {% if page.exception %}
+        <div class="exception">
+            <span class="show">Дополнительно ...</span>
+            <span class="hide hidden">Скрыть ...</span>
+            <div class="message hidden">
+                {{ page.exception|raw }}
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}

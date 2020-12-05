@@ -6,6 +6,8 @@
         "styles" : [
             "Cmatrix/Web/forms/custom/404/404.css"
         ],
-        "jss" : null
+        "jss" : [
+            "Cmatrix/Web/forms/custom/404/404.js"
+        ]
     }
 }

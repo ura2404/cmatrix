@@ -19,15 +19,18 @@ class Exception extends \Exception {
     
     // --- --- --- --- --- --- --- ---
     static function createMessage($e){
+        $_file = function($path){
+            return strAfter($path,CM_ROOT);
+        };
         
-        $Trace = array_map(function($value){
+        $Trace = array_map(function($value) use($_file){
             return 
-                "\t". (array_key_exists('file',$value) ? $value['file'] : null) .':'. (array_key_exists('line',$value) ? $value['line'] : null)
+                "\t". (array_key_exists('file',$value) ? $_file($value['file']) : null) .':'. (array_key_exists('line',$value) ? $value['line'] : null)
                 .(array_key_exists('class',$value) ? " class:". $value['class'] : null)
                 .(array_key_exists('function',$value) ? " function:". $value['function'] : null);
         },$e->getTrace());
         
-        $Message = $e->getMessage() ."\nFile: ". $e->getFile() .':'. $e->getLine() ."\nTrace:\n". implode("\n",$Trace);
+        $Message = $e->getMessage() ."\nFile: ". $_file($e->getFile()) .':'. $e->getLine() ."\nTrace:\n". implode("\n",$Trace);
         
         if(PHP_SAPI != 'cli'){
             $Message = explode("\n",$Message);
