@@ -1,6 +1,6 @@
 {
     "form" : {
-        "code" : "Cmatrix/Web/form/custom/master",
+        "code" : "Cmatrix/Web/form/custom/session",
         "type" : "twig",
         "parent" : null,
         "styles" : [

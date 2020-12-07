@@ -62,14 +62,8 @@ a {
 }
 
 #wp {
-    position: fixed;
-    height: 100vh;
-    width: 100vw;
     z-index: 99999;
-    transition: opacity 0.3s, visibility 0s linear 0.3s;
+    /*transition-property: top;*/
     /*transition-delay: 0s;*/
-}
-
-#wp.show {
-    opacity: 1;
+    transition: opacity 0.3s, visibility 0s linear 0.3s;
 }

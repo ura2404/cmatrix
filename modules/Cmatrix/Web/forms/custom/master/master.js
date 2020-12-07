@@ -1,6 +1,5 @@
-setTimeout(function(){
+window.onload = function(){
     let Wp = document.getElementById("wp");
-    Wp.removeAttribute('style');
-    Wp.classList.remove('show');
-    //Wp.remove();
-}, 3000);
+    Wp.style.opacity = 0;
+    setTimeout(() => { Wp.remove(); },400);
+};

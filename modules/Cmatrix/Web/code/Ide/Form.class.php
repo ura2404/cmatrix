@@ -22,6 +22,7 @@ class Form extends kernel\Reflection {
     protected $_Styles;
     protected $_Jss;
     protected $_CacheName;
+    protected $_Content;
     
     private $Types = ['html','php','element','twig'];
     
@@ -45,7 +46,8 @@ class Form extends kernel\Reflection {
             case 'Parent'    : return $this->getMyParent();
             case 'Styles'    : return $this->getMyStyles();
             case 'Jss'       : return $this->getMyJss();
-            case 'CacheName' : return $this->getMyCacheName();
+            case 'CacheName'    : return $this->getMyCacheName();
+            case 'CacheContent' : return $this->getMyContent();
             default : return parent::__get($name);
         }
     }
@@ -106,6 +108,16 @@ class Form extends kernel\Reflection {
     private function getMyCacheName(){
         return $this->getInstanceValue('_CacheName',function(){
             return md5($this->Url.'/form') .'.'. $this->Type;
+        });
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    private function getMyContent(){
+        return $this->getInstanceValue('_Content',function(){
+            $Path = $this->Path.'/form.'.$this->Type;
+            
+            
+            
         });
     }
     
