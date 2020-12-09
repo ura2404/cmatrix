@@ -13,15 +13,15 @@
         "rewrite" : true
     },
     "pages" : {
-        "def" : "Cmatrix/Web/pages/custom/def",
+        "def" : "Cmatrix/Web/custom/def",
         "aliases" : {
-            "main"      : "Cmatrix/Web/pages/custom/def",
-            "404"       : "Cmatrix/Web/pages/custom/404",
-            "exception" : "Cmatrix/Web/pages/custom/exception",
-            "session"   : "Cmatrix/Web/pages/custom/session",
-            "browser"   : "Cmatrix/Web/pages/custom/browser",
-            "check"     : "Cmatrix/Web/pages/custom/check",
-            "admin"     : "Cmatrix/Web/pages/custom/admin"
+            "main"      : "Cmatrix/Web/custom/def",
+            "404"       : "Cmatrix/Web/custom/404",
+            "exception" : "Cmatrix/Web/custom/exception",
+            "session"   : "Cmatrix/Web/custom/session",
+            "browser"   : "Cmatrix/Web/custom/browser",
+            "check"     : "Cmatrix/Web/custom/check",
+            "admin"     : "Cmatrix/Web/custom/admin"
             
         }
     }

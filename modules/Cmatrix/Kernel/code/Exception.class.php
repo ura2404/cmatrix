@@ -30,7 +30,7 @@ class Exception extends \Exception {
                 .(array_key_exists('function',$value) ? " function:". $value['function'] : null);
         },$e->getTrace());
         
-        $Message = $e->getMessage() ."\nFile: ". $_file($e->getFile()) .':'. $e->getLine() ."\nTrace:\n". implode("\n",$Trace);
+        $Message = $e->getMessage(). "\nFile: ". $_file($e->getFile()) .':'. $e->getLine() ."\nTrace:\n". implode("\n",$Trace);
         
         if(PHP_SAPI != 'cli'){
             $Message = explode("\n",$Message);

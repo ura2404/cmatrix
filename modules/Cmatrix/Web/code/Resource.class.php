@@ -31,7 +31,7 @@ class Resource extends kernel\Reflection{
             case 'isRaw' : return $this->getMyRaw();
             case 'Path'  : return $this->getMyPath();
             case 'Link'  : return $this->getMyLink();
-            default : throw new ex\Property($this,$name);
+            default : return parent::__get($name);
         }
     }
     

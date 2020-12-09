@@ -1,0 +1,15 @@
+{
+    "form" : {
+        "code" : "Cmatrix/Web/custom/session",
+        "type" : "twig",
+        "parent" : "Cmatrix/Web/custom/master",
+        "styles" : [
+            "raw::/res/fonts/google/Arsenal/font.css",
+            "raw::/res/fonts/fontawesome.com/5.14.0/css/all.css",
+            "form::Cmatrix/Web/custom/master/master.css"
+        ],
+        "jss" : [
+            "form::Cmatrix/Web/custom/master/master.js"
+        ]
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "form" : {
+        "code" : "Cmatrix/Web/custom/404",
+        "type" : "twig",
+        "parent" : "Cmatrix/Web/custom/master",
+        "_parent" : null,
+        "styles" : [
+            "form::Cmatrix/Web/custom/404/404.css"
+        ],
+        "jss" : [
+            "form::Cmatrix/Web/custom/404/404.js"
+        ]
+    }
+}

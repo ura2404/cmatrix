@@ -1,6 +1,6 @@
 {
     "form" : {
-        "code" : "Cmatrix/Web/form/custom/def",
+        "code" : "Cmatrix/Web/custom/def",
         "type" : "html",
         "parent" : null,
         "styles" : null,

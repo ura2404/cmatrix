@@ -1,9 +1,0 @@
-{
-    "page" : {
-        "code" : "Cmatrix/Web/pages/custom/session",
-        "parent" : null,
-        "name" : "session",
-        "info" : "Информация о текущей сессии",
-        "form" : "Cmatrix/Web/forms/custom/session"
-    }
-}

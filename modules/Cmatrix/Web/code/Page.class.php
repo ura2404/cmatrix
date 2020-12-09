@@ -36,7 +36,7 @@ class Page extends kernel\Reflection{
         switch($name){
             case 'Html' : return $this->getMyHtml();
             case 'Path' : return $this->getMyPath();
-            default : throw new ex\Error('class "' .get_class($this). '" property "' .$name. '" is not defined.');
+            default : return parent::__get($name);
         }
     }
 
@@ -102,7 +102,6 @@ class Page extends kernel\Reflection{
             else return $_noweb();
         }
         catch(\Throwable $e){
-            echo $e->getMessage();
             return \Cmatrix\Kernel\Exception::createMessage($e);
         }
     }

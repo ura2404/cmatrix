@@ -1,0 +1,223 @@
+{
+    "code": "Cmatrix/Core/Session",
+    "name": {
+        "_def" : "Сущность"
+    },
+    "baloon": null,
+    "parent": null,
+    "info": null,
+    "uniques": [ "hid" ],
+    "props": {
+        "id" : {
+            "code": "id",
+            "name": {
+                "_def": "ID"
+            },
+            "label": null,
+            "baloon": {
+                "_def": "Уникальный ID идентификатор"
+            },
+            "type": "::id::",
+            "length": null,
+            "nn": true,
+            "index": null,
+            "default": "::counter::",
+            "registr" : null,
+            "info": null,
+            "association": null
+        },
+        "hid" : {
+            "code": "hid",
+            "name": {
+                "_def": "HID"
+            },
+            "label": null,
+            "baloon": {
+                "_def": "Уникальный HID идентификатор"
+            },
+            "type": "::hid::",
+            "length" : 32,
+            "nn": true,
+            "index": null,
+            "default": "::hid::",
+            "registr" : null,
+            "info": null,
+            "association": null
+        },
+        "status" : {
+            "code": "status",
+            "name": {
+                "_def": "Статус"
+            },
+            "label": {
+                "_def" : "Ст"
+            },
+            "baloon": {
+                "_def": "Текущий статус"
+            },
+            "type": "string",
+            "length": 3,
+            "nn": true,
+            "index": null,
+            "default": "A",
+            "registr" : null,
+            "info": null,
+            "association": null
+        },
+        "active" : {
+            "code": "active",
+            "name": {
+                "_def" : "Активная"
+            },
+            "label": {
+                "_def" : "A"
+            },
+            "baloon": {
+                "_def": "Признак активности записи"
+            },
+            "type": "bool",
+            "length" : null,
+            "nn": null,
+            "index": null,
+            "default": "TRUE",
+            "registr" : null,
+            "info": null,
+            "association": null
+        },
+        "deleted" : {
+            "code": "deleted",
+            "name": {
+                "_def" : "Удалённая"
+            },
+            "label": {
+                "_def" : "D"
+            },
+            "baloon": {
+                "_def": "Признак удаления записи"
+            },
+            "type": "bool",
+            "length": null,
+            "nn": null,
+            "index": null,
+            "default": null,
+            "registr" : null,
+            "info": null,
+            "association": null
+        },
+        "create_ts" : {
+            "code": "create_ts",
+            "name": {
+                "_def": "Время создания"
+            },
+            "label": {
+                "_def": "CTS"
+            },
+            "baloon": {
+                "_def": "Время создания"
+            },
+            "type": "timestamp",
+            "length": null,
+            "nn": true,
+            "index": null,
+            "default": "::now::",
+            "registr" : null,
+            "info": "Временная метка создания записи",
+            "association": null
+        },
+        "upd_ts" : {
+            "code": "upd_ts",
+            "name": {
+                "_def": "Время изменение"
+            },
+            "label": {
+                "_def" : "UTS"
+            },
+            "baloon": {
+                "_def": "Время изменения"
+            },
+            "type": "timestamp",
+            "length": null,
+            "nn": null,
+            "index": null,
+            "default": null,
+            "registr" : null,
+            "info": "Временная метка изменения записи",
+            "association": null
+        },
+        "session_id" : {
+            "code": "session_id",
+            "name": {
+                "_def" : "Сессия создания"
+            },
+            "label": {
+                "_def" : "SID"
+            },
+            "baloon": null,
+            "type": "::id::",
+            "length": null,
+            "nn": true,
+            "index": null,
+            "default": 2,
+            "registr" : null,
+            "info": null,
+            "association": {
+                "entity": "core/Session",
+                "prop": "id"
+            }
+        },
+        "session_upd_id" : {
+            "code": "session_upd_id",
+            "name": {
+                "_def" : "Сессия изменения"
+            },
+            "label": {
+                "_def" : "SUD"
+            },
+            "baloon": null,
+            "type": "::id::",
+            "length": null,
+            "nn": null,
+            "index": null,
+            "default": null,
+            "registr" : null,
+            "info": null,
+            "association": {
+                "entity": "core/Session",
+                "prop": "id"
+            }
+        },
+        "info" : {
+            "code": "info",
+            "name": {
+                "_def": "Информация"
+            },
+            "label": null,
+            "baloon": {
+                "_def": "Информация, примечания, коментарии..."
+            },
+            "type": "text",
+            "length": null,
+            "nn": null,
+            "index": null,
+            "default": null,
+            "registr" : null,
+            "info": "Поле для свободной информации",
+            "association": null
+        },
+        "systype" : {
+            "code": "systype",
+            "name": null,
+            "label": null,
+            "baloon": null,
+            "type": "string",
+            "length": 32,
+            "nn": true,
+            "index": null,
+            "default": "cmCore/Entity",
+            "registr" : null,
+            "info": null,
+            "association": null
+        }
+    },
+    "init" : null
+}

@@ -12,6 +12,7 @@ use \Cmatrix\Kernel\Exception as ex;
 use \Cmatrix\Web as web;
 
 class Resource extends kernel\Reflection{
+    static $C = [];
     static $INSTANCES = [];
     
     protected $Url;
@@ -28,7 +29,8 @@ class Resource extends kernel\Reflection{
         $this->Url = $url;
         parent::__construct($url);
         
-        if(!$this->isRaw && CM_MODE === 'development' && !isset(self::$INSTANCES[$this->Url])){
+        isset(self::$C[$url]) ? null : self::$C[$url] = 0;
+        if(!$this->isRaw && CM_MODE === 'development' && !self::$C[$url]++){
             //dump($url,'need create resource cache');
             $this->createCache();
         }

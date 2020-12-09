@@ -1,7 +1,7 @@
 {
     "part" : {
-        "code" : "Kernel",
-        "name" : "Ядро Cmatrix",
+        "code" : "Vendor",
+        "name" : "Сторонние модули и ресурсы",
         "version" : "4.0",
         "build" : "1",
         "requiries" : null

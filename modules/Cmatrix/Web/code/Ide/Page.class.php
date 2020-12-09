@@ -15,7 +15,7 @@ class Page extends kernel\Reflection{
     protected $Url;
     
     protected $_Path;
-    protected $_Json;
+    protected $_Config;
     protected $_Form;
     
     // --- --- --- --- --- --- --- ---
@@ -27,9 +27,9 @@ class Page extends kernel\Reflection{
     // --- --- --- --- --- --- --- ---
     function __get($name){
         switch($name){
-            case 'Path' : return $this->getMyPath();
-            case 'Json' : return $this->getMyJson();
-            case 'Form' : return $this->getMyForm();
+            case 'Path'   : return $this->getMyPath();
+            case 'Config' : return $this->getMyConfig();
+            case 'Form'   : return $this->getMyForm();
             default : return parent::__get($name);
         }
     }
@@ -47,16 +47,16 @@ class Page extends kernel\Reflection{
     }
     
     // --- --- --- --- --- --- --- ---
-    private function getMyJson(){
-        return $this->getInstanceValue('_Json',function(){
-            return json_decode(file_get_contents($this->Path.'/config.json'),true);
+    private function getMyConfig(){
+        return $this->getInstanceValue('_Config',function(){
+            return kernel\Config::get($this->Url .CM_DS. 'config.json');
         });
     }
     
     private function getMyForm(){
         return $this->getInstanceValue('_Form',function(){
-            if(!isset($this->Json['page']['form'])) throw new ex\Error('page [' .$this->Url. '] form url is not defined.');
-            return $this->Json['page']['form'];
+            if(!($Form = $this->Config->getValue('page/form'))) throw new ex\Error('page [' .$this->Url. '] form url is not defined.');
+            return $Form;
         });
     }
     

@@ -12,6 +12,7 @@ use \Cmatrix\Kernel\Exception as ex;
 use \Cmatrix\Web as web;
 
 class Form extends kernel\Reflection {
+    static $C = [];
     static $INSTANCES = [];
     protected $Url;
     
@@ -32,7 +33,8 @@ class Form extends kernel\Reflection {
         $this->Url = $url;
         parent::__construct($url);
         
-        if(CM_MODE === 'development' && !isset(self::$INSTANCES[$this->Url])){
+        isset(self::$C[$url]) ? null : self::$C[$url] = 0;
+        if(CM_MODE === 'development' && !self::$C[$url]++){
             $this->createCache();
         }
     }
@@ -46,8 +48,8 @@ class Form extends kernel\Reflection {
             case 'Parent'    : return $this->getMyParent();
             case 'Styles'    : return $this->getMyStyles();
             case 'Jss'       : return $this->getMyJss();
-            case 'CacheName'    : return $this->getMyCacheName();
-            case 'CacheContent' : return $this->getMyContent();
+            case 'CacheName' : return $this->getMyCacheName();
+            case 'Content'   : return $this->getMyContent();
             default : return parent::__get($name);
         }
     }
@@ -115,9 +117,8 @@ class Form extends kernel\Reflection {
     private function getMyContent(){
         return $this->getInstanceValue('_Content',function(){
             $Path = $this->Path.'/form.'.$this->Type;
-            
-            
-            
+            if(!file_exists($Path)) throw new ex\Error('form [' .$this->Url. '] template is not found.');
+            return file_get_contents($Path);
         });
     }
     
@@ -125,36 +126,33 @@ class Form extends kernel\Reflection {
     private function createCache(){
         //dump($this->Url,'create form cache');
         
-        $Cache = kernel\Ide\Cache::get('forms');
-        $Content = file_get_contents($this->Path.'/form.'.$this->Type);
-        
-        $_parent = function() use(&$Content){
+        $_parent = function(){
             if(!$this->Parent) return;
-            $Content = '{% extends "'. self::get($this->Parent)->CacheName .'" %}'."\n\n" . $Content;
+            $this->Content = '{% extends "'. self::get($this->Parent)->CacheName .'" %}'."\n\n" . $this->Content;
         };
         
-        $_styles = function() use(&$Content){
+        $_styles = function(){
             //dump($this->Styles,'styles for cache');
             $Arr = array_map(function($value){
                 return web\Resource::get($value)->Link;
             },$this->Styles);
             
-            $Content = str_replace(
+            $this->Content = str_replace(
                 '{% block blockStyles %}{% endblock %}',
                 '{% block blockStyles %}'. ($this->Parent ? '{{ parent() }}' : null) . implode("\n",$Arr) .'{% endblock %}'
-                ,$Content
+                ,$this->Content
             );
         };
         
-        $_jss = function() use(&$Content){
+        $_jss = function(){
             $Arr = array_map(function($value){
                 return web\Resource::get($value)->Link;
             },$this->Jss);
             
-            $Content = str_replace(
+            $this->Content = str_replace(
                 '{% block blockJss %}{% endblock %}',
                 '{% block blockJss %}'. ($this->Parent ? '{{ parent() }}' : null) . implode('',$Arr) .'{% endblock %}'
-                ,$Content
+                ,$this->Content
             );
         };
         
@@ -163,7 +161,7 @@ class Form extends kernel\Reflection {
         $_styles();
         $_jss();
         
-        $Cache->updateValue($this->CacheName,$Content);
+        kernel\Ide\Cache::get('forms')->updateValue($this->CacheName,$this->Content);
     }
 
     // --- --- --- --- --- --- --- ---
@@ -171,129 +169,6 @@ class Form extends kernel\Reflection {
     // --- --- --- --- --- --- --- ---
     static function get($url){
         return new self($url);
-    }
-}
-
-
-
-
-
-
-
-class __Form extends kernel\Reflection {
-    static $INSTANCES = [];
-    protected $Url;
-    protected $Path;
-    
-    protected $_Json;
-    protected $_Type;
-    protected $_Parent;
-    
-    // --- --- --- --- --- --- --- ---
-    function __construct($url){
-        kernel\Kernel::get();
-        
-        $this->Url = $url;
-        $this->Path = $this->getMyPath($this->Url);
-        
-        parent::__construct($url);
-    }
-
-    // --- --- --- --- --- --- --- ---
-    function __get($name){
-        switch($name){
-            case 'Path' : return $this->Path;
-            case 'Json' : return $this->getMyJson();
-            case 'Type' : return $this->getMyType();
-            case 'Parent' : return $this->getMyParent();
-            default : return parent::__get($name);
-        }
-    }
-
-    // --- --- --- --- --- --- --- ---
-    // --- --- --- --- --- --- --- ---
-    // --- --- --- --- --- --- --- ---
-    private function getMyPath($url){
-        $Path = Module::get($this->Url)->Path .'/form/'. strAfter($this->Url,'/');
-        if(!file_exists($Path) || !file_exists($Path .'/form.json')) throw new ex\Error('form descriptor [' .$this->Url. '] is not found.');
-        return $Path;
-    }
-    
-    // --- --- --- --- --- --- --- ---
-    private function getMyJson(){
-        return $this->getInstanceValue('_Json',function(){
-            return json_decode(file_get_contents($this->Path.'/form.json'),true);
-        });
-    }
-    
-    // --- --- --- --- --- --- --- ---
-    private function getMyType(){
-        return $this->getInstanceValue('_Type',function(){
-            if(!isset($this->Json['type'])) throw new ex\Error('form [' .$this->Url. '] type is not defined.');
-            return $this->Json['type'];
-        });
-    }
-
-    // --- --- --- --- --- --- --- ---
-    private function getMyParent(){
-        return $this->getInstanceValue('_Parent',function(){
-            if(!array_key_exists('parent',$this->Json)) throw new ex\Error('form [' .$this->Url. '] parent is not defined.');
-            return $this->Json['parent'];
-        });
-    }
-    
-    // --- --- --- --- --- --- --- ---
-    // --- --- --- --- --- --- --- ---
-    // --- --- --- --- --- --- --- ---
-    private function createCache(){
-        $Fs = [
-            'html' => function(){ },
-            'twig' => function(){
-                $Path = $this->Path .'/form.twig';
-                if(!file_exists($Path)) throw new ex\Error('form [' .$this->Url. '] template is not defined.');
-                
-                $Key = $this->Url .'.twig';
-                $Data = file_get_contents($Path);
-                
-                if($this->Parent){
-                    $Data = '{% extends "'. Cache::get('forms')->getKey($this->Parent).'.twig' .'" %}'."\n" . $Data;
-                }
-                
-                if(isset($this->Json['rearHead']) && count($this->Json['rearHead'])){
-                    $Arr = array_map(function($value){
-                        return ide\Resource::get($value)->Link;
-                    },$this->Json['rearHead']);
-                    
-                    if(($Pos=strpos($Data,'parent()'))!==false){
-                        $Pos1 = strpos(substr($Data,$Pos),'}}');
-                        $Data = substr($Data,0,$Pos+$Pos1+2) . implode('',$Arr) . substr($Data,$Pos+$Pos1+2);
-                    }
-                    else{
-                        $Data = str_replace('{% block blockRearHead %}{% endblock %}','{% block blockRearHead %}'. implode('',$Arr) .'{% endblock %}',$Data);
-                    }
-                }
-                
-                return [$Key,$Data];
-            }
-        ];
-        
-        if(!isset($Fs[$this->Type])) throw new ex\Error($this,'cache function [' .$this->Type. '] is not defined.');
-        
-        $_fun = $Fs[$this->Type];
-        list($key,$value) = $_fun();
-        if($key && $value) Cache::get('forms')->putValue($key,$value);
-    }
-
-    // --- --- --- --- --- --- --- ---
-    // --- --- --- --- --- --- --- ---
-    // --- --- --- --- --- --- --- ---
-    static function get($url){
-        return new self($url);
-    }
-    
-    // --- --- --- --- --- --- --- ---
-    static function cache($url){
-        return (new self($url))->createCache();
     }
 }
 ?>
