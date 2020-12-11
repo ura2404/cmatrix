@@ -11,11 +11,12 @@ use \Cmatrix\Kernel\Exception as ex;
 use \Cmatrix\Web as web;
 
 class Mvc {
+    private $Form;
 
     /**
-     * Form url, for example /site/about.
+     * Form url, for example /MyProject/MyPart/site/about.
      */
-    private $Url;
+    //private $Url;
     
     /**
     */
@@ -43,8 +44,8 @@ class Mvc {
     ];
 
     // --- --- --- --- --- --- --- ---
-    function __construct($url){
-        $this->Url = $url;
+    function __construct(\Cmatrix\Kernel\Ide\Form $form){
+        $this->Form = $form;
         $this->Controller = $this->getMyController();
     }
     
@@ -60,6 +61,7 @@ class Mvc {
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     private function getMyController(){
+        dump($this->Form->Type);
         $Type = web\Ide\Form::get($this->Url)->Type;
         
         if(!isset(self::$CONTROLLES[$Type])) throw new ex\Error('controller class [' .$Type. '] is not defined.');
@@ -81,8 +83,8 @@ class Mvc {
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
-    static function get($url){
-        return new self($url);
+    static function get(\Cmatrix\Kernel\Ide\Form $form){
+        return new self($form);
     }
 }
 ?>

@@ -49,13 +49,15 @@ class Config extends Reflection {
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     /**
-     * @param string $url - url config-файла <Module>/<Part>/<path_to_config>
-     *     например /Cmatrix/Web/www/config.json
+     * @param string $path - path to config file folder
+     * @return \Cmatrix\Config - config instance 
      */
-    static function get($url){
-        $Path = Ide\Part::get($url)->Path .CM_DS. Url::get($url)->Path;
+    static function get($path){
+        dump(strpos(substr($path,strrpos($path,'/')),'.') );
+        
+        $Path = $path .CM_DS. 'config.json';
         if(!file_exists($Path)) throw new ex\Error('Config file "'.strAfter($Path,CM_ROOT).'" not found.');
-        return self::reg($url,Json::decode(file_get_contents($Path)));
+        return self::reg($path,Json::decode(file_get_contents($Path)));
     }
     
     // --- --- --- --- --- --- --- ---

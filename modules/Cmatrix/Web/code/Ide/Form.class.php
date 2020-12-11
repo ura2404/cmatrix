@@ -14,6 +14,74 @@ use \Cmatrix\Web as web;
 class Form extends kernel\Reflection {
     static $C = [];
     static $INSTANCES = [];
+    
+    // --- --- --- --- --- --- --- ---
+    function __construct($url){
+        parent::__construct($url);
+        
+        isset(self::$C[$url]) ? null : self::$C[$url] = 0;
+        if(CM_MODE === 'development' && !self::$C[$url]++){
+            //$this->createCache();
+        }
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    private function createCache(){
+        //dump($this->Url,'create form cache');
+        
+        $_parent = function(){
+            if(!$this->Parent) return;
+            $this->Content = '{% extends "'. self::get($this->Parent)->CacheName .'" %}'."\n\n" . $this->Content;
+        };
+        
+        $_styles = function(){
+            //dump($this->Styles,'styles for cache');
+            $Arr = array_map(function($value){
+                return web\Resource::get($value)->Link;
+            },$this->Styles);
+            
+            $this->Content = str_replace(
+                '{% block blockStyles %}{% endblock %}',
+                '{% block blockStyles %}'. ($this->Parent ? '{{ parent() }}' : null) . implode("\n",$Arr) .'{% endblock %}'
+                ,$this->Content
+            );
+        };
+        
+        $_jss = function(){
+            $Arr = array_map(function($value){
+                return web\Resource::get($value)->Link;
+            },$this->Jss);
+            
+            $this->Content = str_replace(
+                '{% block blockJss %}{% endblock %}',
+                '{% block blockJss %}'. ($this->Parent ? '{{ parent() }}' : null) . implode('',$Arr) .'{% endblock %}'
+                ,$this->Content
+            );
+        };
+        
+        // --- --- --- --- --- --- ---
+        $_parent();
+        $_styles();
+        $_jss();
+        
+        kernel\Ide\Cache::get('forms')->updateValue($this->CacheName,$this->Content);
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    static function get($url){
+        return new self($url);
+    }
+}
+
+
+
+
+
+class Form2 extends kernel\Reflection {
+    static $C = [];
+    static $INSTANCES = [];
     protected $Url;
     
     protected $_Path;
@@ -42,14 +110,14 @@ class Form extends kernel\Reflection {
     // --- --- --- --- --- --- --- ---
     function __get($name){
         switch($name){
-            case 'Path'      : return $this->getMyPath();
-            case 'Config'    : return $this->getMyConfig();
-            case 'Type'      : return $this->getMyType();
-            case 'Parent'    : return $this->getMyParent();
-            case 'Styles'    : return $this->getMyStyles();
-            case 'Jss'       : return $this->getMyJss();
-            case 'CacheName' : return $this->getMyCacheName();
-            case 'Content'   : return $this->getMyContent();
+            //case 'Path'      : return $this->getMyPath();
+            //case 'Config'    : return $this->getMyConfig();
+            //case 'Type'      : return $this->getMyType();
+            //case 'Parent'    : return $this->getMyParent();
+            //case 'Styles'    : return $this->getMyStyles();
+            //case 'Jss'       : return $this->getMyJss();
+            //case 'CacheName' : return $this->getMyCacheName();
+            //case 'Content'   : return $this->getMyContent();
             default : return parent::__get($name);
         }
     }
@@ -58,6 +126,7 @@ class Form extends kernel\Reflection {
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
+    /*
     private function getMyPath(){
         return $this->getInstanceValue('_Path',function(){
             $Path = kernel\Ide\Part::get($this->Url)->Path .CM_DS. kernel\Url::get($this->Url)->Path;
@@ -65,10 +134,12 @@ class Form extends kernel\Reflection {
             return $Path;
         });
     }
+    */
     
     // --- --- --- --- --- --- --- ---
     private function getMyConfig(){
         return $this->getInstanceValue('_Config',function(){
+            dump($this->Url);
             return kernel\Config::get($this->Url .CM_DS. 'config.json');
         });
     }
@@ -116,7 +187,8 @@ class Form extends kernel\Reflection {
     // --- --- --- --- --- --- --- ---
     private function getMyContent(){
         return $this->getInstanceValue('_Content',function(){
-            $Path = $this->Path.'/form.'.$this->Type;
+            //$Path = $this->Path.'/form.'.$this->Type;
+            $Path = kernel\Ide\Form::get($this->Url)->Path.'/form.'.$this->Type;
             if(!file_exists($Path)) throw new ex\Error('form [' .$this->Url. '] template is not found.');
             return file_get_contents($Path);
         });

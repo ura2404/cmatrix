@@ -22,8 +22,6 @@ class Page extends kernel\Reflection{
     protected $Url;
     protected $StaticContent;
     
-    protected $_Path;
-    
     // --- --- --- --- --- --- --- ---
     function __construct($url=''){
         $this->Url = $url;
@@ -34,8 +32,9 @@ class Page extends kernel\Reflection{
     // --- --- --- --- --- --- --- ---
     function __get($name){
         switch($name){
-            case 'Html' : return $this->getMyHtml();
-            case 'Path' : return $this->getMyPath();
+            case 'Html'   : return $this->getMyHtml();
+            case 'Path'   : return $this->getMyPath();
+            case 'Config' : return $this->getMyConfig();
             default : return parent::__get($name);
         }
     }
@@ -54,25 +53,33 @@ class Page extends kernel\Reflection{
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
+    /**
+     * @return \Cmatrix\Kernel\Config - конфиг web-проекта
+     */
+    private function getMyConfig(){
+        $Path = kernel\Ide\Part::get('Cmatrix/Web')->Path.CM_DS.'www';
+        return kernel\Config::get($Path);
+    }
+    
+    // --- --- --- --- --- --- --- ---
     private function getMyHtml(){
         if($this->StaticContent) return $this->StaticContent;
         
         self::$PAGE = $this->Url;
         
         // 1. найти url в конфиге
-        $Config = kernel\Config::get('Cmatrix/Web/www/config.json');
-        $PageUrl = $this->Url === '' ? $Config->getValue('pages/def') : $Config->getValue('pages/aliases/'. $this->Url);
+        $PageUrl = $this->Url === '' ? $this->Config->getValue('pages/def') : $this->Config->getValue('pages/aliases/'. $this->Url);
         
         try{
             // 2. если нет url в конфиге, то найти url 404-ой страницв 
             //404
-            if(!$PageUrl) $PageUrl = $Config->getValue('pages/aliases/404');
+            if(!$PageUrl) $PageUrl = $this->Config->getValue('pages/aliases/404');
             if(!$PageUrl) throw new ex\Error('page "404" is not defined.');
             
             //3. вывести html
-            $FormUrl = web\Ide\Page::get($PageUrl)->Form;
-            
-            $Html = web\Mvc\Mvc::get($FormUrl)->Html;
+            $Form = web\Ide\Page::get($PageUrl)->Form;
+            $Html = web\Mvc\Mvc::get($Form)->Html;
+            //dump($Form);
             //dump($Html);
             
             return $Html;
@@ -97,7 +104,7 @@ class Page extends kernel\Reflection{
                 }
             };
             
-            $PageUrl = $Config->getValue('pages/aliases/404');
+            $PageUrl = $this->Config->getValue('pages/aliases/404');
             if($PageUrl) return $_web($PageUrl);
             else return $_noweb();
         }
@@ -108,9 +115,7 @@ class Page extends kernel\Reflection{
     
     // --- --- --- --- --- --- --- ---
     private function getMyPath(){
-        $Config = kernel\Config::get('Cmatrix/Web/www/config.json');
-        
-        $Url = $Config->getValue('pages/aliases/'. $this->Url);
+        $Url = $this->Config->getValue('pages/aliases/'. $this->Url);
         if(!$Url && $this->Url!='') throw new ex\Error('page "'.$this->Url.'" is not defined.');
         
         return web\Kernel::get()->Home.'/'.$this->Url;

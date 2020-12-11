@@ -1,9 +1,9 @@
 {
     "page" : {
-        "code" : "Cmatrix/Web/page/custom/404",
+        "code" : "Cmatrix/Web/custom/404",
         "parent" : null,
         "name" : "default page",
         "info" : "Страница 404",
-        "form" : "Cmatrix/Web/form/custom/404"
+        "form" : "Cmatrix/Web/custom/404"
     }
 }

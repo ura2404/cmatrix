@@ -6,25 +6,11 @@
  * @version 1.0 2020-07-21
  */
 
-namespace Cmatrix\Web\Ide;
+namespace Cmatrix\Kernel\Ide;
 use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Exception as ex;
 
-class Page extends kernel\Ide\Page{
-    static $INSTANCES = [];
-    
-    // --- --- --- --- --- --- --- ---
-    // --- --- --- --- --- --- --- ---
-    // --- --- --- --- --- --- --- ---
-    static function get($url){
-        return new self($url);
-    }
-}
-
-
-
-
-class Page22 extends kernel\Reflection{
+class Page extends kernel\Reflection{
     static $INSTANCES = [];
     protected $Url;
     
@@ -52,9 +38,12 @@ class Page22 extends kernel\Reflection{
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
+    /**
+     * @return string - path to page description folder
+     */
     private function getMyPath(){
         return $this->getInstanceValue('_Path',function(){
-            $Path = kernel\Ide\Part::get($this->Url)->Path .CM_DS. kernel\Url::get($this->Url)->Path;
+            $Path = kernel\Ide\Part::get($this->Url)->Path .CM_DS.'page'.CM_DS. kernel\Url::get($this->Url)->Path;
             if(!file_exists($Path) || !file_exists($Path .CM_DS. 'config.json')) throw new ex\Error('page descriptor [' .$this->Url. '] is not found.');
             return $Path;
         });
@@ -62,7 +51,7 @@ class Page22 extends kernel\Reflection{
     
     // --- --- --- --- --- --- --- ---
     /**
-     * @return \Cmatrix\Kernel\Config 
+     * @return \Cmatrix\Kernel\Config - page description config
      */
     private function getMyConfig(){
         return $this->getInstanceValue('_Config',function(){
@@ -70,10 +59,14 @@ class Page22 extends kernel\Reflection{
         });
     }
     
+    // --- --- --- --- --- --- --- ---
+    /**
+     * @return \Cmatrix\Kernel\Ide\Form - form instance
+     */
     private function getMyForm(){
         return $this->getInstanceValue('_Form',function(){
-            if(!($Form = $this->Config->getValue('page/form'))) throw new ex\Error('page [' .$this->Url. '] form url is not defined.');
-            return $Form;
+            if(!($FormUrl = $this->Config->getValue('page/form'))) throw new ex\Error('page [' .$this->Url. '] form url is not defined.');
+            return Form::get($FormUrl);
         });
     }
     
