@@ -18,8 +18,8 @@ switch(CM_MODE){
         exit(1);
 }
 
-$Page = isset($_REQUEST['cmp']) ? rtrim($_REQUEST['cmp'],'/') : null;
-echo \Cmatrix\Web\Page::get($Page)->Html;
+$PageUrl = isset($_REQUEST['cmp']) ? rtrim($_REQUEST['cmp'],'/') : null;
+echo \Cmatrix\Web\Page::get($PageUrl)->Html;
 
 /*
 try{

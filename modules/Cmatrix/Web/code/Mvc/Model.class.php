@@ -7,22 +7,22 @@
  */
 
 namespace Cmatrix\Web\Mvc;
+use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Exception as ex;
-use \Cmatrix\Web\Ide as ide;
 
 class Model {
-    protected $Url;
+    protected $Form;
 
     // --- --- --- --- --- --- --- ---
-    function __construct($url){
-        $this->Url = $url;
+    function __construct(\Cmatrix\Web\Ide\Form $form){
+        $this->Form = $form;
     }
 
     // --- --- --- --- --- --- --- ---
     function __get($name){
         switch($name){
             case 'Data' : return $this->getMyData();
-            default : throw new ex\Error('class [' .get_class($this). '] property [' .$name. '] is not defined.');
+            default : throw new ex\Property($this,$name);
         }
     }
 
@@ -43,23 +43,18 @@ class Model {
             eval('class '. $Text);
         };
         
-        $ClassName = str_replace('/','_',$this->Url) .'_model';
-        $PathModel = ide\Form::get($this->Url)->Path .'/model.php';
+        $ClassName = str_replace('/','_',$this->Form->Url) .'_model';
+        $PathModel = $this->Form->Path .'/model.php';
         if(!file_exists($PathModel)) throw new ex\Error('form [' .$this->Url. '] model is not defined.');
         
         if(!class_exists($ClassName)) $_content($ClassName,$PathModel);
         
-        $Ob = new $ClassName($this->Url);
-        //$Data = $Ob->getData();
-        
-        //if(!is_array($Data)) return [];
+        $Ob = new $ClassName($this->Form);
         if(!is_array($Data = $Ob->getData())) $Data = [];
         
-        $UrlParent = ide\Form::get($this->Url)->Parent;
-        $DataParent = $UrlParent ? (new Model($UrlParent))->Data : [];
+        $DataParent = $this->Form->Parent ? $this->Form->Parent->Data : [];
         
         $Data = arrayMergeReplace($DataParent,$Data);
-        
         return $Data;
     }
 }

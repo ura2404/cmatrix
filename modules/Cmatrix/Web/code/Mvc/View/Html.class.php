@@ -21,7 +21,7 @@ class Html extends \Cmatrix\Web\Mvc\View {
     
     // --- --- --- --- --- --- --- ---
     protected function getMyData(){
-        $Path = ide\Form::get($this->Url)->Path .'/form.html';
+        $Path = $this->Form->Path .CM_DS.'form.html';
         if(!file_exists($Path)) throw new ex\Error('html template file [' .$this->Url. '] is not found.');
         
         return file_get_contents($Path);

@@ -11,6 +11,8 @@ use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Exception as ex;
 
 class Form extends kernel\Reflection{
+    static $TYPES = ['html','php','element','twig'];
+    
     static $INSTANCES = [];
     
     protected $Url;
@@ -19,8 +21,6 @@ class Form extends kernel\Reflection{
     protected $_Config;
     protected $_Parent;
     protected $_Type;
-    
-    private $Types = ['html','php','element','twig'];
     
     // --- --- --- --- --- --- --- ---
     function __construct($url){
@@ -31,6 +31,7 @@ class Form extends kernel\Reflection{
     // --- --- --- --- --- --- --- ---
     function __get($name){
         switch($name){
+            case 'Url'       : return $this->Url;
             case 'Path'      : return $this->getMyPath();
             case 'Config'    : return $this->getMyConfig();
             case 'Parent'    : return $this->getMyParent();
@@ -57,16 +58,18 @@ class Form extends kernel\Reflection{
     // --- --- --- --- --- --- --- ---
     private function getMyConfig(){
         return $this->getInstanceValue('_Config',function(){
-            dump($this->Path .CM_DS. 'config.json','config');
             return kernel\Config::get($this->Path .CM_DS. 'config.json');
         });
     }
     
     // --- --- --- --- --- --- --- ---
+    /**
+     * @return \Cmatrix\Kernel\Form - parent form 
+     */
     private function getMyParent(){
         return $this->getInstanceValue('_Parent',function(){
-            if(($Parent = $this->Config->getValue('form/parent'))===false) throw new ex\Error('form "' .$this->Url. '" parent is not defined.');
-            return $Parent;
+            if(($ParentUrl = $this->Config->getValue('form/parent'))===false) throw new ex\Error('form "' .$this->Url. '" parent is not defined.');
+            return $ParentUrl ? static::get($ParentUrl) : null;
         });
     }
     
@@ -74,7 +77,7 @@ class Form extends kernel\Reflection{
     private function getMyType(){
         return $this->getInstanceValue('_Type',function(){
             if(($Type = $this->Config->getValue('form/type'))===false) throw new ex\Error('form "' .$this->Url. '" type is not defined.');
-            if(!in_array($Type,$this->Types)) throw new ex\Error('form "' .$this->Url. '" type "' .$Type. '"is not valid.');
+            if(!in_array($Type,self::$TYPES)) throw new ex\Error('form "' .$this->Url. '" type "' .$Type. '"is not valid.');
             return $Type;
         });
     }

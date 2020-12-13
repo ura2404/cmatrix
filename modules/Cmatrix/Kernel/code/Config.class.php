@@ -49,14 +49,15 @@ class Config extends Reflection {
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     /**
-     * @param string $path - path to config file folder
+     * @param string $path - path to config file folder or config file
      * @return \Cmatrix\Config - config instance 
      */
     static function get($path){
-        dump(strpos(substr($path,strrpos($path,'/')),'.') );
+        $Path = $path.(strpos(substr($path,strrpos($path,'/')),'.')===false ? CM_DS.'config.json' : null);
         
-        $Path = $path .CM_DS. 'config.json';
-        if(!file_exists($Path)) throw new ex\Error('Config file "'.strAfter($Path,CM_ROOT).'" not found.');
+        //if(!file_exists($Path)) throw new ex\Error('Config file "'.strAfter($Path,CM_ROOT).'" not found.');
+        if(!file_exists($Path)) throw new ex\Error('Config file "'.$Path.'" not found.');
+        
         return self::reg($path,Json::decode(file_get_contents($Path)));
     }
     

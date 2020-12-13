@@ -4,7 +4,7 @@ class MyModel extends \Cmatrix\Web\Mvc\Model {
     
     // --- --- --- --- --- --- --- ---
     public function getData(){
-        $this->Config = \Cmatrix\Kernel\Config::get('Cmatrix/Web/www/config.json');
+        $this->Config = \Cmatrix\Web\Kernel::get()->Config;
         
         return [
             'app' => [
@@ -17,11 +17,11 @@ class MyModel extends \Cmatrix\Web\Mvc\Model {
             ],
             'web' => [
                 'home'    => $this->getMyUrl(),
-                'session' => \Cmatrix\Web\Page::get('session')->Path,
-                'browser' => \Cmatrix\Web\Page::get('browser')->Path,
-                'admin'   => \Cmatrix\Web\Page::get('admin')->Path,
-                'check'   => \Cmatrix\Web\Page::get('check')->Path,
-                'favicon' => \Cmatrix\Web\Resource::get('Cmatrix/Web/form/custom/master/res/favicon.ico')->Path,
+                //'session' => \Cmatrix\Web\Page::get('session')->Path,
+                //'browser' => \Cmatrix\Web\Page::get('browser')->Path,
+                //'admin'   => \Cmatrix\Web\Page::get('admin')->Path,
+                //'check'   => \Cmatrix\Web\Page::get('check')->Path,
+                // ??? 'favicon' => \Cmatrix\Web\Resource::get('Cmatrix/Web/form/custom/master/res/favicon.ico')->Path,
             ]
         ];
     }

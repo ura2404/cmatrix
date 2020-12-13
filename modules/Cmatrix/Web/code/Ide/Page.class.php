@@ -14,6 +14,19 @@ class Page extends kernel\Ide\Page{
     static $INSTANCES = [];
     
     // --- --- --- --- --- --- --- ---
+    function __get($name){
+        switch($name){
+            default : return parent::__get($name);
+        }
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    protected function getFormInstance($url){
+        dump($url,11111);
+        return Form::get($url);
+    }
+
+    // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     static function get($url){

@@ -10,18 +10,18 @@ namespace Cmatrix\Web\Mvc;
 use \Cmatrix\Kernel\Exception as ex;
 
 class View {
-    protected $Url;
+    protected $Form;
 
     // --- --- --- --- --- --- --- ---
-    function __construct($url){
-        $this->Url = $url;
+    function __construct(\Cmatrix\Web\Ide\Form $form){
+        $this->Form = $form;
     }
 
     // --- --- --- --- --- --- --- ---
     function __get($name){
         switch($name){
             case 'Data' : return $this->getMyData();
-            default : throw new ex\Error('class [' .get_class($this). '] property [' .$name. '] is not defined.');
+            default : throw new ex\Property($this,$name);
         }
     }
 

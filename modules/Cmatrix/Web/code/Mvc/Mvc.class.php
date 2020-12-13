@@ -44,7 +44,7 @@ class Mvc {
     ];
 
     // --- --- --- --- --- --- --- ---
-    function __construct(\Cmatrix\Kernel\Ide\Form $form){
+    function __construct(\Cmatrix\Web\Ide\Form $form){
         $this->Form = $form;
         $this->Controller = $this->getMyController();
     }
@@ -61,8 +61,7 @@ class Mvc {
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     private function getMyController(){
-        dump($this->Form->Type);
-        $Type = web\Ide\Form::get($this->Url)->Type;
+        $Type = $this->Form->Type;
         
         if(!isset(self::$CONTROLLES[$Type])) throw new ex\Error('controller class [' .$Type. '] is not defined.');
         if(!isset(self::$VIEWS[$Type]))      throw new ex\Error('view class [' .$Type. '] is not defined.');
@@ -72,7 +71,7 @@ class Mvc {
         $ViewClass       = self::$VIEWS[$Type];
         $ModelClass      = self::$MODELS[$Type];
         
-        return new $ControllerClass(new $ViewClass($this->Url), new $ModelClass($this->Url));
+        return new $ControllerClass(new $ViewClass($this->Form), new $ModelClass($this->Form));
     }
     
     // --- --- --- --- --- --- --- ---
@@ -83,7 +82,7 @@ class Mvc {
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
-    static function get(\Cmatrix\Kernel\Ide\Form $form){
+    static function get(\Cmatrix\Web\Ide\Form $form){
         return new self($form);
     }
 }

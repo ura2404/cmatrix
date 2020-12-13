@@ -35,6 +35,11 @@ class Page extends kernel\Reflection{
     }
     
     // --- --- --- --- --- --- --- ---
+    protected function getFormInstance($url){
+        return Form::get($url);
+    }
+    
+    // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
@@ -66,7 +71,7 @@ class Page extends kernel\Reflection{
     private function getMyForm(){
         return $this->getInstanceValue('_Form',function(){
             if(!($FormUrl = $this->Config->getValue('page/form'))) throw new ex\Error('page [' .$this->Url. '] form url is not defined.');
-            return Form::get($FormUrl);
+            return $this->getFormInstance($FormUrl);
         });
     }
     

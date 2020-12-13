@@ -11,9 +11,12 @@ use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Exception as ex;
 use \Cmatrix\Web as web;
 
-class Form extends kernel\Reflection {
+class Form extends kernel\Ide\Form {
     static $C = [];
     static $INSTANCES = [];
+    
+    protected $_CacheName;
+    protected $_Styles;
     
     // --- --- --- --- --- --- --- ---
     function __construct($url){
@@ -21,13 +24,41 @@ class Form extends kernel\Reflection {
         
         isset(self::$C[$url]) ? null : self::$C[$url] = 0;
         if(CM_MODE === 'development' && !self::$C[$url]++){
-            //$this->createCache();
+            $this->createCache();
         }
+    }
+
+    // --- --- --- --- --- --- --- ---
+    function __get($name){
+        switch($name){
+            case 'CacheName' : return $this->getMyCacheName();
+            case 'Styles'    : return $this->getMyStyles();
+            default : return parent::__get($name);
+        }
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    private function getMyCacheName(){
+        return $this->getInstanceValue('_CacheName',function(){
+            return md5($this->Url.'/form') .'.'. $this->Type;
+        });
+    }
+
+    // --- --- --- --- --- --- --- ---
+    private function getMyStyles(){
+        return $this->getInstanceValue('_Styles',function(){
+            if(($Styles = $this->Config->getValue('form/styles'))===false) throw new ex\Error('form "' .$this->Url. '" styles is not defined.');
+            return is_array($Styles) ? $Styles : [];
+        });
     }
     
     // --- --- --- --- --- --- --- ---
     private function createCache(){
         //dump($this->Url,'create form cache');
+        
+        dump($this->Parent,$this->Url);
         
         $_parent = function(){
             if(!$this->Parent) return;
@@ -35,6 +66,9 @@ class Form extends kernel\Reflection {
         };
         
         $_styles = function(){
+            dump($this->Styles,$this->Url);
+            
+            
             //dump($this->Styles,'styles for cache');
             $Arr = array_map(function($value){
                 return web\Resource::get($value)->Link;
@@ -60,9 +94,9 @@ class Form extends kernel\Reflection {
         };
         
         // --- --- --- --- --- --- ---
-        $_parent();
-        $_styles();
-        $_jss();
+        //$_parent();
+        //$_styles();
+        //$_jss();
         
         kernel\Ide\Cache::get('forms')->updateValue($this->CacheName,$this->Content);
     }
