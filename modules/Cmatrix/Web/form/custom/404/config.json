@@ -7,7 +7,7 @@
         "styles" : [
             "form::Cmatrix/Web/custom/404/404.css"
         ],
-        "jss" : [
+        "scripts" : [
             "form::Cmatrix/Web/custom/404/404.js"
         ]
     }

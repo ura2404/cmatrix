@@ -68,8 +68,7 @@ class Page extends kernel\Reflection{
             
             //3. вывести html
             $Form = web\Ide\Page::get($PageUrl)->Form;
-            dump($Form,'FORM');
-            return;
+            //dump($Form);
             
             $Html = web\Mvc\Mvc::get($Form)->Html;
             //dump($Html);
@@ -78,6 +77,8 @@ class Page extends kernel\Reflection{
         }
         // 4. если что-то пошло не так, вывести страницу exception, если она есть, если её нет, то просто вывести текст ошибки в браузерa
         catch(ex\Error $e){
+            //dump($e->getMessage());
+            //return;
             
             $_noweb = function() use($e){
                 $Message = \Cmatrix\Kernel\Exception::createMessage($e);

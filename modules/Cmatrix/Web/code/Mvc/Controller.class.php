@@ -31,6 +31,13 @@ class Controller {
     protected function getMyData(){
         return;
     }
+    
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    static function get($form){
+        $ClassName = '\Cmatrix\Web\Mvc\Controller\\' . ucfirst($form->Type);
+        return new $ClassName(View::get($form), Model::get($form));        
+    }
 }
-
 ?>

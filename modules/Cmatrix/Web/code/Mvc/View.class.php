@@ -29,6 +29,13 @@ class View {
     protected function getMyData(){
         return;
     }
+    
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    static function get($form){
+        $ClassName = '\Cmatrix\Web\Mvc\View\\' . ucfirst($form->Type);
+        return new $ClassName($form);
+    }
 }
-
 ?>

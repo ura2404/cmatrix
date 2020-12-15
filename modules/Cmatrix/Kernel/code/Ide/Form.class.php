@@ -21,6 +21,7 @@ class Form extends kernel\Reflection{
     protected $_Config;
     protected $_Parent;
     protected $_Type;
+    protected $_Content;
     
     // --- --- --- --- --- --- --- ---
     function __construct($url){
@@ -33,9 +34,11 @@ class Form extends kernel\Reflection{
         switch($name){
             case 'Url'       : return $this->Url;
             case 'Path'      : return $this->getMyPath();
+            case 'CacheName' : return $this->getMyCacheName();
             case 'Config'    : return $this->getMyConfig();
             case 'Parent'    : return $this->getMyParent();
             case 'Type'      : return $this->getMyType();
+            case 'Content'   : return $this->getMyContent();
             //case 'Files' : return $this->getMyFiles();
             default : return parent::__get($name);
         }
@@ -55,6 +58,17 @@ class Form extends kernel\Reflection{
             return $Path;
         });
     }
+    
+    // --- --- --- --- --- --- --- ---
+    /**
+     * @return string - cache name of form instance in the cache
+     */
+    private function getMyCacheName(){
+        return $this->getInstanceValue('_CacheName',function(){
+            return md5($this->Url.'/form') .'.'. $this->Type;
+        });
+    }
+
     // --- --- --- --- --- --- --- ---
     private function getMyConfig(){
         return $this->getInstanceValue('_Config',function(){
@@ -74,11 +88,27 @@ class Form extends kernel\Reflection{
     }
     
     // --- --- --- --- --- --- --- ---
+    /**
+     * @return string - form type
+     */
     private function getMyType(){
         return $this->getInstanceValue('_Type',function(){
             if(($Type = $this->Config->getValue('form/type'))===false) throw new ex\Error('form "' .$this->Url. '" type is not defined.');
             if(!in_array($Type,self::$TYPES)) throw new ex\Error('form "' .$this->Url. '" type "' .$Type. '"is not valid.');
             return $Type;
+        });
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    /**
+     * @return string - content of form template file
+     */
+    private function getMyContent(){
+        return $this->getInstanceValue('_Content',function(){
+            //$Path = $this->Path.'/form.'.$this->Type;
+            $Path = kernel\Ide\Form::get($this->Url)->Path.'/form.'.$this->Type;
+            if(!file_exists($Path)) throw new ex\Error('form [' .$this->Url. '] template is not found.');
+            return file_get_contents($Path);
         });
     }
     

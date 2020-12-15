@@ -80,11 +80,17 @@ class Cache extends kernel\Reflection{
     }
     
     // --- --- --- --- --- --- --- ---
+    /**
+     * @return string - converted cache key
+     */
     public function getKey($key){
         return str_replace('/','^',$key);
     }
     
     // --- --- --- --- --- --- --- ---
+    /**
+     * @return string - path to cache content file
+     */
     public function getPath($key){
         $Path = $this->Path .'/'. $this->getKey($key);
         return $Path;

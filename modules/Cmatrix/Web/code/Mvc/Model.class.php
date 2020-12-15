@@ -44,6 +44,7 @@ class Model {
         };
         
         $ClassName = str_replace('/','_',$this->Form->Url) .'_model';
+        
         $PathModel = $this->Form->Path .'/model.php';
         if(!file_exists($PathModel)) throw new ex\Error('form [' .$this->Url. '] model is not defined.');
         
@@ -52,10 +53,17 @@ class Model {
         $Ob = new $ClassName($this->Form);
         if(!is_array($Data = $Ob->getData())) $Data = [];
         
-        $DataParent = $this->Form->Parent ? $this->Form->Parent->Data : [];
-        
+        $DataParent = $this->Form->Parent ? self::get($this->Form->Parent)->Data : [];
         $Data = arrayMergeReplace($DataParent,$Data);
         return $Data;
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    static function get($form){
+        $ClassName = '\Cmatrix\Web\Mvc\Model\\' . ucfirst($form->Type);
+        return new $ClassName($form);
     }
 }
 ?>

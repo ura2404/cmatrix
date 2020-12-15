@@ -11,37 +11,23 @@ use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Exception as ex;
 use \Cmatrix\Web as web;
 
-class Resource extends kernel\Reflection{
+class Resource extends  kernel\Ide\Resource {
     static $C = [];
     static $INSTANCES = [];
     
-    protected $Url;
-    
-    protected $_isRaw;
-    protected $_Path;
-    protected $_Type;
     protected $_CacheName;
-
-    private $Types = ['ico','png','jpg','css','js'];
     
     // --- --- --- --- --- --- --- ---
     function __construct($url){
-        $this->Url = $url;
         parent::__construct($url);
         
         isset(self::$C[$url]) ? null : self::$C[$url] = 0;
-        if(!$this->isRaw && CM_MODE === 'development' && !self::$C[$url]++){
-            //dump($url,'need create resource cache');
-            $this->createCache();
-        }
+        if(strpos($this->Url,'raw::')===false && CM_MODE === 'development' && !self::$C[$url]++) $this->createCache();
     }
     
     // --- --- --- --- --- --- --- ---
     function __get($name){
         switch($name){
-            case 'isRaw' : return $this->getMyRaw();
-            case 'Path' : return $this->getMyPath();
-            case 'Type' : return $this->getMyType();
             case 'CacheName' : return $this->getMyCacheName();
             default : return parent::__get($name);
         }
@@ -49,35 +35,6 @@ class Resource extends kernel\Reflection{
     
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
-    // --- --- --- --- --- --- --- ---
-    // --- --- --- --- --- --- --- ---
-    private function getMyRaw(){
-        return $this->getInstanceValue('_isRaw',function(){
-            return strStart($this->Url,'raw::') ? true : false;
-        });
-    }
-    
-    // --- --- --- --- --- --- --- ---
-    private function getMyPath(){
-        return $this->getInstanceValue('_Path',function(){
-            if(!$this->isRaw) $Path = kernel\Ide\Part::get($this->Url)->Path .CM_DS. kernel\Url::get($this->Url)->Path;
-            else $Path = kernel\Ide\Part::get('Cmatrix/Vendor')->Path .CM_DS. 'resources' .CM_DS. strAfter($this->Url,'raw::');
-            if(!file_exists($Path)) throw new ex\Error('resource file [' .$this->Url. '] is not found.');
-            
-            //dump($Path);
-            return $Path;
-        });
-    }
-    
-    // --- --- --- --- --- --- --- ---
-    private function getMyType(){
-        return $this->getInstanceValue('_Type',function(){
-            $Type = strRAfter($this->Url,'.');
-            if(!in_array($Type,$this->Types)) throw new ex\Error('resource "' .$this->Url. '" type "' .$Type. '"is not valid.');
-            return $Type;
-        });
-    }
-    
     // --- --- --- --- --- --- --- ---
     private function getMyCacheName(){
         return $this->getInstanceValue('_CacheName',function(){

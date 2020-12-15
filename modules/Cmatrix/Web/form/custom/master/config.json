@@ -4,11 +4,11 @@
         "type" : "twig",
         "parent" : null,
         "styles" : [
-            "raw::/res/fonts/google/Arsenal/font.css",
-            "raw::/res/fonts/fontawesome.com/5.14.0/css/all.css",
+            "raw::Cmatrix/Vendor/fonts/google/Arsenal/font.css",
+            "raw::Cmatrix/Vendor/fonts/fontawesome.com/5.14.0/css/all.css",
             "form::Cmatrix/Web/custom/master/master.css"
         ],
-        "jss" : [
+        "scripts" : [
             "form::Cmatrix/Web/custom/master/master.js"
         ]
     }

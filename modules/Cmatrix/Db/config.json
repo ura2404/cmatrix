@@ -4,6 +4,8 @@
         "name" : "Database подсистема",
         "version" : "4.0",
         "build" : "1",
-        "requiries" : null
+        "requiries" : [
+            "Cmatrix/Kernel"
+        ]
     }
 }

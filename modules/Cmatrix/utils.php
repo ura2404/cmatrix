@@ -412,10 +412,12 @@ function isArrayPlain(array $arr){
 /**
  * Функция str_fupper
  * Первая буква теперь заглавная
+ * 
+ * !! есть штатная функция ucfirst
  */
-function str_fupper($str){
+/*function str_fupper($str){
     return strFupper($str);
-}
+}*/
 function strFupper($str){
     return str_toupper(str_substr($str,0,1)) . str_tolower(str_substr($str,1)); 
 }
@@ -424,9 +426,9 @@ function strFupper($str){
  * Функция str_lupper
  * Первая буква теперь строчная
  */
-function str_flower($str){
+/*function str_flower($str){
     return strFlower($str);
-}
+}*/
 function strFlower($str){
     return str_tolower(str_substr($str,0,1)) . str_substr($str,1);
 }

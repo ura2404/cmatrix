@@ -24,10 +24,9 @@ class Twig extends \Cmatrix\Web\Mvc\View {
     // --- --- --- --- --- --- --- ---
     protected function getMyCacheKey(){
         $Key = $this->Form->CacheName;
-        $Cache = kernel\Ide\Cache::get('forms');
-        dump($Key,$this->Form->Url);
+        $Cache = web\Ide\Cache::get('forms');
         
-        if(!$Cache->isExists($Key)) throw new ex\Error('twig template cache file [' .$this->Form->Url. '] is not found.');
+        if(CM_MODE === 'development' && !$Cache->isExists($Key)) throw new ex\Error('twig template cache file [' .$this->Form->Url. '] is not found.');
         return $Cache->getKey($Key);
     }
 

@@ -1,5 +1,4 @@
 <?php
-
 class MyModel extends \Cmatrix\Web\Mvc\Model {
     protected $Config;
     

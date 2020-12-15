@@ -15,7 +15,6 @@ class Resource extends kernel\Reflection{
     
     protected $Url;
     
-    protected $_isRaw;
     protected $_Path;
     protected $_Link;
     
@@ -28,9 +27,8 @@ class Resource extends kernel\Reflection{
     // --- --- --- --- --- --- --- ---
     function __get($name){
         switch($name){
-            case 'isRaw' : return $this->getMyRaw();
-            case 'Path'  : return $this->getMyPath();
-            case 'Link'  : return $this->getMyLink();
+            case 'Path'     : return $this->getMyPath();
+            case 'HeadLink' : return $this->getMyHeadLink();
             default : return parent::__get($name);
         }
     }
@@ -38,30 +36,31 @@ class Resource extends kernel\Reflection{
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
-    private function getMyRaw(){
-        return $this->getInstanceValue('_isRaw',function(){
-            return strStart($this->Url,'raw::') ? true : false;
-        });
-    }
-    
-    // --- --- --- --- --- --- --- ---
     private function getMyPath(){
         return $this->getInstanceValue('_Path',function(){
-            $Path = \Cmatrix\Web\Kernel::get()->Home .($this->isRaw ? '/res/'. strAfter($this->Url,'raw::') : '/cache/'. Ide\Resource::get($this->Url)->CacheName);
+            $Path = \Cmatrix\Web\Kernel::get()->Home .
+                (
+                    kernel\Ide\Resource::get($this->Url)->Src === 'raw' ? 
+                    strAfter(Ide\Resource::get($this->Url)->Path,kernel\Ide\Part::get($this->Url)->Path) 
+                    : '/cache/'.Ide\Resource::get($this->Url)->CacheName
+                );
             return $Path;
         });
     }
     
     // --- --- --- --- --- --- --- ---
-    protected function getMyLink(){
+    protected function getMyHeadLink(){
+        switch(Ide\Resource::get($this->Url)->Type){
+            case 'js'  : return '<script type="text/javascript" src="' .$this->Path. '"></script>';
+            case 'css' : return '<link rel="stylesheet" media="none" type="text/css" href="'. $this->Path .'" onload="if(media!=\'all\')media=\'all\'"/>';
+        }
     }
 
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     static function get($url){
-        $Cl = '\Cmatrix\Web\Resource\\' . ucfirst(Ide\Resource::get($url)->Type);
-        return $Cl::get($url);
+        return new self($url);
     }
 }
 ?>

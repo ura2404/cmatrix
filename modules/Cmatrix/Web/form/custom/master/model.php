@@ -1,5 +1,4 @@
 <?php
-
 class MyModel extends \Cmatrix\Web\Mvc\Model {
     protected $Config;
     
@@ -18,7 +17,7 @@ class MyModel extends \Cmatrix\Web\Mvc\Model {
             ],
             'web' => [
                 'home'    => \Cmatrix\Web\Page::get()->Path,
-                // ???? 'favicon' => \Cmatrix\Web\Resource::get('Cmatrix/Web/form/custom/master/res/favicon.ico')->Path,
+                'favicon' => \Cmatrix\Web\Resource::get('form::Cmatrix/Web/custom/master/res/favicon.ico')->Path,
             ],
             'page' => [
                 'name' => 'Master',
