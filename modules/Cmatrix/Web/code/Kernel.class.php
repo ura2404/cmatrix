@@ -8,24 +8,22 @@
 
 namespace Cmatrix\Web;
 use \Cmatrix\Kernel\Exception as ex;
+use \Cmatrix\App as app;
 
 class Kernel extends \Cmatrix\Kernel\Reflection {
     static $INSTANCES = [];
     
     protected $_Home;
-    protected $_Config;
     
     // --- --- --- --- --- --- --- ---
     function __construct(){
         parent::__construct('web.kernel');
     }
     
-    
     // --- --- --- --- --- --- --- ---
     function __get($name){
         switch($name){
-            case 'Home'   : return $this->getMyHome();
-            case 'Config' : return $this->getMyConfig();
+            case 'Home' : return $this->getMyHome();
             default : return parent::__get($name);
         }
     }
@@ -35,19 +33,8 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
     // --- --- --- --- --- --- --- ---
     protected function getMyHome(){
         return $this->getInstanceValue('_Home',function(){
-            if(!($Home = $this->Config->getValue('web/root'))) throw new ex\Error($this,'configure variable "web.root" is not defined.');
+            if(!($Home = app\Kernel::get()->Config->getValue('web/root'))) throw new ex\Error($this,'configure variable "web.root" is not defined.');
             return $Home;
-        });
-    }
-    
-    // --- --- --- --- --- --- --- ---
-    /**
-     * @return \Cmatrix\Kernel\Config - конфиг web-проекта
-     */
-    private function getMyConfig(){
-        return $this->getInstanceValue('_Config',function(){
-            $Path = \Cmatrix\Kernel\Ide\Part::get('Cmatrix/Web')->Path.CM_DS.'www';
-            return \Cmatrix\Kernel\Config::get($Path);
         });
     }
     

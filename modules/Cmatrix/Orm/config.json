@@ -1,7 +1,7 @@
 {
     "part" : {
-        "code" : "Cmatrix/Db",
-        "name" : "Database подсистема",
+        "code" : "Cmatrix/Orm",
+        "name" : "ORM",
         "version" : "4.0",
         "build" : "1",
         "requiries" : [

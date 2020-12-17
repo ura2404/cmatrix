@@ -7,37 +7,47 @@
 namespace Cmatrix\Core;
 use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Exception as ex;
+use \Cmatrix\App as app;
+use \Cmatrix\Orm as orm;
 
-class Session extends kernel\Reflection {
-    static $INSTANCES = [];
-    protected $Key;
-    
-    //protected $_Instance;
+class Session {
+    static $INSTANCE;
     
     // --- --- --- --- --- --- --- ---
     function __construct(){
-        $this->Key = md5('current session');
-        
-        parent::__construct($this->Key);
+        if(!self::$INSTANCE) self::$INSTANCE = $this->createInstance();
     }
     
     // --- --- --- --- --- --- --- ---
-	/*function __get($name){
-        if($name === 'Instance') return $this->Instance;
-        else return $this->Instance->$name;
-	}
-    */
+    function __get($name){
+        switch($name){
+            case 'Instance' : return self::$INSTANCE;
+            default : throw new ex\Property($this,$name);
+        }
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    private function createInstance(){
+        if(app\Kernel::get()->Config->getValue('db')){
+            
+        }
+        else{
+            $Dm = orm\Datamodel::get('Cmatrix/Core/Session');
+            dump($Dm);
+            
+            
+            //return orm\Datamodel::get('Cmatrix/Core/Session');
+        }
+    }
 
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     static function get(){
-        return new self();
-    }
-    
-    // --- --- --- --- --- --- --- ---
-    static function reg(){
-        return new self();
+        new self();
+        return self::$INSTANCE;
     }
 }
 ?>

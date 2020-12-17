@@ -1,0 +1,21 @@
+{
+    "part" : {
+        "code" : "Cmatrix/App",
+        "name" : "Application",
+        "version" : "1.0",
+        "build" : "1",
+        "requiries" : [
+            "Cmatrix/Kernel"
+        ]
+    },
+    "app" : {
+        "code" : "cmatrix",
+        "name" : "Cmatrix",
+        "info" : "Конструктор платформ",
+        "_info" : "ECM/CMS/DMS платформа",
+        "author" : "ura@itx.ru",
+        "url" : "http://cmatrix.ru",
+        "since" : "2000",
+        "version" : "4.0"
+    }
+}

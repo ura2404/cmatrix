@@ -55,15 +55,15 @@ class Page extends kernel\Reflection{
         if($this->StaticContent) return $this->StaticContent;
         
         self::$PAGE = $this->Url;
-        $Config = \Cmatrix\Web\Kernel::get()->Config;
+        $Config = \Cmatrix\App\Kernel::get()->Config;
         
         // 1. найти url в конфиге
-        $PageUrl = $this->Url === '' ? $Config->getValue('pages/def') : $Config->getValue('pages/aliases/'. $this->Url);
+        $PageUrl = $this->Url === '' ? $Config->getValue('web/pages/def') : $Config->getValue('web/pages/aliases/'. $this->Url);
         
         try{
             // 2. если нет url в конфиге, то найти url 404-ой страницв 
             //404
-            if(!$PageUrl) $PageUrl = $Config->getValue('pages/aliases/404');
+            if(!$PageUrl) $PageUrl = $Config->getValue('web/pages/aliases/404');
             if(!$PageUrl) throw new ex\Error('page "404" is not defined.');
             
             //3. вывести html
@@ -97,7 +97,7 @@ class Page extends kernel\Reflection{
                 }
             };
             
-            $PageUrl = $Config->getValue('pages/aliases/404');
+            $PageUrl = $Config->getValue('web/pages/aliases/404');
             if($PageUrl) return $_web($PageUrl);
             else return $_noweb();
         }
@@ -108,9 +108,9 @@ class Page extends kernel\Reflection{
     
     // --- --- --- --- --- --- --- ---
     private function getMyPath(){
-        $Config = \Cmatrix\Web\Kernel::get()->Config;
+        $Config = \Cmatrix\App\Kernel::get()->Config;
         
-        $Url = $Config->getValue('pages/aliases/'. $this->Url);
+        $Url = $Config->getValue('web/pages/aliases/'. $this->Url);
         if(!$Url && $this->Url!='') throw new ex\Error('page "'.$this->Url.'" is not defined.');
         
         return web\Kernel::get()->Home.'/'.$this->Url;

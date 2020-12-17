@@ -36,7 +36,7 @@ body {
     bottom: 30px;
     left: 0;
     right: 0;
-    padding: 10px 100px;
+    padding: 0 100px;
 }
 .footer {
     position: fixed;

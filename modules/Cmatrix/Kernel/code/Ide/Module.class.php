@@ -16,6 +16,7 @@ class Module extends kernel\Reflection{
     protected $Url;
     
     protected $_Path;
+    protected $_Config;
     
     // --- --- --- --- --- --- --- ---
     function __construct($url){
@@ -27,6 +28,7 @@ class Module extends kernel\Reflection{
     function __get($name){
         switch($name){
             case 'Path' : return $this->getMyPath();
+            case 'Config' : return $this->getMyConfig();
             default : return parent::__get($name);
         }
     }
@@ -43,6 +45,16 @@ class Module extends kernel\Reflection{
         });
     }
     
+    // --- --- --- --- --- --- --- ---
+    /**
+     * @return \Cmatrix\Kernel\Config - module description config
+     */
+    private function getMyConfig(){
+        return $this->getInstanceValue('_Config',function(){
+            return kernel\Config::get($this->Path);
+        });
+    }
+
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---

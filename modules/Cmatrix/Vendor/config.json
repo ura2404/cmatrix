@@ -1,6 +1,6 @@
 {
     "part" : {
-        "code" : "Vendor",
+        "code" : "Cmatrix/Vendor",
         "name" : "Сторонние модули и ресурсы",
         "version" : "4.0",
         "build" : "1",

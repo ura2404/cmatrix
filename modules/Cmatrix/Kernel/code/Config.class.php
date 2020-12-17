@@ -38,7 +38,7 @@ class Config extends Reflection {
             if(count($arr)>1){
                 $ind = $arr[0];
                 array_shift($arr);
-                return isset($ini[$ind]) ? $_fun($arr,$ini[$ind]) : $default;
+                return isset($ini[$ind]) ? $_fun($arr,$ini[$ind]) : ($default ? $default : false);
             }
             else return array_key_exists($arr[0],$ini) ? $ini[$arr[0]] : ($default ? $default : false);
         };

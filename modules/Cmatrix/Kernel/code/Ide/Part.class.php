@@ -16,6 +16,7 @@ class Part extends kernel\Reflection{
     protected $Url;
     
     protected $_Path;
+    protected $_Config;
     
     // --- --- --- --- --- --- --- ---
     function __construct($url){
@@ -27,6 +28,7 @@ class Part extends kernel\Reflection{
     function __get($name){
         switch($name){
             case 'Path' : return $this->getMyPath();
+            case 'Config' : return $this->getMyConfig();
             default : return parent::__get($name);
         }
     }
@@ -40,6 +42,16 @@ class Part extends kernel\Reflection{
             $Path = Module::get($this->Url)->Path .CM_DS. $Part;
             if(!file_exists($Path) || !is_dir($Path)) throw new ex\Error('Part "'. $Part .'" is not exists.');
             return $Path;
+        });
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    /**
+     * @return \Cmatrix\Kernel\Config - part description config
+     */
+    private function getMyConfig(){
+        return $this->getInstanceValue('_Config',function(){
+            return kernel\Config::get($this->Path);
         });
     }
     

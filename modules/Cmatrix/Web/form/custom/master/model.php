@@ -4,7 +4,7 @@ class MyModel extends \Cmatrix\Web\Mvc\Model {
     
     // --- --- --- --- --- --- --- ---
     public function getData(){
-        $this->Config = \Cmatrix\Web\Kernel::get()->Config;
+        $this->Config = \Cmatrix\App\Kernel::get()->Config;
         
         return [
             'app' => [
@@ -28,7 +28,7 @@ class MyModel extends \Cmatrix\Web\Mvc\Model {
     // --- --- --- --- --- --- --- ---
 	protected function getMyPreiod(){
         $now = date('Y');
-        $since = $this->Config->getValue('app/since');
+        $since = $this->Config->getValue('app/since',$now);
         return $now == $since ? $now : $since .' - '. $now;
 	}
 }

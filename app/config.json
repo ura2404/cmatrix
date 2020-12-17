@@ -1,18 +1,16 @@
 {
-    "part" : {
-        "code" : "Cmatrix/Web",
-        "name" : "web подсистема",
-        "version" : "4.0",
-        "build" : "1",
-        "requiries" : [
-            "Cmatrix/Kernel"
-        ]
+    "app" : {
+        "code" : "cmatrix",
+        "name" : "Cmatrix",
+        "info" : "Конструктор платформ",
+        "author" : "ura@itx.ru",
+        "url" : "http://cmatrix.ru",
+        "since" : "2000",
+        "version" : "4.0"
     },
     "web" : {
-        "rewrite" : {
-            "root" : "/cmatrix",
-            "state" : true
-        },
+        "root" : "/cmatrix",
+        "rewrite" : true,
         "pages" : {
             "def" : "Cmatrix/Web/custom/def",
             "aliases" : {

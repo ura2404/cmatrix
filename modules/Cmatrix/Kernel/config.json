@@ -1,6 +1,6 @@
 {
     "part" : {
-        "code" : "Kernel",
+        "code" : "Cmatrix/Kernel",
         "name" : "Ядро Cmatrix",
         "version" : "4.0",
         "build" : "1",

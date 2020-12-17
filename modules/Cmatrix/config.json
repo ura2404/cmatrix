@@ -2,14 +2,17 @@
     "module" : {
         "code" : "Cmatrix",
         "name" : "Cmatrix",
-        "info" : "ECM/CMS/DMS платформа",
+        "info" : "Конструктор платформ",
         "author" : "ura@itx.ru",
-        "url" : "http://cmatrox.ru",
+        "url" : "http://cmatrix.ru",
         "since" : "2000",
         "version" : "4.0"
     },
     "parts" : [
+        "Core",
+        "Db",
         "Kernel",
+        "Orm",
         "Vendor",
         "Web"
     ]
