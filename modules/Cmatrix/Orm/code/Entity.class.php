@@ -1,29 +1,32 @@
 <?php
 /**
- * Class Cmatrix\Orm\Datamodel
+ * Class Cmatrix\Orm\Entity
  *
  * @author ura@itx.ru
- * @version 1.0 2020-12-17
+ * @version 1.0 2020-12-19
  */
 
 namespace Cmatrix\Orm;
 use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Exception as ex;
 
-class Datamodel extends \Cmatrix\Kernel\Reflection {
+class Entity extends \Cmatrix\Kernel\Reflection {
     //static $INSTANCES = [];
     
-    protected $_Props;
+    protected $Dm;
+    
+    //protected $_Props;
     
     // --- --- --- --- --- --- --- ---
-    function __construct(){
+    function __construct($id,$dm){
+        $this->Dm = $dm;
         parent::__construct(get_class($this));
     }
     
     // --- --- --- --- --- --- --- ---
     function __get($name){
         switch($name){
-            case 'Props' : return $this->getMyProps();
+            //case 'Props' : return $this->getMyProps();
             default : return parent::__get($name);
         }
     }
@@ -43,9 +46,13 @@ class Datamodel extends \Cmatrix\Kernel\Reflection {
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
-    static function get($url){
-        $ClassName = kernel\Ide\Datamodel::get($url)->Class;
-        return new $ClassName();
+    static function create($dm){
+        return new self(null,$dm);
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    static function get($id,$dm){
+        return new self($id,$dm);
     }
 }
 ?>

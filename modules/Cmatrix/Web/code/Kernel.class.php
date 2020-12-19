@@ -11,7 +11,7 @@ use \Cmatrix\Kernel\Exception as ex;
 use \Cmatrix\App as app;
 
 class Kernel extends \Cmatrix\Kernel\Reflection {
-    static $INSTANCES = [];
+    //static $INSTANCES = [];
     
     protected $_Home;
     

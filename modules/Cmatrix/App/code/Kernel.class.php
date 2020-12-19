@@ -10,7 +10,7 @@ namespace Cmatrix\App;
 use \Cmatrix\Kernel\Exception as ex;
 
 class Kernel extends \Cmatrix\Kernel\Reflection {
-    static $INSTANCES = [];
+    //static $INSTANCES = [];
     
     protected $_Sapi;
     protected $_Config;
@@ -20,6 +20,8 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
     // --- --- --- --- --- --- --- ---
     function __construct(){
         parent::__construct('app.kernel');
+        
+        //dump(self::$REFINSTANCES);
     }
     
     // --- --- --- --- --- --- --- ---

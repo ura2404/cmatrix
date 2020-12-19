@@ -11,7 +11,11 @@ use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Exception as ex;
 
 class Cache extends kernel\Ide\Cache {
-    static $INSTANCES = [];
+    //static $INSTANCES = [];
+    // --- --- --- --- --- --- --- ---
+    function __construct($url){
+        parent::__construct($url);
+    }
     
     // --- --- --- --- --- --- --- ---
     function __get($name){

@@ -10,8 +10,8 @@ namespace Cmatrix\Kernel\Ide;
 use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Exception as ex;
 
-class Part extends kernel\Reflection{
-    static $INSTANCES = [];
+class Part extends kernel\Reflection {
+    //static $INSTANCES = [];
     
     protected $Url;
     
@@ -22,6 +22,8 @@ class Part extends kernel\Reflection{
     function __construct($url){
         $this->Url = $url;
         parent::__construct($url);
+        
+        //dump(self::$REFINSTANCES);
     }
     
     // --- --- --- --- --- --- --- ---

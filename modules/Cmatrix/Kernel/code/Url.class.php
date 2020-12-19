@@ -11,9 +11,9 @@ use \Cmatrix\Kernel\Exception as ex;
 
 class Url extends Reflection{
     static $SRC = ['raw','form','res'];
-    static $INSTANCES = [];
+    //static $INSTANCES = [];
     
-    protected $U;
+    private $U;
     
     protected $_Url;
     protected $_Src;
@@ -32,6 +32,7 @@ class Url extends Reflection{
     // --- --- --- --- --- --- --- ---
     function __get($name){
         switch($name){
+            //case 'U'      : return $this->U;
             case 'Url'    : return $this->getMyUrl();
             case 'Src'    : return $this->getMySrc();
             case 'Arr'    : return $this->getMyArr();
@@ -46,7 +47,7 @@ class Url extends Reflection{
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     protected function getMyUrl(){
-        return $this->getInstanceValue('_Arr',function(){
+        return $this->getInstanceValue('_Url',function(){
             return strpos($this->U,'::') === false ? $this->U : strAfter($this->U,'::');
         });
     }

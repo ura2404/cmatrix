@@ -61,7 +61,7 @@ class Model {
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
-    static function get($form){
+    static function get(\Cmatrix\Web\Ide\Form $form){
         $ClassName = '\Cmatrix\Web\Mvc\Model\\' . ucfirst($form->Type);
         return new $ClassName($form);
     }

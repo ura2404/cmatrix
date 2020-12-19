@@ -8,29 +8,39 @@ namespace Cmatrix\Kernel;
 use \Cmatrix\Kernel\Exception as ex;
 
 class Reflection {
-    //static $INSTANCES = [];
-    protected $Key;
+    static $REFINSTANCES = [];
+    static $REFPROPS = [];
+    static $REFPROPSNAMES = [];
     
-    protected $_Props;
-    protected $_PropsNames;
+    protected $RefKey;
+    protected $OldKey;
+    
+    protected $_RefProps;
+    protected $_RefPropsNames;
 
     // --- --- --- --- --- --- ---
     function __construct($key){
+        $this->OldKey = $key;
+        
         if(gettype($key) === 'string') $key = md5($key);
         elseif(is_array($key)) $key = md5(serialize($key));
         
-        $this->Key = $key;
-        if(isset(static::$INSTANCES[$this->Key])) $this->getInstance();
+        $this->RefKey = get_class($this).$key;
+        if(isset(self::$REFINSTANCES[$this->RefKey])) $this->getInstance();
         else $this->createInstance();
     }
 
     // --- --- --- --- --- --- ---
     function __get($name){
+        //dump($name);
+        //dump($this);
+        //dump($this->Oldkey);
         switch($name){
-            case 'Instance'   : return $this->Instance;
-            case 'Props'      : return $this->getMyProps();
-            case 'PropsNames' : return $this->getMyPropsNames();
-            default : throw new ex\Error('class "' .get_class($this). '" property "' .$name. '" is not defined.');
+            //case 'Instance'      : return $this->Instance;
+            case 'RefProps'      : return $this->getMyRefProps();
+            case 'RefPropsNames' : return $this->getMyRefPropsNames();
+            //default : throw new ex\Error('class "' .get_class($this). '" property "' .$name. '" is not defined.');
+            default : throw new ex\Property($this,$name);
         }
     }
 
@@ -38,83 +48,109 @@ class Reflection {
     function __set($name,$value){
         switch($name){
             default : 
-                if(in_array('_'.$name,$this->PropsNames)) $Name = '_'.$name;
-                else if(in_array($name,$this->PropsNames)) $Name = $name;
-                else throw new ex\Error('class "' .get_class($this). '" property "' .$name. '" is not defined.');
+                if(in_array('_'.$name,$this->RefPropsNames)) $Name = '_'.$name;
+                else if(in_array($name,$this->RefPropsNames)) $Name = $name;
+                else throw new ex\Property($this,$name);
                 
-                static::$INSTANCES[$this->Key]->$Name = $this->$Name = $value;
+                self::$REFINSTANCES[$this->RefKey]->$Name = $this->$Name = $value;
         }
     }
 
     // --- --- --- --- --- --- ---
-    protected function getMyProps(){
-        if($this->_Props) return $this->_Props;
+    protected function getMyRefProps(){
+        if($this->_RefProps) return $this->_RefProps;
         
         $Reflect = new \ReflectionClass($this);
 		$Statics = $Reflect->getStaticProperties();
         
 		// приватные свойства не трогать, пусть останутся лично классу
 		//$Props = $Reflect->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED | \ReflectionProperty::IS_PRIVATE);
-		$this->_Props = $Reflect->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED);
+		$this->_RefProps = $Reflect->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED);
 		
-        $this->_Props = array_map(function($prop) use($Statics){
+        $this->_RefProps = array_map(function($prop) use($Statics){
             $Name = $prop->getName();
             // статику не переносим
             return array_key_exists($Name,$Statics) ? null : $prop;
-		},$this->_Props);
+		},$this->_RefProps);
 		
-		return $this->_Props = array_filter($this->_Props,function($value){ return !!$value; });
+		return $this->_RefProps = array_filter($this->_RefProps,function($value){ return !!$value; });
+    }
+
+    // --- --- --- --- --- --- ---
+    protected function getMyRefProps2(){
+        if(isset(self::$REFPROPS[$this->RefKey])) return self::$REFPROPS[$this->RefKey];
+        
+        $Reflect = new \ReflectionClass($this);
+		$Statics = $Reflect->getStaticProperties();
+        
+		// приватные свойства не трогать, пусть останутся лично классу
+		self::$REFPROPS[$this->RefKey] = $Reflect->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED /*| \ReflectionProperty::IS_PRIVATE*/);
+		
+        // статику не переносим
+        self::$REFPROPS[$this->RefKey] = array_map(function($prop) use($Statics){
+            $Name = $prop->getName();
+            return array_key_exists($Name,$Statics) ? null : $prop;
+		},self::$REFPROPS[$this->RefKey]);
+		
+		//dump(get_class($this));
+		//dump($this->Url,'URL');
+		//dump($this->RefKey,'KEY');
+		//dump(self::$REFPROPS[$this->RefKey]);
+		
+		// удалить пустые у вернуть
+		return self::$REFPROPS[$this->RefKey] = array_filter(self::$REFPROPS[$this->RefKey],function($value){ return !!$value; });
     }
     
     // --- --- --- --- --- --- ---
-    protected function getMyPropsNames(){
-        if($this->_PropsNames) return $this->_PropsNames;
+    protected function getMyRefPropsNames(){
+        if($this->_RefPropsNames) return $this->_RefPropsNames;
         
-		return $this->_PropsNames = array_map(function($prop){
+		return $this->_RefPropsNames = array_map(function($prop){
 		    return $prop->getName();
-		},$this->Props);
+		},$this->RefProps);
+    }
+
+    // --- --- --- --- --- --- ---
+    protected function getMyRefPropsNames2(){
+        if(isset(self::$REFPROPSNAMES[$this->RefKey])) return self::$REFPROPSNAMES[$this->RefKey];
+        
+		return self::$REFPROPSNAMES[$this->RefKey] = array_map(function($prop){
+		    return $prop->getName();
+		},$this->RefProps);
     }
     
     // --- --- --- --- --- --- ---
     protected function createInstance(){
         //dump(get_class($this),'createInstance');
-        static::$INSTANCES[$this->Key] = $this;
+        self::$REFINSTANCES[$this->RefKey] = $this;
     }
 
     // --- --- --- --- --- --- ---
     protected function getInstance(){
-        array_map(function($name){
-            $this->$name = static::$INSTANCES[$this->Key]->$name;
-        },$this->PropsNames);
+        //dump(self::$REFINSTANCES[$this->RefKey],1111);
+        //dump(get_class($this),11111);
+        //dump($this,2222);
+        //dump($this->RefKey,3333);
+        //dump($this->OldKey,4444);
+        //dump($this->RefPropsNames);
         
-        /*
-        //dump(get_class($this),'getInstance');
-		$Reflect = new \ReflectionClass($this);
-		
-		// приватные свойства не трогать, пусть останутся лично классу
-		//$Props = $Reflect->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED | \ReflectionProperty::IS_PRIVATE);
-		$Props = $Reflect->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED);
-		//dump($Props);
-		
-		$Statics = $Reflect->getStaticProperties();
-		
-        array_map(function($prop) use($Statics){
-            $Name = $prop->getName();
-            if(array_key_exists($Name,$Statics)) return;    // статику не переносим
-            
-            $this->$Name = static::$INSTANCES[$this->Key]->$Name;
-		},$Props);
-		*/
+        array_map(function($name){
+            //dump($name,111);
+            //dump($this->OldKey,222);
+            //dump(self::$REFINSTANCES[$this->RefKey],333);
+            //dump(self::$REFINSTANCES[$this->RefKey]->$name,444);
+            $this->$name = self::$REFINSTANCES[$this->RefKey]->$name;
+        },$this->RefPropsNames);
     }
     
     // --- --- --- --- --- --- ---
-    protected function getInstanceValue($key,$_fun){
-        //dump(static::$INSTANCES[$this->Key]);
+    protected function getInstanceValue($name,$_fun){
+        //dump(self::$REFINSTANCES[$this->RefKey]);
         
-        if(!$_fun instanceof \Closure) throw new ex\Error('invalid instance "' .$key. '" of function');
+        if(!$_fun instanceof \Closure) throw new ex\Error('invalid function for instance "' .$name. '"');
         
-        if(static::$INSTANCES[$this->Key]->$key) return static::$INSTANCES[$this->Key]->$key;
-        return static::$INSTANCES[$this->Key]->$key = $this->$key = $_fun();
+        if(self::$REFINSTANCES[$this->RefKey]->$name) return self::$REFINSTANCES[$this->RefKey]->$name;
+        return self::$REFINSTANCES[$this->RefKey]->$name = $this->$name = $_fun();
     }
 
 }

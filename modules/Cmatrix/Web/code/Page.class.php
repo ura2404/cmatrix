@@ -15,7 +15,7 @@ class Page extends kernel\Reflection{
     static $PAGE;
     static $EXCEPTION;
     
-    static $INSTANCES = [];
+    //static $INSTANCES = [];
     /**
      * url страницы, переданный в браузер
      */
@@ -25,7 +25,9 @@ class Page extends kernel\Reflection{
     // --- --- --- --- --- --- --- ---
     function __construct($url=''){
         $this->Url = $url;
-        parent::__construct($this->Url);
+        parent::__construct('page.'.$this->Url);
+        
+        //dump(self::$REFINSTANCES);
     }
 
     // --- --- --- --- --- --- --- ---

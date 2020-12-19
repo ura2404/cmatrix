@@ -11,7 +11,7 @@ use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Exception as ex;
 
 class Page extends kernel\Reflection{
-    static $INSTANCES = [];
+    //static $INSTANCES = [];
     protected $Url;
     
     protected $_Path;
@@ -22,10 +22,13 @@ class Page extends kernel\Reflection{
     function __construct($url){
         $this->Url = $url;
         parent::__construct($url);
+        
+        //dump(self::$REFINSTANCES);
     }
     
     // --- --- --- --- --- --- --- ---
     function __get($name){
+        //dump($name);
         switch($name){
             case 'Path'   : return $this->getMyPath();
             case 'Config' : return $this->getMyConfig();

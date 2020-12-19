@@ -9,7 +9,7 @@ namespace Cmatrix\Kernel;
 use \Cmatrix\Kernel\Exception as ex;
 
 class Config extends Reflection {
-    static $INSTANCES = [];
+    //static $INSTANCES = [];
     protected $Key;
     protected $Data;
     

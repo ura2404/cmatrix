@@ -13,11 +13,12 @@ use \Cmatrix\Kernel\Exception as ex;
 class Form extends kernel\Reflection{
     static $TYPES = ['html','php','element','twig'];
     
-    static $INSTANCES = [];
+    //static $INSTANCES = [];
     
     protected $Url;
     
     protected $_Path;
+    protected $_CacheName;
     protected $_Config;
     protected $_Parent;
     protected $_Type;
@@ -83,7 +84,7 @@ class Form extends kernel\Reflection{
     private function getMyParent(){
         return $this->getInstanceValue('_Parent',function(){
             if(($ParentUrl = $this->Config->getValue('form/parent'))===false) throw new ex\Error('form "' .$this->Url. '" parent is not defined.');
-            return $ParentUrl ? static::get($ParentUrl) : null;
+            return $ParentUrl ? static::get($ParentUrl) : null;    // static::get() - НЕ self::get()
         });
     }
     

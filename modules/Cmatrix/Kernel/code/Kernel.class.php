@@ -7,7 +7,7 @@
 namespace Cmatrix\Kernel;
 
 class Kernel extends \Cmatrix\Kernel\Reflection {
-    static $INSTANCES = [];
+    //static $INSTANCES = [];
     
     // --- --- --- --- --- --- --- ---
     function __construct(){

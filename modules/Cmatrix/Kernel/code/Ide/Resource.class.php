@@ -13,7 +13,7 @@ use \Cmatrix\Kernel\Exception as ex;
 class Resource extends kernel\Reflection{
     static $TYPES = ['ico','png','jpg','css','js'];
     
-    static $INSTANCES = [];
+    //static $INSTANCES = [];
     
     protected $Url;
     

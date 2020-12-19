@@ -11,7 +11,7 @@ use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Exception as ex;
 
 class Cache extends kernel\Reflection{
-    static $INSTANCES = [];
+    //static $INSTANCES = [];
     
     protected $Url;
     

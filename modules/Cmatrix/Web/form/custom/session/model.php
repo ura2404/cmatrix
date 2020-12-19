@@ -16,7 +16,7 @@ class MyModel extends \Cmatrix\Web\Mvc\Model {
     
     // --- --- --- --- --- --- --- ---
     private function getMySession(){
-        dump(\Cmatrix\Core\Session::get());
+        //dump(\Cmatrix\Core\Session::get());
     }
 }
 ?>

@@ -11,7 +11,12 @@ use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Exception as ex;
 
 class Page extends kernel\Ide\Page{
-    static $INSTANCES = [];
+    //static $INSTANCES = [];
+    
+    // --- --- --- --- --- --- --- ---
+    function __construct($url){
+        parent::__construct($url);
+    }
     
     // --- --- --- --- --- --- --- ---
     function __get($name){

@@ -35,7 +35,10 @@ class Session {
         }
         else{
             $Dm = orm\Datamodel::get('Cmatrix/Core/Session');
-            dump($Dm);
+            //dump($Dm);
+            
+            $Ob = orm\Entity::create($Dm);
+            dump($Ob);
             
             
             //return orm\Datamodel::get('Cmatrix/Core/Session');

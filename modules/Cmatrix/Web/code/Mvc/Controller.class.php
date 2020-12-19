@@ -35,7 +35,7 @@ class Controller {
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
-    static function get($form){
+    static function get(\Cmatrix\Web\Ide\Form $form){
         $ClassName = '\Cmatrix\Web\Mvc\Controller\\' . ucfirst($form->Type);
         return new $ClassName(View::get($form), Model::get($form));        
     }

@@ -13,7 +13,7 @@ use \Cmatrix\Web as web;
 
 class Resource extends  kernel\Ide\Resource {
     static $C = [];
-    static $INSTANCES = [];
+    //static $INSTANCES = [];
     
     protected $_CacheName;
     

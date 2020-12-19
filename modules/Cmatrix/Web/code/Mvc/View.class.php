@@ -33,7 +33,7 @@ class View {
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
-    static function get($form){
+    static function get(\Cmatrix\Web\Ide\Form $form){
         $ClassName = '\Cmatrix\Web\Mvc\View\\' . ucfirst($form->Type);
         return new $ClassName($form);
     }

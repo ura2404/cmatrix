@@ -13,7 +13,7 @@ use \Cmatrix\Web as web;
 
 class Form extends kernel\Ide\Form {
     static $C = [];
-    static $INSTANCES = [];
+    //static $INSTANCES = [];
     
     protected $_CacheName;
     protected $_Styles;
