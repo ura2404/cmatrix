@@ -111,7 +111,7 @@ class Form extends kernel\Ide\Form {
         $_styles();
         $_scripts();
         
-        web\Ide\Cache::get('forms')->updateValue($this->CacheName,$this->Content);
+        kernel\Ide\Cache::get('forms')->updateValue($this->CacheName,$this->Content);
     }
     
 

@@ -13,19 +13,20 @@ class Reflection {
     static $REFPROPSNAMES = [];
     
     protected $RefKey;
-    protected $OldKey;
+    //protected $OldKey;
     
-    protected $_RefProps;
-    protected $_RefPropsNames;
+    //protected $_RefProps;
+    //protected $_RefPropsNames;
 
     // --- --- --- --- --- --- ---
-    function __construct($key){
-        $this->OldKey = $key;
-        
-        if(gettype($key) === 'string') $key = md5($key);
+    function __construct($key=null){
+        //$this->OldKey = $key;
+        if(!$key) $key = '';
+        elseif(gettype($key) === 'string') $key = md5($key);
         elseif(is_array($key)) $key = md5(serialize($key));
+        else throw new ex\Error('Bad key for create Reflecton instance');
         
-        $this->RefKey = get_class($this).$key;
+        $this->RefKey = get_class($this).'_'.$key;
         if(isset(self::$REFINSTANCES[$this->RefKey])) $this->getInstance();
         else $this->createInstance();
     }
@@ -57,7 +58,7 @@ class Reflection {
     }
 
     // --- --- --- --- --- --- ---
-    protected function getMyRefProps(){
+    protected function getMyRefProps2(){
         if($this->_RefProps) return $this->_RefProps;
         
         $Reflect = new \ReflectionClass($this);
@@ -77,7 +78,7 @@ class Reflection {
     }
 
     // --- --- --- --- --- --- ---
-    protected function getMyRefProps2(){
+    protected function getMyRefProps(){
         if(isset(self::$REFPROPS[$this->RefKey])) return self::$REFPROPS[$this->RefKey];
         
         $Reflect = new \ReflectionClass($this);
@@ -102,7 +103,7 @@ class Reflection {
     }
     
     // --- --- --- --- --- --- ---
-    protected function getMyRefPropsNames(){
+    protected function getMyRefPropsNames2(){
         if($this->_RefPropsNames) return $this->_RefPropsNames;
         
 		return $this->_RefPropsNames = array_map(function($prop){
@@ -111,7 +112,7 @@ class Reflection {
     }
 
     // --- --- --- --- --- --- ---
-    protected function getMyRefPropsNames2(){
+    protected function getMyRefPropsNames(){
         if(isset(self::$REFPROPSNAMES[$this->RefKey])) return self::$REFPROPSNAMES[$this->RefKey];
         
 		return self::$REFPROPSNAMES[$this->RefKey] = array_map(function($prop){

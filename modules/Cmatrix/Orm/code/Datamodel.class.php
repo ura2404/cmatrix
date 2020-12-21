@@ -11,13 +11,18 @@ use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Exception as ex;
 
 class Datamodel extends \Cmatrix\Kernel\Reflection {
-    //static $INSTANCES = [];
+    static $C = [];
     
+    public $Code;
+    public $Name;
+    
+    protected $Props;
     protected $_Props;
     
     // --- --- --- --- --- --- --- ---
     function __construct(){
-        parent::__construct(get_class($this));
+        $this->init();
+        parent::__construct();
     }
     
     // --- --- --- --- --- --- --- ---
@@ -31,6 +36,15 @@ class Datamodel extends \Cmatrix\Kernel\Reflection {
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
+    private function init(){
+        $Url = str_replace('\\','/',str_replace('\Dm',null,get_class($this)));
+        $Own    = kernel\Ide\Datamodel::get($Url);
+        $Parent = kernel\Ide\Datamodel::get($Own->Parent);
+        
+        dump($Own->Props);
+        //dump($Own->OwnProps);
+    }
+    
     /*protected function getMySapi(){
         return $this->getInstanceValue('_Sapi',function(){
             $Sapi = php_sapi_name();
@@ -44,8 +58,25 @@ class Datamodel extends \Cmatrix\Kernel\Reflection {
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     static function get($url){
+        if(CM_MODE === 'development'){
+            $ClassName = kernel\Ide\Datamodel::get($url)->ClassName;
+            $Dm = new $ClassName();
+            
+            isset(self::$C[$url]) ? null : self::$C[$url] = 0;
+            if(!self::$C[$url]++) kernel\Ide\Cache::get('dm')->updateValue($url,serialize($Dm));
+            return $Dm;
+        }
+        else{
+            $Sc = kernel\Ide\Cache::get('dm')->getValue($url);
+            return unserialize($Sc);
+        }
+        
+        /*
+        dump($url);
+        dump(kernel\Ide\Datamodel::get($url)->Path);
         $ClassName = kernel\Ide\Datamodel::get($url)->Class;
         return new $ClassName();
+        */
     }
 }
 ?>

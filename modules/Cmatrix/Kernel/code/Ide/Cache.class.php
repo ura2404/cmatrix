@@ -84,7 +84,7 @@ class Cache extends kernel\Reflection{
      * @return string - converted cache key
      */
     public function getKey($key){
-        return str_replace('/','^',$key);
+        return str_replace(['/','\\'],['^','^'],$key);
     }
     
     // --- --- --- --- --- --- --- ---

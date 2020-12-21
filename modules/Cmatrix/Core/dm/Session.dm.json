@@ -1,5 +1,48 @@
 {
     "dm" : {
+        "code": "Cmatrix/Core/Session",
+        "name": {
+            "_def" : "Сессия"
+        },
+        "baloon": null,
+        "parent": "Cmatrix/Core/Entity",
+        "info": null,
+        "uniques": null,
+        "props": {
+            "id" : {
+                "code": "id",
+                "name": {
+                    "_def": "ID"
+                },
+                "label": null,
+                "baloon": {
+                    "_def": "Уникальный ID идентификатор"
+                },
+                "type": "::id::",
+                "length": null,
+                "nn": true,
+                "index": null,
+                "default": "::counter::",
+                "registr" : null,
+                "info": null,
+                "association": null
+            },
+            "systype" : {
+                "code": "systype",
+                "name": null,
+                "label": null,
+                "baloon": null,
+                "type": "string",
+                "length": 32,
+                "nn": true,
+                "index": null,
+                "default": "Cmatrix/Core/Session",
+                "registr" : null,
+                "info": null,
+                "association": null
+            }
+            
+        }
         
     }
 }
