@@ -15,8 +15,20 @@ class MyModel extends \Cmatrix\Web\Mvc\Model {
     }
     
     // --- --- --- --- --- --- --- ---
-    private function getMySession(){
-        \Cmatrix\Core\Session::get();
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    public function getMySession(){
+        $Enabled = ['id','create_ts'];
+        //$Arr = [];
+        $Props = \Cmatrix\Core\Session::get()->Dm->Props;
+        $Session = \Cmatrix\Core\Session::get()->Values;
+        dump($Session);
+        dump($Props);
+        
+        //$Arr['id'] = $Session['id'];
+        
+        
+        //dump(\Cmatrix\Core\Session::get()->getValues());
         //dump(\Cmatrix\Core\Session::get());
     }
 }

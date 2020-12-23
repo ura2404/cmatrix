@@ -12,7 +12,7 @@
             "id" : {
                 "code": "id",
                 "name": {
-                    "_def": "ID"
+                    "_def": "ID2"
                 },
                 "label": null,
                 "baloon": {
@@ -27,7 +27,136 @@
                 "info": null,
                 "association": null
             },
-            "systype" : {
+             "touch_ts" : {
+                "code": "touch_ts",
+                "name": null,
+                "label": null,
+                "baloon": null,
+                "type": "timestamp",
+                "length" : null,
+                "nn": null,
+                "index": null,
+                "default": null,
+                "register" : null,
+                "info": null,
+                "association": null
+            },
+            "ip4" : {
+                "code": "ip4",
+                "name": null,
+                "label": null,
+                "baloon": null,
+                "type": "string",
+                "length" : 50,
+                "nn": true,
+                "index": null,
+                "default": null,
+                "register" : null,
+                "info": null,
+                "association": null
+            },
+            "ip4x" : {
+                "code": "ip4x",
+                "name": null,
+                "label": null,
+                "baloon": null,
+                "type": "string",
+                "length" : 50,
+                "nn": null,
+                "index": null,
+                "default": null,
+                "register" : null,
+                "info": null,
+                "association": null
+            },
+            "proxy" : {
+                "code": "proxy",
+                "name": null,
+                "label": null,
+                "baloon": null,
+                "type": "string",
+                "length" : 128,
+                "nn": null,
+                "index": null,
+                "default": null,
+                "register" : null,
+                "info": null,
+                "association": null
+            },
+            "agent" : {
+                "code": "agent",
+                "name": null,
+                "label": null,
+                "baloon": null,
+                "type": "string",
+                "length" : 1024,
+                "nn": null,
+                "index": true,
+                "default": null,
+                "register" : null,
+                "info": null,
+                "association": null
+            },
+            "lang" : {
+                "code": "lang",
+                "name": null,
+                "label": null,
+                "baloon": null,
+                "type": "string",
+                "length" : 256,
+                "nn": null,
+                "index": true,
+                "default": null,
+                "register" : null,
+                "info": null,
+                "association": null
+            },
+            "charset" : {
+                "code": "charset",
+                "name": null,
+                "label": null,
+                "baloon": null,
+                "type": "string",
+                "length" : 256,
+                "nn": null,
+                "index": true,
+                "default": null,
+                "register" : null,
+                "info": null,
+                "association": null
+            },
+            "encoding" : {
+                "code": "agent",
+                "name": null,
+                "label": null,
+                "baloon": null,
+                "type": "string",
+                "length" : 256,
+                "nn": null,
+                "index": true,
+                "default": null,
+                "register" : null,
+                "info": null,
+                "association": null
+            },
+            "sysuser_id" : {
+                "code": "sysuser_id",
+                "name": null,
+                "label": null,
+                "baloon": null,
+                "type": "::id::",
+                "length" : null,
+                "nn": true,
+                "index": null,
+                "default": 2,
+                "register" : null,
+                "info": null,
+                "association": {
+                    "entity" : "Cmatrix/Core/Sysuser",
+                    "prop" : "id"
+                }
+            },
+           "systype" : {
                 "code": "systype",
                 "name": null,
                 "label": null,
@@ -42,7 +171,36 @@
                 "association": null
             }
             
-        }
-        
+        },
+        "init" : [
+            {
+                "id" : 1,
+                "active" : true,
+                "hidden" : true,
+                "status" : "C",
+                "ip4" : "127.0.0.1",
+                "sysuser_id" : 1,
+                "agent" : "Init",
+                "info" : "Сессия для инициализационных сессий / #1"
+            },
+            {
+                "id" : 2,
+                "active" : true,
+                "status" : "C",
+                "ip4" : "127.0.0.1",
+                "sysuser_id" : 1,
+                "agent" : "Not define",
+                "info" : "Сессия для неопределённых сессий / #2"
+            },
+            {
+                "id" : 3,
+                "active" : true,
+                "status" : "C",
+                "ip4" : "127.0.0.1",
+                "sysuser_id" : 1,
+                "agent" : "Console",
+                "info" : "Cmatrix console / #3"
+            }
+        ]
     }
 }

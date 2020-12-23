@@ -68,19 +68,39 @@
             "active" : {
                 "code": "active",
                 "name": {
-                    "_def" : "Активная"
+                    "_def" : "Активно"
                 },
                 "label": {
                     "_def" : "A"
                 },
                 "baloon": {
-                    "_def": "Признак активности записи"
+                    "_def": "Активная запись"
                 },
                 "type": "bool",
                 "length" : null,
                 "nn": null,
                 "index": null,
-                "default": "TRUE",
+                "default": true,
+                "registr" : null,
+                "info": null,
+                "association": null
+            },
+            "hidden" : {
+                "code": "hidden",
+                "name": {
+                    "_def" : "Скрыто"
+                },
+                "label": {
+                    "_def" : "H"
+                },
+                "baloon": {
+                    "_def": "Запись скрыта"
+                },
+                "type": "bool",
+                "length": null,
+                "nn": null,
+                "index": null,
+                "default": null,
                 "registr" : null,
                 "info": null,
                 "association": null
@@ -94,7 +114,7 @@
                     "_def" : "D"
                 },
                 "baloon": {
-                    "_def": "Признак удаления записи"
+                    "_def": "Запись удалена"
                 },
                 "type": "bool",
                 "length": null,
@@ -162,7 +182,7 @@
                 "registr" : null,
                 "info": null,
                 "association": {
-                    "entity": "core/Session",
+                    "entity": "Cmatrix/Core/Session",
                     "prop": "id"
                 }
             },
@@ -183,7 +203,7 @@
                 "registr" : null,
                 "info": null,
                 "association": {
-                    "entity": "core/Session",
+                    "entity": "Cmatrix/Core/Session",
                     "prop": "id"
                 }
             },

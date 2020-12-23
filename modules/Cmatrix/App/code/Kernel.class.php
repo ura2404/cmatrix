@@ -15,11 +15,14 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
     protected $_Sapi;
     protected $_Config;
     protected $_Hid;
+    protected $_Ts;
     protected $_Cookie;
     
     // --- --- --- --- --- --- --- ---
     function __construct(){
         parent::__construct('app.kernel');
+        
+        $this->Hid;
         
         //dump(self::$REFINSTANCES);
     }
@@ -27,10 +30,14 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
     // --- --- --- --- --- --- --- ---
     function __get($name){
         switch($name){
+            case 'Hid'    : return $this->getHid();
+            case 'Cookie' : return $this->getCookieName();
+            case 'Ts'     : return $this->getTs();
+            case 'isDb'   : return $this->getIsDb();
+            
             case 'Sapi'   : return $this->getMySapi();
             case 'Config' : return $this->getMyConfig();
-            case 'Hid'    : return $this->getMyHid();
-            case 'Cookie' : return $this->getMyCookie();
+            
             default : return parent::__get($name);
         }
     }
@@ -38,31 +45,10 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
-    protected function getMySapi(){
-        return $this->getInstanceValue('_Sapi',function(){
-            $Sapi = php_sapi_name();
-            if($Sapi=='cli') return 'CLI';
-            elseif(substr($Sapi,0,3)=='cgi') return 'CGI';
-            elseif(substr($Sapi,0,6)=='apache') return 'APACHE';
-        });
-    }
-    
-    // --- --- --- --- --- --- --- ---
-    /**
-     * @return \Cmatrix\Kernel\Config - конфиг приложения
-     */
-    private function getMyConfig(){
-        return $this->getInstanceValue('_Config',function(){
-            $Path = CM_ROOT.CM_DS.'app'.CM_DS.'config.json';
-            return $Config = \Cmatrix\Kernel\Config::get($Path);
-        });
-    }
-
-    // --- --- --- --- --- --- --- ---
     /**
      * @return string - application cookie name
      */
-    private function getMyCookie(){
+    private function getCookieName(){
         return $this->getInstanceValue('_Cookie',function(){
             return str_replace('.','-',$this->Config->getValue('app/code','cmatrix').'-'.hid('_application'));
         });
@@ -72,7 +58,7 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
     /**
      * @return string - 32 symbol hash
      */
-    private function getMyHid(){
+    private function getHid(){
         return $this->getInstanceValue('_Hid',function(){
             switch($this->Sapi){
                 case 'CLI' : return md5('Cmatrix cli');
@@ -88,6 +74,20 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
     }
     
     // --- --- --- --- --- --- ---
+    private function getTs(){
+        return $this->getInstanceValue('_Ts',function(){
+            switch($this->Sapi){
+                case 'CLI' : return;
+                case 'APACHE' :
+                    $Ts = empty($_COOKIE[$this->Cookie.'_ts']) ? null : $_COOKIE[$this->Cookie.'_ts'];
+                    return $Ts;
+                    
+                default : die('Can\'t calculate application ts.');
+            }
+        });
+    }
+    
+    // --- --- --- --- --- --- ---
     private function setCookie($name,$hid){
         switch($this->Sapi){
             case 'CLI' : return;
@@ -98,7 +98,7 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
                 // $Period = 604800     // неделя  - 60*60*24*7
                 // $Period = 2592000    // 30 дней - 60*60*24*30
                 // $Period = 31536000   // год     - 60*60*24*365
-                $Period = 5;
+                $Period = 10;
                 
                 $Url = '/';
                 
@@ -151,7 +151,43 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
             default : die('Can\'t unset application cookie.');
         }
     }
-
+    
+    // --- --- --- --- --- --- --- ---
+    /**
+     * @return bool - признак использования базы данных
+     */
+    private function getIsDb(){
+        return $this->Config->getValue('db');
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    /**
+     * @return string - режим работы проекта
+     *     -CLI     - консоль 
+     *     -APACHE  - модуль apache
+     */
+    protected function getMySapi(){
+        return $this->getInstanceValue('_Sapi',function(){
+            $Sapi = php_sapi_name();
+            if($Sapi=='cli') return 'CLI';
+            elseif(substr($Sapi,0,3)=='cgi') return 'CGI';
+            elseif(substr($Sapi,0,6)=='apache') return 'APACHE';
+        });
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    /**
+     * @return \Cmatrix\Kernel\Config - конфиг приложения
+     */
+    private function getMyConfig(){
+        return $this->getInstanceValue('_Config',function(){
+            $Path = CM_ROOT.CM_DS.'app'.CM_DS.'config.json';
+            return $Config = \Cmatrix\Kernel\Config::get($Path);
+        });
+    }
+    
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---

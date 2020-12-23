@@ -28,11 +28,8 @@ class Html extends \Cmatrix\Web\Mvc\Controller {
             }
             return implode('',$arr);
         };
-        
-        $DataView = $this->View->Data;
-        $DataModel = $this->Model->Data;
-        
-        return $_parser($DataView,$DataModel);
+
+        return $_parser($this->View->Data,$this->Model->Data);
     }
 }
 ?>

@@ -3,7 +3,7 @@ namespace Cmatrix\Core\Dm;
 use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Exception as ex;
 
-class Session extends Entity {
+class Sysuser extends Entity {
     
     // --- --- --- --- --- --- --- ---
     function __construct(){
@@ -16,7 +16,7 @@ class Session extends Entity {
     public function beforeCreate($ob){
         parent::beforeCreate($ob);
     }
-
+    
     // --- --- --- --- --- --- --- ---
     public function afterCreate($ob){
         parent::afterCreate($ob);

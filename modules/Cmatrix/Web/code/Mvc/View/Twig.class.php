@@ -14,21 +14,7 @@ use \Cmatrix\Web as web;
 class Twig extends \Cmatrix\Web\Mvc\View {
 
     // --- --- --- --- --- --- --- ---
-    function __get($name){
-        switch($name){
-            case 'CacheKey' : return $this->getMyCacheKey();
-            default : return parent::__get($name);
-        }
+    protected function getMyData(){
     }
-    
-    // --- --- --- --- --- --- --- ---
-    protected function getMyCacheKey(){
-        $Key = $this->Form->CacheName;
-        $Cache = kernel\Ide\Cache::get('forms');
-        
-        if(CM_MODE === 'development' && !$Cache->isExists($Key)) throw new ex\Error('twig template cache file [' .$this->Form->Url. '] is not found.');
-        return $Cache->getKey($Key);
-    }
-
 }
 ?>

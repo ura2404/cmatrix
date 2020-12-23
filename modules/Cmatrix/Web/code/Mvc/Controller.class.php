@@ -9,7 +9,7 @@
 namespace Cmatrix\Web\Mvc;
 use \Cmatrix\Kernel\Exception as ex;
 
-class Controller {
+abstract class Controller {
     protected $View;
     protected $Model;
 
@@ -28,9 +28,7 @@ class Controller {
     }
     
     // --- --- --- --- --- --- --- ---
-    protected function getMyData(){
-        return;
-    }
+    abstract protected function getMyData();
     
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---

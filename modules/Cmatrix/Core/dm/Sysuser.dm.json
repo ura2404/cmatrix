@@ -1,0 +1,177 @@
+{
+    "dm" : {
+        "code" : "Cmatrix/Core/Sysuser",
+        "name": {
+            "_def" : "Пользователь"
+        },
+        "baloon": {
+            "_def": "Пользователь системы"
+        },
+        "parent": "Cmatrix/Core/Entity",
+        "info" : null,
+        "uniques": [
+            "code",
+            "name"
+        ],
+        "props": {
+            "id" : {
+                "code": "id",
+                "name": {
+                    "_def": "ID"
+                },
+                "label": null,
+                "baloon": null,
+                "type": "::id::",
+                "length": null,
+                "nn": true,
+                "index": null,
+                "default": "::counter::",
+                "register" : null,
+                "info": null,
+                "association": null
+            },
+            "code" : {
+                "code": "code",
+                "name" : {
+                    "_def" : "Логин"
+                },
+                "label" : null,
+                "baloon": null,
+                "type": "string",
+                "length" : 32,
+                "nn": true,
+                "index": null,
+                "default": null,
+                "register" : null,
+                "info": "имя пользователя",
+                "association": null
+            },
+            "name" : {
+                "code": "name",
+                "name": {
+                    "_def" : "Ник"
+                },
+                "label": null,
+                "baloon": null,
+                "type": "string",
+                "length" : 128,
+                "nn": true,
+                "index": null,
+                "default": null,
+                "register" : null,
+                "info": null,
+                "association": null
+            },
+            "pass" : {
+                "code": "pass",
+                "name": {
+                    "_def" : "Пароль"
+                },
+                "label": null,
+                "baloon": null,
+                "type": "string",
+                "length" : 64,
+                "nn": null,
+                "index": null,
+                "default": null,
+                "register" : null,
+                "info": null,
+                "association": null
+            },
+            "lk" : {
+                "code": "lk",
+                "name": {
+                    "_def" : "Личный кабинет"
+                },
+                "label": {
+                    "_def" : "ЛК"
+                },
+                "baloon": null,
+                "type": "bool",
+                "length" : null,
+                "nn": null,
+                "index": null,
+                "default": null,
+                "register" : null,
+                "info": "Нужен ли для пользователя личный кабинет",
+                "association": null
+            },
+            "systype" : {
+                "code": "systype",
+                "name": null,
+                "label": null,
+                "baloon": null,
+                "type": "string",
+                "length": 32,
+                "nn": true,
+                "index": null,
+                "default": "Cmatrix/Core/Sysuser",
+                "register" : null,
+                "info": null,
+                "association": null
+            }
+        },
+        "init" : [
+            {
+                "id" : 1,
+                "hid" : "429965709c0938cf8d8214c17074d58c",
+                "active" : true,
+                "hidden" : true,
+                "status" : "C",
+                "code" : "init",
+                "name" : "Init",
+                "_pass" : "raw::md5('ewrf#$dfgdfs#$ASDaf33er')",
+                "pass" : "58bc4e1ff964006368b8f8876e44e749",
+                
+                "info" : "Инициализационный пользователь / #1"
+            },
+            {
+                "id" : 2,
+                "hid" : "dfbf938d8982154e075956ea83dc78f2",
+                "active" : true,
+                "status" : "C",
+                "code" : "guest",
+                "name" : "Гость",
+                "_pass" : "raw::md5('ewrf#$dfgdfs#$#$%rewfgdfge')",
+                "pass" : "ef635c7d786ed3b73a35d46474d5d992",
+                "info" : "Гость системы / #2"
+            },
+            {
+                "id" : 3,
+                "hid" : "22e2589464ff2cb68d60b1b594b7a665",
+                "active" : true,
+                "status" : "C",
+                "code" : "admin",
+                "name" : "Администратор",
+                "_pass" : "raw::md5('admin')",
+                "pass" : "21232f297a57a5a743894a0e4a801fc3",
+                "info" : "Администратор системы / #3",
+                "lk"   : true
+            },
+            {
+                "id" : 4,
+                "hid" : "abfdb93e659719dd9dcdba87f320e2d1",
+                "active" : true,
+                "status" : "C",
+                "code" : "user",
+                "name" : "Пользователь",
+                "pass" : "raw::md5('user')",
+                "_pass" : "ee11cbb19052e40b07aac0ca060c23ee",
+                "info" : "Пользователь системы / #4",
+                "lk"   : true
+            },
+            {
+                "id" : 5,
+                "hid" : "6382aa2ad456cd30d609f5be5b7b7a68",
+                "active" : true,
+                "status" : "C",
+                "code" : "worker",
+                "name" : "Обработчик",
+                "_pass" : "raw::md5('wwejflwje#@$3423$@#$234@#$32')",
+                "pass" : "6937e1e63f959fb9fd2eef05952932e9",
+                "info" : "Системный обработчик / #5"
+            }
+        ]
+    
+    }
+}

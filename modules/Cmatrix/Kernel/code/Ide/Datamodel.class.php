@@ -35,6 +35,7 @@ class Datamodel extends kernel\Reflection{
             case 'Parent'    : return $this->getMyParent();
             case 'Props'     : return $this->getMyProps();
             case 'OwnProps'  : return $this->getMyOwnProps();
+            case 'Init'      : return $this->getMyInit();
             //case 'AllProps'  : return $this->getMyAllProps();
             default : return parent::__get($name);
         }
@@ -61,6 +62,9 @@ class Datamodel extends kernel\Reflection{
     }
 
     // --- --- --- --- --- --- --- ---
+    /**
+     * @return array - datamodel json config
+     */
     protected function getMyJson(){
         return $this->getInstanceValue('_Json',function(){
             $Path = kernel\Ide\Part::get($this->Url)->Path.CM_DS.'dm'.CM_DS.kernel\Url::get($this->Url)->Path.'.dm.json';
@@ -70,6 +74,9 @@ class Datamodel extends kernel\Reflection{
     }
 
     // --- --- --- --- --- --- --- ---
+    /**
+     * @retrun string - parent datamodel url
+     */
     protected function getMyParent(){
         return $this->getInstanceValue('_Parent',function(){
             return $this->Json['parent'];
@@ -82,10 +89,15 @@ class Datamodel extends kernel\Reflection{
      */
     protected function getMyOwnProps(){
         return $this->getInstanceValue('_OwnProps',function(){
+            // 1. если нет Url, то это не datamodel, а класс родитель Cmatrix/Ide/Datamodel
             if(!$this->Url) return [];
             
+            // 2. определить текущий язык
             $Lang = app\Kernel::get()->Config->getValue('lang','_def');
             
+            // 3. получить свойства
+            // - отсеить свойства с преффиксом '_'
+            // - парсить язык в мультиязыковых полях
             $Props = $this->Json['props'];
             foreach($Props as $code=>$prop){
                 if(substr($code,0,1) === '_') unset($Props[$code]);
@@ -95,16 +107,6 @@ class Datamodel extends kernel\Reflection{
                     $prop['baloon'] = $this->setByLang($prop['baloon'],$Lang);
                     $Props[$code] = $prop;
                 }
-                
-                
-            /*foreach($Props as $code=>$prop){
-                
-                $prop['name'] ? $prop['name'] : $prop['code'];
-                
-                // --- --- --- --- ---
-                $Props[$code] = $prop;
-            }*/
-                
             }
             return $Props;
         });
@@ -117,31 +119,15 @@ class Datamodel extends kernel\Reflection{
     //protected function getMyAllProps(){
     protected function getMyProps(){
         return $this->getInstanceValue('_Props',function(){
+            
+            // 1. Получить собственный свойства
             $Props = $this->OwnProps;
+            
+            // 2. Получить свойства родителя
             $ParentProps = self::get($this->Parent)->OwnProps;
             
-            /*
-            $Parent = self::get($this->Parent);
-            
-            // 1. Получить свойства родителя
-            if(!$Parent->Url) $ParentProps = [];
-            else $ParentProps = $Parent->OwnProps;
-            
-            // 2. Получить собственный свойства
-            $Props = $this->OwnProps;
-            foreach($Props as $code=>$prop){
-                if(substr($code,0,1) === '_') unset($Props[$code]);
-                elseif($code !== 'systype') $Props[$code]['self'] = true;
-                else $Props[$code]['self'] = null;
-            }
-            */
-            
             // 3. Склеить свойства родителя и собственные
-            foreach($Props as $code=>$prop) $ParentProps[$code] = $prop;
-            $Props = $ParentProps;
-            //dump($Props);
-            return $Props;
-            
+            $Props = array_merge($ParentProps,$Props);
             
             // 4. Сортировать поля
             if(isset($Props['id'])) $Arr = [ 'id' => $Props['id'] ]; unset($Props['id']);
@@ -155,34 +141,17 @@ class Datamodel extends kernel\Reflection{
             $Info ? $Arr['info'] = $Info : null;
             $Systype ? $Arr['systype'] = $Systype : null;
             $Props = $Arr;
-            
-            // 5. Парсить language
-            $Language = app\Kernel::get()->Config->getValue('lang','_def');
-            /*foreach($Props as $code=>$prop){
-                $prop['name']   = kernel\Language::get($prop['name'])->Value;
-                $prop['label']  = kernel\Language::get($prop['label'])->Value;
-                $prop['baloon'] = kernel\Language::get($prop['baloon'])->Value;
-                
-                $prop['name'] ? $prop['name'] : $prop['code'];
-                
-                // --- --- --- --- ---
-                $Props[$code] = $prop;
-            }*/
-            
+
             return $Props;
         });
     }
     
     // --- --- --- --- --- --- --- ---
-    /**
-     * Получение свойств для форм ввода и списков
-     */
-    /*protected function getMyProps(){
-        return $this->getInstanceValue('_Props',function(){
-            return array_filter($this->AllProps,function($val){ return !!$val['self']; });
-        });
-    }*/
-    
+    protected function getMyInit(){
+        $Init = $this->Json['init'];
+        return is_array($Init) ? $Init : [];
+    }
+
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---

@@ -10,7 +10,7 @@ namespace Cmatrix\Web\Mvc;
 use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Exception as ex;
 
-class Model {
+abstract class Model {
     protected $Form;
 
     // --- --- --- --- --- --- --- ---

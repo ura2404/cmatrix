@@ -10,13 +10,12 @@ namespace Cmatrix\Orm;
 use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Exception as ex;
 
-class Datamodel extends \Cmatrix\Kernel\Reflection {
+abstract class Datamodel extends \Cmatrix\Kernel\Reflection implements iDatamodel{
     static $C = [];
     
     public $Code;
     public $Name;
     
-    protected $Props;
     protected $_Props;
     
     // --- --- --- --- --- --- --- ---
@@ -28,32 +27,35 @@ class Datamodel extends \Cmatrix\Kernel\Reflection {
     // --- --- --- --- --- --- --- ---
     function __get($name){
         switch($name){
+            case 'Url'   : return $this->getUrl();
             case 'Props' : return $this->getMyProps();
             default : return parent::__get($name);
         }
     }
-    
+
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     private function init(){
-        $Url = str_replace('\\','/',str_replace('\Dm',null,get_class($this)));
-        $Own    = kernel\Ide\Datamodel::get($Url);
+        $Own    = kernel\Ide\Datamodel::get($this->Url);
         $Parent = kernel\Ide\Datamodel::get($Own->Parent);
         
-        dump($Own->Props);
+        //dump($Own->Props);
         //dump($Own->OwnProps);
     }
     
-    /*protected function getMySapi(){
-        return $this->getInstanceValue('_Sapi',function(){
-            $Sapi = php_sapi_name();
-            if($Sapi=='cli') return 'CLI';
-            elseif(substr($Sapi,0,3)=='cgi') return 'CGI';
-            elseif(substr($Sapi,0,6)=='apache') return 'APACHE';
+    // --- --- --- --- --- --- --- ---
+    protected function getMyProps(){
+        return $this->getInstanceValue('_Props',function(){
+            return kernel\Ide\Datamodel::get($this->Url)->Props;
         });
-    }*/
+    }
     
+    // --- --- --- --- --- --- --- ---
+    private function getUrl(){
+        return str_replace('\\','/',str_replace('\Dm',null,get_class($this)));
+    }
+
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
@@ -70,13 +72,6 @@ class Datamodel extends \Cmatrix\Kernel\Reflection {
             $Sc = kernel\Ide\Cache::get('dm')->getValue($url);
             return unserialize($Sc);
         }
-        
-        /*
-        dump($url);
-        dump(kernel\Ide\Datamodel::get($url)->Path);
-        $ClassName = kernel\Ide\Datamodel::get($url)->Class;
-        return new $ClassName();
-        */
     }
 }
 ?>
