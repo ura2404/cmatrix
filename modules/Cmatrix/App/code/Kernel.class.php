@@ -15,7 +15,8 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
     protected $_Sapi;
     protected $_Config;
     protected $_Hid;
-    protected $_Ts;
+    protected $_Cts;
+    protected $_Tts;
     protected $_Cookie;
     
     // --- --- --- --- --- --- --- ---
@@ -32,7 +33,8 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
         switch($name){
             case 'Hid'    : return $this->getHid();
             case 'Cookie' : return $this->getCookieName();
-            case 'Ts'     : return $this->getTs();
+            case 'Cts'    : return $this->getCts();
+            case 'Tts'    : return $this->getTts();
             case 'isDb'   : return $this->getIsDb();
             
             case 'Sapi'   : return $this->getMySapi();
@@ -74,15 +76,35 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
     }
     
     // --- --- --- --- --- --- ---
-    private function getTs(){
-        return $this->getInstanceValue('_Ts',function(){
+    /**
+     * @return timestamp - виеря создание сессии
+     */
+    private function getCts(){
+        return $this->getInstanceValue('_Cts',function(){
             switch($this->Sapi){
                 case 'CLI' : return;
                 case 'APACHE' :
-                    $Ts = empty($_COOKIE[$this->Cookie.'_ts']) ? null : $_COOKIE[$this->Cookie.'_ts'];
+                    $Ts = empty($_COOKIE[$this->Cookie.'_cts']) ? null : $_COOKIE[$this->Cookie.'_cts'];
                     return $Ts;
                     
-                default : die('Can\'t calculate application ts.');
+                default : die('Can\'t calculate application cts.');
+            }
+        });
+    }
+
+    // --- --- --- --- --- --- ---
+    /**
+     * @return timestamp - виеря создание сессии
+     */
+    private function getTts(){
+        return $this->getInstanceValue('_Tts',function(){
+            switch($this->Sapi){
+                case 'CLI' : return;
+                case 'APACHE' :
+                    $Ts = empty($_COOKIE[$this->Cookie.'_tts']) ? null : $_COOKIE[$this->Cookie.'_tts'];
+                    return $Ts;
+                    
+                default : die('Can\'t calculate application tts.');
             }
         });
     }
@@ -98,13 +120,14 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
                 // $Period = 604800     // неделя  - 60*60*24*7
                 // $Period = 2592000    // 30 дней - 60*60*24*30
                 // $Period = 31536000   // год     - 60*60*24*365
-                $Period = 10;
+                $Period = 86400;
                 
                 $Url = '/';
                 
                 $Time = time();
                 setcookie($name,$hid,$Time + $Period,$Url);
-                setcookie($name.'_ts',$Time,$Time + $Period,$Url);
+                setcookie($name.'_cts',$Time,$Time + $Period,$Url);
+                setcookie($name.'_tts',$Time,$Time + $Period,$Url);
                 
                 $this->reload();
                 exit();        
@@ -125,7 +148,7 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
                 
                 $Time = time();
                 setcookie($name,"",$Time + $Period,$Path2);
-                setcookie($name.'_ts',"",$Time + $Period,$Path2);
+                setcookie($name.'_tts',"",$Time + $Period,$Path2);
                 
                 $this->reload();
                 exit();        

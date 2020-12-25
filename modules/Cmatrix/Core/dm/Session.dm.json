@@ -29,9 +29,15 @@
             },
              "touch_ts" : {
                 "code": "touch_ts",
-                "name": null,
-                "label": null,
-                "baloon": null,
+                "name": {
+                    "_def": "Время доступа"
+                },
+                "label": {
+                    "_def" : "TTS"
+                },
+                "baloon": {
+                    "_def": "Последенее время доступа"
+                },
                 "type": "timestamp",
                 "length" : null,
                 "nn": null,
@@ -141,9 +147,13 @@
             },
             "sysuser_id" : {
                 "code": "sysuser_id",
-                "name": null,
+                "name": {
+                    "_def" : "Пользователь"
+                },
                 "label": null,
-                "baloon": null,
+                "baloon": {
+                    "_def" : "Пользователь системы"
+                },
                 "type": "::id::",
                 "length" : null,
                 "nn": true,

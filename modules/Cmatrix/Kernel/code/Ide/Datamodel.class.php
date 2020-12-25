@@ -105,6 +105,10 @@ class Datamodel extends kernel\Reflection{
                     $prop['name']   = $this->setByLang($prop['name'],$Lang);
                     $prop['label']  = $this->setByLang($prop['label'],$Lang);
                     $prop['baloon'] = $this->setByLang($prop['baloon'],$Lang);
+                    
+                    if(!$prop['name']) $prop['name'] = $prop['code'];
+                    if(!$prop['label']) $prop['label'] = $prop['name'];
+                    
                     $Props[$code] = $prop;
                 }
             }

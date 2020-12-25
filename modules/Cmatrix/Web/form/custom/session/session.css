@@ -1,0 +1,26 @@
+.body {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.session {
+    margin: 20px auto;
+    display: grid;
+    grid-template-columns: minmax(100px, auto) minmax(100px, auto);
+}
+
+.session span {
+    padding : 2px 10px;
+}
+
+.session span:nth-child(4n),
+.session span:nth-child(4n-1) {
+    background: #f5f5f5;
+}
+
+hr {
+    width : 100%;
+    border: none;
+    border-top: 3px double lightgrey;
+}

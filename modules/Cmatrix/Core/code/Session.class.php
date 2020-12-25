@@ -50,9 +50,11 @@ class Session {
             if($Session) $Ob->setValues($Session);
             
             $Ob->hid = app\Kernel::get()->Hid;
-            $Ob->create_ts = date('Y-m-d H:i:s',app\Kernel::get()->Ts);
+            $Ob->create_ts = date('Y-m-d H:i:s',app\Kernel::get()->Cts);
+            //$Ob->touch_ts = date('Y-m-d H:i:s',app\Kernel::get()->Tts);
             $Ob->session_id = $Ob->id;
             $Ob->sysuser_id = core\Sysuser::get()->id;
+            
             $Ob->setValues($this->Ident);
             
             //dump($Ob);

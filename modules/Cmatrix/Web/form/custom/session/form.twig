@@ -9,6 +9,41 @@
 {% block blockJss %}{% endblock %}
 
 {% block blockBody %}
-    {% for key,value in session %}
-    {% endfor %}
+    <div class="session">
+        <span title="{{ session.props.hid.baloon }}">{{ session.props.hid.label }}</span>
+        <span title="{{ session.props.hid.baloon }}">{{ session.values.hid }}</span>
+        
+        <span title="{{ session.props.create_ts.baloon }}">{{ session.props.create_ts.label }}</span>
+        <span title="{{ session.props.create_ts.baloon }}">{{ session.values.create_ts }} // {{ session.duration.create }}</span>
+        
+        {% if session.values.touch_ts %}
+            <span title="{{ session.props.touch_ts.baloon }}">{{ session.props.touch_ts.label }}</span>
+            <span title="{{ session.props.touch_ts.baloon }}">{{ session.values.touch_ts }} // {{ session.duration.touch }}</span>
+        {% endif %}
+        
+        <span title="{{ session.props.ip4.baloon }}">{{ session.props.ip4.label }}</span>
+        <span title="{{ session.props.ip4.baloon }}">{{ session.values.ip4 }}</span>
+        
+        {% if session.values.ip4x %}
+            <span title="{{ session.props.ip4x.baloon }}">{{ session.props.ip4x.label }}</span>
+            <span title="{{ session.props.ip4x.baloon }}">{{ session.values.ip4x }}</span>
+        {% endif %}
+        
+        {% if session.values.proxy %}
+            <span title="{{ session.props.proxy.baloon }}">{{ session.props.proxy.label }}</span>
+            <span title="{{ session.props.proxy.baloon }}">{{ session.values.proxy }}</span>
+        {% endif %}
+        
+        <span title="{{ session.props.sysuser_id.baloon }}">{{ session.props.sysuser_id.label }}</span>
+        <span title="{{ session.props.sysuser_id.baloon }}">{{ sysuser.values.code }} // {{ sysuser.values.name }} // {{ sysuser.values.hid }}</span>
+        
+        
+        {#
+        {% for key,value in session %}
+            <span>{{ key }}</span>
+            <span>{{ value }}</span>
+        {% endfor %}
+        #}
+    </div>
+    <hr/>
 {% endblock %}

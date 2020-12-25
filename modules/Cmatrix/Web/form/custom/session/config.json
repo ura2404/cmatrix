@@ -3,7 +3,9 @@
         "code" : "Cmatrix/Web/custom/session",
         "type" : "twig",
         "parent" : "Cmatrix/Web/custom/master",
-        "styles" : null,
+        "styles" : [
+            "form::Cmatrix/Web/custom/session/session.css"
+        ],
         "scripts" : null,
         "_styles" : [
             "raw::/res/fonts/google/Arsenal/font.css",
