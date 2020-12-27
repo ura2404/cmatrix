@@ -9,6 +9,8 @@
 {% block blockJss %}{% endblock %}
 
 {% block blockBody %}
+    <div class="header">Cессия:</div>
+    
     <div class="session">
         <span title="{{ session.props.hid.baloon }}">{{ session.props.hid.label }}</span>
         <span title="{{ session.props.hid.baloon }}">{{ session.values.hid }}</span>
@@ -36,14 +38,15 @@
         
         <span title="{{ session.props.sysuser_id.baloon }}">{{ session.props.sysuser_id.label }}</span>
         <span title="{{ session.props.sysuser_id.baloon }}">{{ sysuser.values.code }} // {{ sysuser.values.name }} // {{ sysuser.values.hid }}</span>
-        
-        
-        {#
-        {% for key,value in session %}
-            <span>{{ key }}</span>
-            <span>{{ value }}</span>
-        {% endfor %}
-        #}
     </div>
+    
     <hr/>
+    
+    <div class="browser">
+        {#<div><span class="cursor" onclick="_browser()">Браузер</span></div>#}
+        <div><a href="{{ web.browser }}">Браузер</a></div>
+        <div>Проверка браузера на соответствие требованиям к системе.</div>
+        <div><span class="cursor" onclick="_clear()">Очистить кэш</span></div>
+        <div>Позволяет избавиться от ошибок интерфейса и некоторых проблем с передачей данных на сервер. Операция абсолютно безопасна, её можно выполнять бесконечное число раз.</div>
+    </div>
 {% endblock %}

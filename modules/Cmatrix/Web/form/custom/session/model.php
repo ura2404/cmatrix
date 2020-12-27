@@ -7,6 +7,9 @@ class MyModel extends \Cmatrix\Web\Mvc\Model {
             'page' => [
                 'name' => \Cmatrix\Web\Ide\Page::get('Cmatrix/Web/custom/session')->Config->getValue('page/name'),
             ],
+            'web' => [
+                'browser' => \Cmatrix\Web\Page::get('browser')->Path,
+            ],            
             'session' => $this->getMySession(),
             'sysuser' => $this->getMySysuser(),
         ];

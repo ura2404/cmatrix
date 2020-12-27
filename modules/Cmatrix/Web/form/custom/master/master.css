@@ -9,7 +9,7 @@ body {
     height: 100vh;
 }
 
-.header {
+#header {
     position: fixed;
     display: flex;
     top: 0;
@@ -22,15 +22,20 @@ body {
     color: white;
 }
 
-.header .app {
+#header .app {
     margin: auto auto auto 0;
 }
 
-.header .home {
+#header .home {
     margin: auto 0 auto auto;
 }
 
-.body {
+#header a {
+    color: white;
+    text-decoration: none;
+}
+
+#body {
     position: fixed;
     top: 50px;
     bottom: 30px;
@@ -38,7 +43,7 @@ body {
     right: 0;
     padding: 0 100px;
 }
-.footer {
+#footer {
     position: fixed;
     display: flex;
     bottom: 0;
@@ -52,13 +57,8 @@ body {
     font-size: 0.8rem;
 }
 
-.footer > div {
+#footer > div {
     margin : auto;
-}
-
-a {
-    color: white;
-    text-decoration: none;
 }
 
 #wp {

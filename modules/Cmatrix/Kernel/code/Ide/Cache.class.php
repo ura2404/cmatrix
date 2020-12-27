@@ -146,13 +146,19 @@ class Cache extends kernel\Reflection{
     }
 
     // --- --- --- --- --- --- --- ---
-    public function copyFile($key,$path){
+    public function copyFile($key,$path,$_callback){
         $Path = $this->getPath($key);
-        copy($path,$Path);
+        
+        if($_callback instanceof \Closure){
+            $Content = file_get_contents($path);
+            $Content = $_callback($Content);
+            file_put_contents($Path,$Content);
+        }
+        else copy($path,$Path);
     }
     
     // --- --- --- --- --- --- --- ---
-    public function updateFile($key,$path){
+    public function updateFile($key,$path,$_callback){
         $Path = $this->getPath($key);
         
         //dump($path);
@@ -166,7 +172,7 @@ class Cache extends kernel\Reflection{
             )
         ){
             //dump($key,'need update cache file');
-            $this->copyFile($key,$path);
+            $this->copyFile($key,$path,$_callback);
         }
     }
     

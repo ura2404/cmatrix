@@ -1,0 +1,49 @@
+{% block blockFavicon %}{{ web.favicon }}{% endblock %}
+
+{% block blockPageName %}{{ page.name }}{% endblock %}
+
+{% block blockTitle %}{{ page.name }}{% endblock %}
+
+{% block blockStyles %}{% endblock %}
+
+{% block blockJss %}
+        <script type="text/javascript">
+            document.addEventListener('DOMContentLoaded', function(){        
+                var Check = App.browser.check();
+                if(Check === true) document.getElementsByClassName('yes')[0].style.display = "flex";
+                else if(Check === null) document.getElementsByClassName('null')[0].style.display = "flex";
+                else document.getElementsByClassName('no')[0].style.display = "flex";
+            });
+        </script>
+        {{ parent() }}
+{% endblock %}
+
+{% block blockBody %}
+    <div class="browser">
+        <div class="container yes">
+            <div class="info">Ваш браузер реализует все необходимые возможности.</div>
+            <div class="info">Поздравляю Вас!</div>
+        </div>
+        
+        <div class="container no">
+            <div class="info">Ваш браузер устарел.</div>
+            <div class="info">Используйте современные решения!</div>
+        </div>
+        
+        <div class="container null">
+            <div class="info">Невозможно проверить браузер.</div>
+        </div>
+    </div>
+    
+    <div class="download">
+        <div class="label">Скачать:</div>
+        <div class="browsers">
+            {% for label,browser in browsers %}
+                <a class="browser" href="{{ browser.url }}">
+                    <i class="{{ browser.icon }}"></i>
+                    <span>{{ label }}</span>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

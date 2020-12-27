@@ -51,8 +51,13 @@ class Resource extends kernel\Reflection{
     // --- --- --- --- --- --- --- ---
     protected function getMyHeadLink(){
         switch(Ide\Resource::get($this->Url)->Type){
-            case 'js'  : return '<script type="text/javascript" src="' .$this->Path. '"></script>';
-            case 'css' : return '<link rel="stylesheet" media="none" type="text/css" href="'. $this->Path .'" onload="if(media!=\'all\')media=\'all\'"/>';
+            case 'js'   : return '<script type="text/javascript" src="' .$this->Path. '"></script>';
+            
+            case 'css'  : return '<link rel="stylesheet" media="none" type="text/css" href="'. $this->Path .'" onload="if(media!=\'all\')media=\'all\'"/>';
+            //case 'css'  : return '<link rel="stylesheet" type="text/css" href="'. $this->Path .'"/>';
+            
+            //case 'less' : return '<link rel="stylesheet/less" media="none" type="text/css" href="'. $this->Path .'" onload="if(media!=\'all\')media=\'all\'"/>';
+            case 'less' : return '<link rel="stylesheet/less" type="text/css" href="'. $this->Path .'"/>';
         }
     }
 

@@ -45,9 +45,21 @@ class Resource extends  kernel\Ide\Resource {
     
     // --- --- --- --- --- --- --- ---
     private function createCache(){
+        // функция сжатия js
+        $_js = function($Content){
+            $Content = preg_replace("/\/\/.*\n/", '', $Content);              // однострочные коментарии
+            $Content = preg_replace("/\/\*(.*?)\*\//sm", '', $Content);       // многострочные коментарии
+            $Content = mb_ereg_replace('[ ]+', ' ', $Content);                // двойные пробелы
+            $Content = preg_replace("/[\r\n|\n|\t]/", '', $Content);          // переносы строк
+            $Content = preg_replace("/\s+([{|}|)|;|,|:|=]+)/", '\\1',$Content);   // лишние символы до
+            $Content = preg_replace("/([{|}|)|;|,|:|=]+)\s+/", '\\1',$Content);   // лишние символы после
+            
+            return $Content;
+        };
+        
         //dump($this->Url,'create resource cache');
         $Cache = web\Ide\Cache::get('res');
-        $Cache->updateFile($this->CacheName,$this->Path);
+        $Cache->updateFile($this->CacheName,$this->Path,$this->Type !== 'js' ? null : $_js);
     }
     
     // --- --- --- --- --- --- --- ---

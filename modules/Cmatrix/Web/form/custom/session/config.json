@@ -4,16 +4,10 @@
         "type" : "twig",
         "parent" : "Cmatrix/Web/custom/master",
         "styles" : [
-            "form::Cmatrix/Web/custom/session/session.css"
+            "form::Cmatrix/Web/custom/session/session.less"
         ],
-        "scripts" : null,
-        "_styles" : [
-            "raw::/res/fonts/google/Arsenal/font.css",
-            "raw::/res/fonts/fontawesome.com/5.14.0/css/all.css",
-            "form::Cmatrix/Web/custom/master/master.css"
-        ],
-        "_jss" : [
-            "form::Cmatrix/Web/custom/master/master.js"
+        "scripts" : [
+            "form::Cmatrix/Web/custom/session/session.js"
         ]
     }
 }

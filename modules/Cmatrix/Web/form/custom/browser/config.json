@@ -1,0 +1,11 @@
+{
+    "form" : {
+        "code" : "Cmatrix/Web/custom/browser",
+        "type" : "twig",
+        "parent" : "Cmatrix/Web/custom/master",
+        "styles" : [
+            "form::Cmatrix/Web/custom/browser/browser.css"
+        ],
+        "scripts" : null
+    }
+}

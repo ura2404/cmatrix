@@ -11,7 +11,7 @@ use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Exception as ex;
 
 class Resource extends kernel\Reflection{
-    static $TYPES = ['ico','png','jpg','css','js'];
+    static $TYPES = ['ico','png','jpg','css','less','js'];
     
     //static $INSTANCES = [];
     

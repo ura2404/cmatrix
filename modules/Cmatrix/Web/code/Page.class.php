@@ -73,8 +73,39 @@ class Page extends kernel\Reflection{
             //dump($Form);
             
             $Html = web\Mvc\Mvc::get($Form)->Html;
-            //dump($Html);
             
+            //4. модификация
+            if(strpos($Html,'<head>') !== false && strpos($Html,'</head>') !== false){
+                $_js = function(){
+                    //$F = 'var _cmfp=function(u){var a=u.split("/");var p=a.reverse().pop();var s=a.reverse().join("/");return ' ."'".Ide\Form::get("'+p+'/'+s")->Path. ';};';
+                    //$R = 'var _cmrp=function(u){var a=u.split("/");var p=a.reverse().pop();var s=a.reverse().join("/");return ' ."'".Ide\Resource::get("'+p+'/'+s")->Path. ';};';
+                    $P = 'var _cmpp=function(u){u=u===undefined?"":u;return '."'" . web\Kernel::get()->Home . '/' . "'+u;}";
+                    //self::get("'+u")->Path .';}';
+                        
+                    //return $F.$R.$P;
+                    return $P;
+                };
+                $Arr = [];
+                $Arr[] = strBefore($Html,'<head>',true);
+                $Arr[] = '<script type="text/javascript">' .$_js(). '</script>';
+                $Arr[] = strAfter($Html,'<head>');
+                $Html = implode('',$Arr);
+                
+                // добавить less, если нужно
+                if(strpos($Html,'stylesheet/less') !==false){
+                    
+                    // !!! версия less
+                    $LessVersion = '3.7.1';
+                    
+                    $Arr = explode('</head>',$Html);
+                    $Arr[0] .= web\Resource::get('Cmatrix/Vendor/lesscss/'.$LessVersion.'/less.min.js')->HeadLink;
+                    //$Arr[0] .= '<script type="text/javascript" src="' .\cmWeb\Ide\Resource::get('vendor/less')->Path. '/'. $LessVersion .'/less.min.js"></script>';
+                    $Html = implode('</head>',$Arr);
+                }
+            }
+            
+            //5. вывести html
+            //dump($Html);
             return $Html;
         }
         // 4. если что-то пошло не так, вывести страницу exception, если она есть, если её нет, то просто вывести текст ошибки в браузерa

@@ -1,0 +1,66 @@
+#body {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+hr {
+    width : 100%;
+    border: none;
+    border-top: 3px double lightgrey;
+}
+
+.header {
+    margin: 10px auto;
+    font-size :  4.2rem;
+}
+
+.session {
+    margin: 10px auto;
+    display: grid;
+    grid-template-columns: minmax(100px, auto) minmax(100px, auto);
+    
+    > span {
+        padding : 2px 10px;
+    }
+
+    > span:nth-child(4n),
+    > span:nth-child(4n-1) {
+        background: #f5f5f5;
+    }
+    
+}
+
+.browser {
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(100px, auto) minmax(100px, 500px);
+    
+    a {
+        color: black;
+        text-decoration: underline;
+        
+        &:hover {
+            color: #0baf64;
+        }
+    }
+    
+    > div {
+        padding : 10px 20px;
+        
+        > span:hover{
+            cursor: pointer;
+            color: #0baf64;
+            text-decoration: underline;
+        }
+        
+        &:nth-child(odd) {
+            text-align: right;
+            text-decoration: underline;
+        }
+    }
+}
+
+
+
+

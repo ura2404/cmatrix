@@ -9,6 +9,7 @@
             "form::Cmatrix/Web/custom/master/master.css"
         ],
         "scripts" : [
+            "res::Cmatrix/Web/app.js",
             "form::Cmatrix/Web/custom/master/master.js"
         ]
     }

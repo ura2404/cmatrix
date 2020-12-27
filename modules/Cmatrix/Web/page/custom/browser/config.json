@@ -1,0 +1,9 @@
+{
+    "page" : {
+        "code" : "Cmatrix/Web/custom/browser",
+        "parent" : null,
+        "name" : "Браузер",
+        "info" : "Информация о текущей сессии",
+        "form" : "Cmatrix/Web/custom/browser"
+    }
+}

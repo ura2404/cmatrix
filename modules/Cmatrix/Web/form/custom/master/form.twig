@@ -14,17 +14,17 @@
     </head>
     <body>
         <div id="wp" style="width:100vw;height:100vh;position:fixed;background-color:white;opacity:1;"></div>
-        <h2 class="header">
+        <h2 id="header">
             <div class="app"><span>{% block blockAppName %}{{ app.name }}{% endblock %}</span> <span> &bull; {% block blockPageName %}{{ page.name }}{% endblock %}</span></div>
             {# <a href="{{ home }}">{{ name }}</a> <span> &bull; 404</span> #}
             <a class="home" href="{{ web.home }}" title="Главная страница"><i class="fas fa-home"></i></a>            
         </h2>
         
-        <div class="body">
+        <div id="body">
             {% block blockBody %}{% endblock %}
         </div>
         
-        <div class="footer">
+        <div id="footer">
             <div>{{ app.name }} &copy; v{{ app.version }} by {{ app.author }} {{ app.period }}</div>            
         </div>
         
