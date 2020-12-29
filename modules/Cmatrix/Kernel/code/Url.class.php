@@ -97,7 +97,7 @@ class Url extends Reflection{
     // --- --- --- --- --- --- --- ---
     protected function getMyPath(){
         return $this->getInstanceValue('_Path',function(){
-            if(count($this->Arr) < 2) return null;
+            if(count($this->Arr) < 3) return null;
             $Arr = $this->Arr;
             array_shift($Arr);
             array_shift($Arr);

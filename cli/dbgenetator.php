@@ -23,7 +23,7 @@ $_help = function($text){
         
   2. php -f dbGenerator.php <mode> <target> <url>, где
         -mode   - режим: script,check,create,update,fkcreate,update,init
-        -target - цель: "all", datamodel", "datasourse"
+        -target - цель: "all", dm", "ds", "<provider>::all", "<provider>::dm", "<provider>::ds"
         -url    - url модуля, части или сущности, например "all", "Cmatrix", "Cmatrix/Core", "Cmatrix/Core/Session" 
         
     Режим:
@@ -34,6 +34,7 @@ $_help = function($text){
         -fkupdate - пересоздание внешних ключей в DB для таблицы сущности;
         -update   - обновление в DB таблицы сущности;
         -init     - наполнение в DB таблицы сущности начальными данными.
+        -provider - DB provider: pdsql,mysql,sqlite3
     Цель:
         -dm - модель данных
         -ds - модель источника данных
@@ -51,9 +52,22 @@ $_version = function(){
 };
 
 // --- --- --- --- --- --- --- ---
-$_script = function($target,$url) use($_help){
+$_provider = function(){
+    return \Cmatrix\App\Kernel::get()->Config->getValue('db/def/provider','pgsql');
+};
+
+// --- --- --- --- --- --- --- ---
+$_script = function($target,$url) use($_help,$_provider){
     if(!$target) $_help('Не указана цель');
     if(!$url) $_help('Не указан url');
+    
+    $provider = strAfter($target,'::');
+    $target = strBefore($target,'::');
+    
+    if(!$provider) $provider = $_provider();
+    
+    //dump($provider);
+    //dump($target);
     
     echo "----------------------------------------------------------------------\n";
     echo "-- start -------------------------------------------------------------\n";
@@ -62,7 +76,8 @@ $_script = function($target,$url) use($_help){
     
     switch($target){
         case 'dm' : 
-            
+            $Provider = \Cmatrix\Structure\Provider::get($provider);
+            \Cmatrix\Structure\Datamodel::get($url,$Provider)->Sql;
             break;
         default: $_help('Неверная цель');
     }

@@ -24,7 +24,7 @@ class Reflection {
         if(!$key) $key = '';
         elseif(gettype($key) === 'string') $key = md5($key);
         elseif(is_array($key)) $key = md5(serialize($key));
-        else throw new ex\Error('Bad key for create Reflecton instance');
+        else throw new ex\Error('Bad key type "'. gettype($key).'" for create Reflecton instance');
         
         $this->RefKey = get_class($this).'_'.$key;
         if(isset(self::$REFINSTANCES[$this->RefKey])) $this->getInstance();
@@ -128,18 +128,7 @@ class Reflection {
 
     // --- --- --- --- --- --- ---
     protected function getInstance(){
-        //dump(self::$REFINSTANCES[$this->RefKey],1111);
-        //dump(get_class($this),11111);
-        //dump($this,2222);
-        //dump($this->RefKey,3333);
-        //dump($this->OldKey,4444);
-        //dump($this->RefPropsNames);
-        
         array_map(function($name){
-            //dump($name,111);
-            //dump($this->OldKey,222);
-            //dump(self::$REFINSTANCES[$this->RefKey],333);
-            //dump(self::$REFINSTANCES[$this->RefKey]->$name,444);
             $this->$name = self::$REFINSTANCES[$this->RefKey]->$name;
         },$this->RefPropsNames);
     }

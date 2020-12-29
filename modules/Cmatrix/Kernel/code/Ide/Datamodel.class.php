@@ -24,11 +24,14 @@ class Datamodel extends kernel\Reflection{
     function __construct($url){
         $this->Url = $url;
         parent::__construct($url);
+        
+        $this->isExists();
     }
     
     // --- --- --- --- --- --- --- ---
     function __get($name){
         switch($name){
+            case 'Url' : return $this->Url;
             case 'ClassName' : return $this->getMyClassName();
             case 'Json'      : return $this->getMyJson();
             case 'Parent'    : return $this->getMyParent();
@@ -37,6 +40,14 @@ class Datamodel extends kernel\Reflection{
             case 'Init'      : return $this->getMyInit();
             default : return parent::__get($name);
         }
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    protected function isExists(){
+        $Path = kernel\Ide\Part::get($this->Url)->Path.CM_DS.'dm'.CM_DS.kernel\Url::get($this->Url)->Path.'.class.php';
+        if(!file_exists($Path) || is_dir($Path)) throw new ex\Error('Datamodel "'. $this->Url .'" is not exists.');
     }
     
     // --- --- --- --- --- --- --- ---
@@ -74,10 +85,13 @@ class Datamodel extends kernel\Reflection{
     // --- --- --- --- --- --- --- ---
     /**
      * @retrun string - parent datamodel url
+     * @return Cmatrix\Kernel\Ide\Datamodel - parent datamodel
      */
     protected function getMyParent(){
         return $this->getInstanceValue('_Parent',function(){
-            return $this->Json['parent'];
+            //return $this->Json['parent'];
+            $ParentUrl = $this->Json['parent'];
+            return $ParentUrl ? self::get($ParentUrl) : null;
         });
     }
 
@@ -88,7 +102,7 @@ class Datamodel extends kernel\Reflection{
     protected function getMyOwnProps(){
         return $this->getInstanceValue('_OwnProps',function(){
             // 1. если нет Url, то это не datamodel, а класс родитель Cmatrix/Ide/Datamodel
-            if(!$this->Url) return [];
+            //if(!$this->Url) return [];
             
             // 2. определить текущий язык
             $Lang = app\Kernel::get()->Config->getValue('lang','_def');
@@ -126,7 +140,8 @@ class Datamodel extends kernel\Reflection{
             $Props = $this->OwnProps;
             
             // 2. Получить свойства родителя
-            $ParentProps = self::get($this->Parent)->OwnProps;
+            //$ParentProps = self::get($this->Parent)->OwnProps;
+            $ParentProps = $this->Parent ? $this->Parent->OwnProps : [];
             
             // 3. Склеить свойства родителя и собственные
             $Props = array_merge($ParentProps,$Props);

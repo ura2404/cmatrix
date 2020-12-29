@@ -38,7 +38,8 @@ abstract class Datamodel extends \Cmatrix\Kernel\Reflection implements iDatamode
     // --- --- --- --- --- --- --- ---
     private function init(){
         $Own    = kernel\Ide\Datamodel::get($this->Url);
-        $Parent = kernel\Ide\Datamodel::get($Own->Parent);
+        //$Parent = kernel\Ide\Datamodel::get($Own->Parent);
+        $Parent = $Own->Parent;
         
         //dump($Own->Props);
         //dump($Own->OwnProps);
