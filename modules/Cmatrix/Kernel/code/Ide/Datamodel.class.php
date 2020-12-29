@@ -19,7 +19,6 @@ class Datamodel extends kernel\Reflection{
     protected $_Parent;
     protected $_Props;
     protected $_OwnProps;
-    //protected $_AllProps;
     
     // --- --- --- --- --- --- --- ---
     function __construct($url){
@@ -36,7 +35,6 @@ class Datamodel extends kernel\Reflection{
             case 'Props'     : return $this->getMyProps();
             case 'OwnProps'  : return $this->getMyOwnProps();
             case 'Init'      : return $this->getMyInit();
-            //case 'AllProps'  : return $this->getMyAllProps();
             default : return parent::__get($name);
         }
     }

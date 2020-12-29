@@ -21,8 +21,9 @@ abstract class View {
     // --- --- --- --- --- --- --- ---
     function __get($name){
         switch($name){
-            case 'Data'     : return $this->getMyData();
-            case 'CacheKey' : return $this->getMyCacheKey();
+            case 'Data'      : return $this->getMyData();
+            case 'CacheKey'  : return $this->getMyCacheKey();
+            case 'CacheData' : return $this->getMyCacheData();
             default : throw new ex\Property($this,$name);
         }
     }
@@ -39,13 +40,19 @@ abstract class View {
      * - имя файла в кеше
      */
     protected function getMyCacheKey(){
-        $Key = $this->Form->CacheName;
+        $Key = $this->Form->CacheKey;
         $Cache = kernel\Ide\Cache::get('forms');
         
         if(CM_MODE === 'development' && !$Cache->isExists($Key)) throw new ex\Error('template cache file [' .$this->Form->Url. '] is not found.');
         return $Cache->getKey($Key);
     }
 
+    // --- --- --- --- --- --- --- ---
+    protected function getMyCacheData(){
+        $Key = $this->Form->CacheKey;
+        $Cache = kernel\Ide\Cache::get('forms');
+        return $Cache->getValue($Key);
+    }
     
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---

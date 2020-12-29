@@ -18,7 +18,7 @@ class Form extends kernel\Reflection{
     protected $Url;
     
     protected $_Path;
-    protected $_CacheName;
+    protected $_CacheKey;
     protected $_Config;
     protected $_Parent;
     protected $_Type;
@@ -35,7 +35,7 @@ class Form extends kernel\Reflection{
         switch($name){
             case 'Url'       : return $this->Url;
             case 'Path'      : return $this->getMyPath();
-            case 'CacheName' : return $this->getMyCacheName();
+            case 'CacheKey'  : return $this->getMyCacheKey();
             case 'Config'    : return $this->getMyConfig();
             case 'Parent'    : return $this->getMyParent();
             case 'Type'      : return $this->getMyType();
@@ -64,8 +64,8 @@ class Form extends kernel\Reflection{
     /**
      * @return string - cache name of form instance in the cache
      */
-    private function getMyCacheName(){
-        return $this->getInstanceValue('_CacheName',function(){
+    private function getMyCacheKey(){
+        return $this->getInstanceValue('_CacheKey',function(){
             return md5($this->Url.'/form') .'.'. $this->Type;
         });
     }
@@ -85,7 +85,7 @@ class Form extends kernel\Reflection{
         return $this->getInstanceValue('_Parent',function(){
             if(($ParentUrl = $this->Config->getValue('form/parent'))===false) throw new ex\Error('form "' .$this->Url. '" parent is not defined.');
             return $ParentUrl ? static::get($ParentUrl) : null;    // static::get() - НЕ self::get()
-        });
+        }); 
     }
     
     // --- --- --- --- --- --- --- ---

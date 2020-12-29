@@ -158,7 +158,7 @@ class Cache extends kernel\Reflection{
     }
     
     // --- --- --- --- --- --- --- ---
-    public function updateFile($key,$path,$_callback){
+    public function updateFile($key,$path,$_callback=null){
         $Path = $this->getPath($key);
         
         //dump($path);

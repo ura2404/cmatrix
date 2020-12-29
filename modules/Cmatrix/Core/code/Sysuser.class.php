@@ -30,7 +30,7 @@ class Sysuser {
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     private function createInstance(){
-          if(app\Kernel::get()->isDb){
+        if(app\Kernel::get()->isDb){
             // ---- создать пользователя с БД
         }
         else{

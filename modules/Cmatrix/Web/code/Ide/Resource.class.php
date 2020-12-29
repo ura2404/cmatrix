@@ -11,11 +11,12 @@ use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Exception as ex;
 use \Cmatrix\Web as web;
 
-class Resource extends  kernel\Ide\Resource {
+abstract class Resource extends  kernel\Ide\Resource {
     static $C = [];
     //static $INSTANCES = [];
     
-    protected $_CacheName;
+    protected $_CacheKey;
+    protected $_Link;
     
     // --- --- --- --- --- --- --- ---
     function __construct($url){
@@ -28,7 +29,9 @@ class Resource extends  kernel\Ide\Resource {
     // --- --- --- --- --- --- --- ---
     function __get($name){
         switch($name){
-            case 'CacheName' : return $this->getMyCacheName();
+            case 'CacheKey' : return $this->getMyCacheKey();
+            case 'Html' : return $this->getMyHtml();
+            case 'Link' : return $this->getMyLink();
             default : return parent::__get($name);
         }
     }
@@ -36,37 +39,49 @@ class Resource extends  kernel\Ide\Resource {
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
-    private function getMyCacheName(){
-        return $this->getInstanceValue('_CacheName',function(){
+    private function getMyCacheKey(){
+        return $this->getInstanceValue('_CacheKey',function(){
             $Name = strRBefore($this->Url,'.');
             return md5($Name) .'.'. $this->Type;
         });
     }
+
+    // --- --- --- --- --- --- --- ---
+    /**
+     * @return string - url ресурса
+     */
+    private function getMyLink(){
+        return $this->getInstanceValue('_Link',function(){
+            $Link = \Cmatrix\Web\Kernel::get()->Home .
+                (
+                    $this->Src === 'raw' ? 
+                    strAfter($this->Path,kernel\Ide\Part::get($this->Url)->Path) 
+                    : '/cache/'.$this->CacheKey
+                );
+            return $Link;
+        });
+    }
     
     // --- --- --- --- --- --- --- ---
-    private function createCache(){
-        // функция сжатия js
-        $_js = function($Content){
-            $Content = preg_replace("/\/\/.*\n/", '', $Content);              // однострочные коментарии
-            $Content = preg_replace("/\/\*(.*?)\*\//sm", '', $Content);       // многострочные коментарии
-            $Content = mb_ereg_replace('[ ]+', ' ', $Content);                // двойные пробелы
-            $Content = preg_replace("/[\r\n|\n|\t]/", '', $Content);          // переносы строк
-            $Content = preg_replace("/\s+([{|}|)|;|,|:|=]+)/", '\\1',$Content);   // лишние символы до
-            $Content = preg_replace("/([{|}|)|;|,|:|=]+)\s+/", '\\1',$Content);   // лишние символы после
-            
-            return $Content;
-        };
-        
-        //dump($this->Url,'create resource cache');
-        $Cache = web\Ide\Cache::get('res');
-        $Cache->updateFile($this->CacheName,$this->Path,$this->Type !== 'js' ? null : $_js);
-    }
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    abstract protected function createCache();
+    
+    /**
+     * @return string - html строка для ресурса
+     */
+    abstract protected function getMyHtml();
     
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     static function get($url){
-        return new self($url);
+        // типы ресурсов с персональным классом
+        $SelfTypes = ['js','css','less'];
+        
+        $Type = kernel\Ide\Resource::get($url)->Type;
+        $ClassName = '\Cmatrix\Web\Ide\Resource\\' . (in_array($Type,$SelfTypes) ? ucfirst($Type) : 'Custom');
+        return new $ClassName($url);
     }
 }
 ?>

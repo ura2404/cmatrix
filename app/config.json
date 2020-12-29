@@ -23,5 +23,16 @@
                 "admin"     : "Cmatrix/Web/custom/admin"
             }
         }
+    },
+    "db" : {
+		"_def" : {
+            "_host"   : "localhost",
+            "_port"   : "5433",
+            "_driver" : "pdo",
+            "_type"   : "pgsql",
+            "name"   : "ru.cmatrix",
+            "user"   : "ru.cmatrix",
+            "pass"   : "ru.cmatrix2000"
+    	}
     }
 }

@@ -75,7 +75,7 @@ class Page extends kernel\Reflection{
             $Html = web\Mvc\Mvc::get($Form)->Html;
             
             //4. модификация
-            if(strpos($Html,'<head>') !== false && strpos($Html,'</head>') !== false){
+            if(CM_MODE === 'development' && strpos($Html,'<head>') !== false && strpos($Html,'</head>') !== false){
                 $_js = function(){
                     //$F = 'var _cmfp=function(u){var a=u.split("/");var p=a.reverse().pop();var s=a.reverse().join("/");return ' ."'".Ide\Form::get("'+p+'/'+s")->Path. ';};';
                     //$R = 'var _cmrp=function(u){var a=u.split("/");var p=a.reverse().pop();var s=a.reverse().join("/");return ' ."'".Ide\Resource::get("'+p+'/'+s")->Path. ';};';
@@ -98,7 +98,7 @@ class Page extends kernel\Reflection{
                     $LessVersion = '3.7.1';
                     
                     $Arr = explode('</head>',$Html);
-                    $Arr[0] .= web\Resource::get('Cmatrix/Vendor/lesscss/'.$LessVersion.'/less.min.js')->HeadLink;
+                    $Arr[0] .= web\Ide\Resource::get('Cmatrix/Vendor/lesscss/'.$LessVersion.'/less.min.js')->Html;
                     //$Arr[0] .= '<script type="text/javascript" src="' .\cmWeb\Ide\Resource::get('vendor/less')->Path. '/'. $LessVersion .'/less.min.js"></script>';
                     $Html = implode('</head>',$Arr);
                 }

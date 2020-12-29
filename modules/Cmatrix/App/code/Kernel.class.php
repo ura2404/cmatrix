@@ -10,14 +10,13 @@ namespace Cmatrix\App;
 use \Cmatrix\Kernel\Exception as ex;
 
 class Kernel extends \Cmatrix\Kernel\Reflection {
-    //static $INSTANCES = [];
-    
     protected $_Sapi;
     protected $_Config;
     protected $_Hid;
     protected $_Cts;
     protected $_Tts;
     protected $_Cookie;
+    protected $_isDb;
     
     // --- --- --- --- --- --- --- ---
     function __construct(){
@@ -180,7 +179,12 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
      * @return bool - признак использования базы данных
      */
     private function getIsDb(){
-        return $this->Config->getValue('db');
+        //dump(self::$REFINSTANCES[$this->RefKey]);
+        return $this->getInstanceValue('_isDb',function(){
+            $Config = $this->Config->getValue('db/def');
+            return !!$Config;
+            return $Config && count($Config);
+        });        
     }
     
     // --- --- --- --- --- --- --- ---

@@ -78,13 +78,13 @@ class Form extends kernel\Ide\Form {
         
         $_parent = function(){
             if(!$this->Parent) return;
-            $this->Content = '{% extends "'. $this->Parent->CacheName .'" %}'."\n\n" . $this->Content;
+            $this->Content = '{% extends "'. $this->Parent->CacheKey .'" %}'."\n\n" . $this->Content;
         };
         
         $_styles = function(){
             //dump($this->Styles,'styles for cache');
             $Arr = array_map(function($value){
-                return web\Resource::get($value)->HeadLink;
+                return web\Ide\Resource::get($value)->Html;
             },$this->Styles);
             
             $this->Content = str_replace(
@@ -96,7 +96,7 @@ class Form extends kernel\Ide\Form {
         
         $_scripts= function(){
             $Arr = array_map(function($value){
-                return web\Resource::get($value)->HeadLink;
+                return web\Ide\Resource::get($value)->Html;
             },$this->Scripts);
             
             $this->Content = str_replace(

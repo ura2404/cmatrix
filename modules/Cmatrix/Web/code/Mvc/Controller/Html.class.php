@@ -29,7 +29,8 @@ class Html extends \Cmatrix\Web\Mvc\Controller {
             return implode('',$arr);
         };
 
-        return $_parser($this->View->Data,$this->Model->Data);
+        //return $_parser($this->View->Data,$this->Model->Data);
+        return $_parser($this->View->CacheData,$this->Model->Data);
     }
 }
 ?>

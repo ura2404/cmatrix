@@ -5,7 +5,7 @@ class MyModel extends \Cmatrix\Web\Mvc\Model {
     public function getData(){
         return [
             'web' => [
-                'favicon' => \Cmatrix\Web\Resource::get('form::Cmatrix/Web/custom/404/res/favicon.ico')->Path,
+                'favicon' => \Cmatrix\Web\Ide\Resource::get('form::Cmatrix/Web/custom/404/res/favicon.ico')->Link,
             ],
             'page' => [
                 'name' => '404',
@@ -32,7 +32,7 @@ class MyModel extends \Cmatrix\Web\Mvc\Model {
         ];
         
         $Key = array_rand($Arr);
-        return \Cmatrix\Web\Resource::get('form::Cmatrix/Web/custom/404/res/404/'.$Arr[$Key])->Path;
+        return \Cmatrix\Web\Ide\Resource::get('form::Cmatrix/Web/custom/404/res/404/'.$Arr[$Key])->Link;
     }
     
     // --- --- --- --- --- --- --- ---

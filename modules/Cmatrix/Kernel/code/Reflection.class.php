@@ -146,11 +146,9 @@ class Reflection {
     
     // --- --- --- --- --- --- ---
     protected function getInstanceValue($name,$_fun){
-        //dump(self::$REFINSTANCES[$this->RefKey]);
+        if(!($_fun instanceof \Closure)) throw new ex\Error('invalid function for instance "' .$name. '"');
         
-        if(!$_fun instanceof \Closure) throw new ex\Error('invalid function for instance "' .$name. '"');
-        
-        if(self::$REFINSTANCES[$this->RefKey]->$name) return self::$REFINSTANCES[$this->RefKey]->$name;
+        if(self::$REFINSTANCES[$this->RefKey]->$name !== null) return self::$REFINSTANCES[$this->RefKey]->$name;
         return self::$REFINSTANCES[$this->RefKey]->$name = $this->$name = $_fun();
     }
 
