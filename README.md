@@ -3,13 +3,14 @@
 
 ## Развёртывание
 ### Linux ###
-``
+
+``` bash
 usermod -aG www-data user
 usermod -aG user www-data
 
 chmod 775 ..
 chmod 775 modiles/Cmatrix/Web/www
-``
+```
 
 ## Используемые термины
 |Термин||
