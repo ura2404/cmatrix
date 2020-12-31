@@ -32,6 +32,10 @@ class Sysuser {
     private function createInstance(){
         if(app\Kernel::get()->isDb){
             // ---- создать пользователя с БД
+            $Dm = orm\Datamodel::get('Cmatrix/Core/Sysuser');
+            $Ob = orm\Entity::create($Dm);
+            
+            return $Ob;
         }
         else{
             // ---- создать пользователя без БД
@@ -54,6 +58,7 @@ class Sysuser {
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     static function get(){
+        return (new self())->Instance;
         new self();
         return self::$INSTANCE;
     }

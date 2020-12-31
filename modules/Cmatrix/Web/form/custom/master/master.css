@@ -65,5 +65,6 @@ body {
     z-index: 99999;
     /*transition-property: top;*/
     /*transition-delay: 0s;*/
-    transition: opacity 0.3s, visibility 0s linear 0.3s;
+    /*transition: opacity 0.3s, visibility 0s linear 0.3s;*/
+    transition: opacity .4s, visibility .2s linear .4s;
 }

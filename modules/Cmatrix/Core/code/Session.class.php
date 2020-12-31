@@ -36,7 +36,10 @@ class Session {
     private function createInstance(){
         if(app\Kernel::get()->isDb){
             // ---- создать сессию с БД
+            $Dm = orm\Datamodel::get('Cmatrix/Core/Session');
+            $Ob = orm\Entity::create($Dm);
             
+            return $Ob;
         }
         else{
             // --- создать сессию без БД
@@ -94,8 +97,9 @@ class Session {
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     static function get(){
+        return (new self())->Instance;
         new self();
         return self::$INSTANCE;
     }
 }
-?>
+?>`

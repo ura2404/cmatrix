@@ -7,5 +7,5 @@ window.onload = function(){
     //setTimeout(function(){ Wp.remove(); },400);
     
     // так ему стало хрошо, сука
-    setTimeout(function(){ Wp.parentElement.removeChild(Wp); },400);
+    setTimeout(function(){ Wp.parentElement.removeChild(Wp); },1000);
 };
