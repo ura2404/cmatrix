@@ -27,4 +27,8 @@ chmod 775 modiles/Cmatrix/Web/www
 
 ----
 
+В фале modules/Cmatrix/Vendor/code/ILess/lib/ILess/Parser/ParserInput.php
+в строке 187 continue; заменить на continue 2;
+----
+
 2000-2020 [Cmatrix](https://cmatrix.ru) © by ura@itx.ru
