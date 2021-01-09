@@ -6,7 +6,7 @@
         "styles" : [
             "raw::Cmatrix/Vendor/fonts/google/Arsenal/font.css",
             "raw::Cmatrix/Vendor/fonts/fontawesome.com/5.14.0/css/all.css",
-            "form::Cmatrix/Web/custom/master/master.css"
+            "form::Cmatrix/Web/custom/master/master.less"
         ],
         "scripts" : [
             "res::Cmatrix/Web/app.js",

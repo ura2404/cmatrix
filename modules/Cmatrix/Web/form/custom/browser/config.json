@@ -4,7 +4,7 @@
         "type" : "twig",
         "parent" : "Cmatrix/Web/custom/master",
         "styles" : [
-            "form::Cmatrix/Web/custom/browser/browser.css"
+            "form::Cmatrix/Web/custom/browser/browser.less"
         ],
         "scripts" : null
     }
