@@ -1,4 +1,4 @@
 #AuthType Basic
 #AuthName "RawEditor"
-#AuthUserFile /var/www/su.urx.custom/tilda/moz/.raws/1.1/.htpasswd
+#AuthUserFile /home/ura/__WORK__/cmatrix/www/raw/.htpasswd
 #require valid-user
