@@ -15,7 +15,7 @@
     <body>
         <div id="wp" style="width:100vw;height:100vh;position:fixed;background-color:white;opacity:1;"></div>
         <h2 id="header">
-            <div class="app"><span>{% block blockAppName %}{{ app.name }}{% endblock %}</span> <span> &bull; {% block blockPageName %}{{ page.name }}{% endblock %}</span></div>
+            <div class="app"><span class="app-name">{% block blockAppName %}{{ app.name }}{% endblock %}</span> <span class="page-name"> &bull; {% block blockPageName %}{{ page.name }}{% endblock %}</span></div>
             {# <a href="{{ home }}">{{ name }}</a> <span> &bull; 404</span> #}
             <a class="home" href="{{ web.home }}" title="Главная страница"><i class="fas fa-home"></i></a>            
         </h2>

@@ -17,22 +17,27 @@ body {
     right: 0;
     height: 50px;
     margin: 0;
-    padding: 0 100px;
     background-color: #0baf64;
     color: white;
-}
-
-#header .app {
-    margin: auto auto auto 0;
-}
-
-#header .home {
-    margin: auto 0 auto auto;
-}
-
-#header a {
-    color: white;
-    text-decoration: none;
+    
+    .app {
+        margin: auto auto auto 0;
+        
+        .app-name {
+            @media (max-width: 250px) {
+                display: none;
+            }
+        }
+    }
+    
+    .home {
+        margin: auto 0 auto auto;
+    }
+    
+    a {
+        color: white;
+        text-decoration: none;
+    }
 }
 
 #body {
@@ -41,8 +46,8 @@ body {
     bottom: 30px;
     left: 0;
     right: 0;
-    padding: 0 100px;
 }
+
 #footer {
     position: fixed;
     display: flex;
@@ -50,18 +55,33 @@ body {
     left: 0;
     right: 0;
     height: 30px;
-    padding: 0;
     color: white;
     background-color: #505050;
     text-align: center;
     font-size: 0.8rem;
+    
+    > div {
+        margin : auto;
+    }
 }
 
-#footer > div {
-    margin : auto;
+@media (max-width: 1024px) {
+    #header, #body, #footer {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
+
+@media (min-width: 1025px) {
+    
+    #header, #body, #footer {
+        padding-left: 100px;
+        padding-right: 100px;
+    }
 }
 
 #wp {
+    
     z-index: 99999;
     /*transition-property: top;*/
     /*transition-delay: 0s;*/

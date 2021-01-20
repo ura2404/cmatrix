@@ -111,11 +111,12 @@ class Cache extends kernel\Reflection{
         catch(\Exception $e){
         }
     }
+    
     // --- --- --- --- --- --- --- ---
     public function updateValue($key,$value){
         $Path = $this->getPath($key);
         
-        if(!$this->isExists($key) || filesize($Path) != strlen($value)){
+        if(!$this->isExists($key) || filesize($Path) != strlen($value) || md5($value) !== md5_file($Path)){
             //dump($key,'need update cache value');
             $this->putValue($key,$value);
         }
