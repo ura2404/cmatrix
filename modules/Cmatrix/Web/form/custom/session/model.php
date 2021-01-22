@@ -21,7 +21,6 @@ class MyModel extends \Cmatrix\Web\Mvc\Model {
     // --- --- --- --- --- --- --- ---
     public function getMySession(){
         $AviProps = ['id','hid','create_ts','touch_ts','ip4','ip4x','proxy','sysuser_id']; 
-        
         $Session = \Cmatrix\Core\Session::get()->Values;
         $Session = array_intersect_key($Session,array_flip($AviProps));
         //dump($Session);

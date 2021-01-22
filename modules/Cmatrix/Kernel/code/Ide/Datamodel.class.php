@@ -113,7 +113,7 @@ class Datamodel extends kernel\Reflection{
             //if(!$this->Url) return [];
             
             // 2. определить текущий язык
-            $Lang = app\Kernel::get()->Config->getValue('lang','_def');
+            $Lang = app\Kernel::get()->AppConfig->getValue('lang','_def');
             
             // 3. получить свойства
             // - отсеить свойства с преффиксом '_'

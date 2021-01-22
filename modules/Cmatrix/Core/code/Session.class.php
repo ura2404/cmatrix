@@ -98,8 +98,9 @@ class Session {
     // --- --- --- --- --- --- --- ---
     static function get(){
         return (new self())->Instance;
-        new self();
-        return self::$INSTANCE;
+        
+        //new self();
+        //return self::$INSTANCE;
     }
 }
 ?>
