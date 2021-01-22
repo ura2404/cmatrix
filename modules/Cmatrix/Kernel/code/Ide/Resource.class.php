@@ -38,15 +38,18 @@ class Resource extends kernel\Reflection{
     }
     
     // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- --- 
     // --- --- --- --- --- --- --- ---
-    // --- --- --- --- --- --- --- ---
+    /**
+     * @return string - путь к файлу ресурса
+     */
     private function getMyPath(){
         return $this->getInstanceValue('_Path',function(){
             switch($this->Src){
-                case 'form' : $Path = kernel\Ide\Part::get($this->Url)->Path .CM_DS.'form'.CM_DS. kernel\Url::get($this->Url)->Path;
+                case 'form' : $Path = kernel\Ide\Part::get($this->Url)->Path .CM_DS.'form'.CM_DS. kernel\Url::get($this->Url)->Part3;
                               break;
                 case 'res'  : 
-                case 'raw'  : $Path = kernel\Ide\Part::get($this->Url)->Path .CM_DS.'res'.CM_DS. kernel\Url::get($this->Url)->Path;
+                case 'raw'  : $Path = kernel\Ide\Part::get($this->Url)->Path .CM_DS.'res'.CM_DS. kernel\Url::get($this->Url)->Part3;
                               break;
                 default :
             }
@@ -58,6 +61,9 @@ class Resource extends kernel\Reflection{
     }
     
     // --- --- --- --- --- --- --- ---
+    /**
+     * @return string - тип ресурса
+     */
     private function getMyType(){
         return $this->getInstanceValue('_Type',function(){
             $Type = strRAfter($this->Url,'.');
@@ -67,6 +73,9 @@ class Resource extends kernel\Reflection{
     }
 
     // --- --- --- --- --- --- --- ---
+    /**
+     * @return string - префикс ресурса
+     */
     private function getMySrc(){
         return $this->getInstanceValue('_Src',function(){
              return !($Src = kernel\Url::get($this->Url)->Src) ? 'raw' : $Src;

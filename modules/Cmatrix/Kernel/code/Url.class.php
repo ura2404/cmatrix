@@ -18,9 +18,9 @@ class Url extends Reflection{
     protected $_Url;
     protected $_Src;
     protected $_Arr;
-    protected $_Module;
-    protected $_Part;
-    protected $_Path;
+    protected $_Part1;
+    protected $_Part2;
+    protected $_Part3;
     
     // --- --- --- --- --- --- --- ---
     function __construct($url){
@@ -36,9 +36,16 @@ class Url extends Reflection{
             case 'Url'    : return $this->getMyUrl();
             case 'Src'    : return $this->getMySrc();
             case 'Arr'    : return $this->getMyArr();
-            case 'Module' : return $this->getMyModule();
-            case 'Part'   : return $this->getMyPart();
-            case 'Path'   : return $this->getMyPath();
+            
+            case 'Module' : 
+            case 'Part1'  : return $this->getMyPart1();
+            
+            case 'Part'   : 
+            case 'Part2'  : return $this->getMyPart2();
+            
+            case 'Path'   : 
+            case 'Part3'  : return $this->getMyPart3();
+            
             default : return parent::__get($name);
         }
     }
@@ -72,38 +79,54 @@ class Url extends Reflection{
             return explode('/',$this->Url);
         });
     }
-    
+
     // --- --- --- --- --- --- --- ---
-    protected function getMyModule(){
-        return $this->getInstanceValue('_Module',function(){
+    protected function getMyPart1(){
+        return $this->getInstanceValue('_Part1',function(){
             if(count($this->Arr) < 1) return null;
             $Arr = $this->Arr;
-            $Module = array_shift($Arr);
-            return $Module;
-        });
-    }
-    
-    // --- --- --- --- --- --- --- ---
-    protected function getMyPart(){
-        return $this->getInstanceValue('_Part',function(){
-            if(count($this->Arr) < 2) return null;
-            $Arr = $this->Arr;
-            array_shift($Arr);
-            $Part = array_shift($Arr);
-            return $Part;
+            $Part1 = array_shift($Arr);
+            return $Part1;
         });
     }
 
     // --- --- --- --- --- --- --- ---
-    protected function getMyPath(){
-        return $this->getInstanceValue('_Path',function(){
+    protected function getMyPart2(){
+        return $this->getInstanceValue('_Part2',function(){
+            if(count($this->Arr) < 2) return null;
+            $Arr = $this->Arr;
+            array_shift($Arr);
+            $Part2 = array_shift($Arr);
+            return $Part2;
+        });
+    }
+
+    // --- --- --- --- --- --- --- ---
+    protected function getMyPart3(){
+        return $this->getInstanceValue('_Part3',function(){
             if(count($this->Arr) < 3) return null;
             $Arr = $this->Arr;
             array_shift($Arr);
             array_shift($Arr);
-            $Path = implode('/',$Arr);
-            return $Path;
+            $Part3 = implode('/',$Arr);
+            return $Part3;
         });
+    }
+
+    
+    // --- --- --- --- --- --- --- ---
+    protected function getMyModule(){
+        return $this->Part1;
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    protected function getMyPart(){
+        return $this->Part2;
+    }
+
+    // --- --- --- --- --- --- --- ---
+    protected function getMyPath(){
+        return $this->Part3;
     }
     
     // --- --- --- --- --- --- --- ---

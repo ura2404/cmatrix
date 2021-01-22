@@ -53,7 +53,7 @@ class Form extends kernel\Reflection{
      */
     protected function getMyPath(){
         return $this->getInstanceValue('_Path',function(){
-            $Form = kernel\Url::get($this->Url)->Path;
+            $Form = kernel\Url::get($this->Url)->Part3;
             $Path = Part::get($this->Url)->Path.CM_DS.'form'.CM_DS. $Form;
             if(!file_exists($Path) || !is_dir($Path)) throw new ex\Error('Form "'. $Form .'" is not exists.');
             return $Path;

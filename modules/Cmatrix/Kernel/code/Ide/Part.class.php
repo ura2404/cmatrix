@@ -40,7 +40,7 @@ class Part extends kernel\Reflection {
     // --- --- --- --- --- --- --- ---
     protected function getMyPath(){
         return $this->getInstanceValue('_Path',function(){
-            $Part = kernel\Url::get($this->Url)->Part;
+            $Part = kernel\Url::get($this->Url)->Part2;
             $Path = Module::get($this->Url)->Path .CM_DS. $Part;
             if(!file_exists($Path) || !is_dir($Path)) throw new ex\Error('Part "'. $Part .'" is not exists.');
             return $Path;

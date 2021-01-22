@@ -1,7 +1,8 @@
 {
     "part" : {
         "code" : "Cmatrix/Structure",
-        "name" : "Подсистема управления структурами данных: datamodels, datasources",
+        "name" : "Подсистема управления структурами данных в БД: datamodels, datasources",
+        "info" : "",
         "version" : "4.0",
         "build" : "1",
         "requiries" : [

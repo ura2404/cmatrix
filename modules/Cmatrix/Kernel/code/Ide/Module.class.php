@@ -38,7 +38,7 @@ class Module extends kernel\Reflection{
     // --- --- --- --- --- --- --- ---
     protected function getMyPath(){
         return $this->getInstanceValue('_Path',function(){
-            $Module = kernel\Url::get($this->Url)->Module;
+            $Module = kernel\Url::get($this->Url)->Part1;
             $Path = CM_ROOT.CM_DS. 'modules' .CM_DS. $Module;
             if(!file_exists($Path) || !is_dir($Path)) throw new ex\Error('Module "'. $Module .'" is not exists.');
             return $Path;

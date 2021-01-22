@@ -1,6 +1,9 @@
 <?php
 /**
  * Class Cmatrix\Kernel\Ide\Datamodel
+ * 
+ * Управление моделью данных.
+ * Если нужно получить любую информацию о данных, то это сюда.
  *
  * @author ura@itx.ru 
  * @version 1.0 2020-12-03
@@ -46,7 +49,7 @@ class Datamodel extends kernel\Reflection{
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     protected function isExists(){
-        $Path = kernel\Ide\Part::get($this->Url)->Path.CM_DS.'dm'.CM_DS.kernel\Url::get($this->Url)->Path.'.class.php';
+        $Path = kernel\Ide\Part::get($this->Url)->Path.CM_DS.'dm'.CM_DS.kernel\Url::get($this->Url)->Part3.'.class.php';
         if(!file_exists($Path) || is_dir($Path)) throw new ex\Error('Datamodel "'. $this->Url .'" is not exists.');
     }
     
@@ -62,11 +65,14 @@ class Datamodel extends kernel\Reflection{
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     /**
+     * Функция getMyClassName()
+     * Получить имя класса модели данных.
+     * 
      * @return string - datamodel class name
      */
     protected function getMyClassName(){
         return $this->getInstanceValue('_ClassName',function(){
-            return kernel\Url::get($this->Url)->Module.'\\'.kernel\Url::get($this->Url)->Part.'\\Dm\\'.kernel\Url::get($this->Url)->Path;
+            return kernel\Url::get($this->Url)->Part1.'\\'.kernel\Url::get($this->Url)->Part2.'\\Dm\\'.kernel\Url::get($this->Url)->Part3;
         });
     }
 
@@ -84,7 +90,9 @@ class Datamodel extends kernel\Reflection{
 
     // --- --- --- --- --- --- --- ---
     /**
-     * @retrun string - parent datamodel url
+     * Функция getMyParent()
+     * Получить экземпляр сущности родительской модели данных.
+     * 
      * @return Cmatrix\Kernel\Ide\Datamodel - parent datamodel
      */
     protected function getMyParent(){

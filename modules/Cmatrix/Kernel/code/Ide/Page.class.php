@@ -51,7 +51,7 @@ class Page extends kernel\Reflection{
      */
     private function getMyPath(){
         return $this->getInstanceValue('_Path',function(){
-            $Path = kernel\Ide\Part::get($this->Url)->Path .CM_DS.'page'.CM_DS. kernel\Url::get($this->Url)->Path;
+            $Path = kernel\Ide\Part::get($this->Url)->Path .CM_DS.'page'.CM_DS. kernel\Url::get($this->Url)->Part3;
             if(!file_exists($Path) || !file_exists($Path .CM_DS. 'config.json')) throw new ex\Error('page descriptor [' .$this->Url. '] is not found.');
             return $Path;
         });

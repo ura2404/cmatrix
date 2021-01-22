@@ -30,9 +30,9 @@ class Datamodel {
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     /*private function getMySql(){
-        $Module = kernel\Url::get($this->Url)->Module;
-        $Part = kernel\Url::get($this->Url)->Part;
-        $Entity = kernel\Url::get($this->Url)->Path;
+        $Module = kernel\Url::get($this->Url)->Part1;
+        $Part = kernel\Url::get($this->Url)->Part2;
+        $Entity = kernel\Url::get($this->Url)->Part3;
         
         if($Module && $Part && $Entity){
             $Dm = kernel\Ide\Datamodel::get($this->Url);
