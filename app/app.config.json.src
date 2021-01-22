@@ -1,0 +1,11 @@
+{
+    "app": {
+        "code": "cmatrix",
+        "name": "Cmatrix",
+        "info": "Конструктор платформ",
+        "author": "ura@itx.ru",
+        "url": "http://cmatrix.ru",
+        "since": "2000",
+        "version": "4.0"
+    }
+}

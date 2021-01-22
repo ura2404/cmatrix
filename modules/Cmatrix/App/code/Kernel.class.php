@@ -76,7 +76,7 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
     
     // --- --- --- --- --- --- ---
     /**
-     * @return timestamp - виеря создание сессии
+     * @return timestamp - время создание сессии
      */
     private function getCts(){
         return $this->getInstanceValue('_Cts',function(){
@@ -93,7 +93,7 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
 
     // --- --- --- --- --- --- ---
     /**
-     * @return timestamp - виеря создание сессии
+     * @return timestamp - время создание сессии
      */
     private function getTts(){
         return $this->getInstanceValue('_Tts',function(){
@@ -193,6 +193,7 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
     /**
      * @return string - режим работы проекта
      *     -CLI     - консоль 
+     *     -CGI     - cgi
      *     -APACHE  - модуль apache
      */
     protected function getMySapi(){
