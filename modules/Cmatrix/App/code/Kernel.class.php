@@ -216,8 +216,12 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
             
             if(!file_exists($Path) && !file_exists($PathSrc)) die('cannot open app.config.file');
             elseif(!file_exists($Path) && file_exists($PathSrc)){
+                $Content = \Cmatrix\Kernel\Json::decode(file_get_contents($PathSrc));
+                $Content['app']['info'] = null;
+                file_put_contents($Path,\Cmatrix\Kernel\Json::encode($Content));
+                
                 //$old = umask(0);
-                copy($PathSrc,$Path);
+                //copy($PathSrc,$Path);
                 chmod($Path,0660);
                 //chown($Path,'www-data');
                 //chgrp($Path,'www-data');
