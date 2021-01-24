@@ -12,6 +12,18 @@ require_once(\$Common);
 \Cmatrix\Web\Kernel::get()->Config;
 \Cmatrix\Db\Kernel::get()->Config;
 "
+GET_CONF="define('CM_DS',DIRECTORY_SEPARATOR);
+\$Common=realpath(dirname(__FILE__).CM_DS.'..'.CM_DS.'modules'.CM_DS.'common.php');
+require_once(\$Common);
+echo \Cmatrix\@@@\Kernel::get()->Config->getValue('###');
+"
+SET_CONF="define('CM_DS',DIRECTORY_SEPARATOR);
+\$Common=realpath(dirname(__FILE__).CM_DS.'..'.CM_DS.'modules'.CM_DS.'common.php');
+require_once(\$Common);
+\Cmatrix\@@@\Kernel::get()->Config->setValue('###','%%%');
+"
+
+
 
 GET_CODE="define('CM_DS',DIRECTORY_SEPARATOR);
 \$Common=realpath(dirname(__FILE__).CM_DS.'..'.CM_DS.'modules'.CM_DS.'common.php');
@@ -59,19 +71,59 @@ SET_HTACCESS="
 # --- --- --- --- --- --- --- --- --- ---
 echo
 
+# 0. --- --- --- ---
 php -r "$FUN_INIT"
 
-CODE=`php -r "$GET_CODE"`
-WHOME=`php -r "$GET_WHOME"`
+# 1. --- --- --- ---
+# получить код проекта
+#CODE=`php -r "$GET_CODE"`
+CONF=$GET_CONF
+CONF=${CONF/'###'/'app/code'}
+CONF=${CONF/'@@@'/'App'}
+CODE=`php -r "$CONF"`
 
+# получить имя проекта
+#CODE=`php -r "$GET_CODE"`
+CONF=$GET_CONF
+CONF=${CONF/'###'/'app/name'}
+CONF=${CONF/'@@@'/'App'}
+NAME=`php -r "$CONF"`
+
+# получить whome
+#WHOME=`php -r "$GET_WHOME"`
+CONF=$GET_CONF
+CONF=${CONF/'###'/'web/root'}
+CONF=${CONF/'@@@'/'Web'}
+WHOME=`php -r "$CONF"`
+
+# 2. --- --- --- ---
 echo 'Введите уникальный код проекта:'
 [ "$CODE" != "" ] && read -ei $CODE CODE || read CODE
+
+echo 'Введите краткое имя проекта:'
+[ "$NAME" != "" ] && read -ei $NAME NAME || read NAME
 
 echo 'Введите путь к корню проекта в нотации web-сервера:'
 [ "$WHOME" != "" ] && read -ei $WHOME WHOME || read WHOME
 
-php -r "${SET_CODE/'%%%'/$CODE}"
-php -r "${SET_WHOME/'%%%'/$WHOME}"
+# 3. --- --- --- ---
+# установить код проекта
+CONF=$SET_CONF
+CONF=${CONF/'###'/'app/code'}
+CONF=${CONF/'@@@'/'App'}
+php -r "${CONF/'%%%'/$CODE}"
+
+# установить имя проекта
+CONF=$SET_CONF
+CONF=${CONF/'###'/'app/name'}
+CONF=${CONF/'@@@'/'App'}
+php -r "${CONF/'%%%'/$NAME}"
+
+# установить whome
+CONF=$SET_CONF
+CONF=${CONF/'###'/'web/root'}
+CONF=${CONF/'@@@'/'Web'}
+php -r "${CONF/'%%%'/$WHOME}"
 
 VAR_HTACCESS=${SET_HTACCESS/'###'/'RewriteBase'}
 VAR_HTACCESS=${VAR_HTACCESS/'%%%'/$WHOME}
