@@ -230,9 +230,8 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
             $PathSrc = \Cmatrix\Kernel\Ide\Part::get('Cmatrix/App')->Path.CM_DS.'app.config.json';
             
             if(!file_exists($Path) && !file_exists($PathSrc)) die('cannot open app.config.file');
-            elseif(!file_exists($Path) && file_exists($PathSrc)){
-                $this->initConfig($Path,$PathSrc);
-                /*
+            elseif(!file_exists($Path) && file_exists($PathSrc)) $this->initConfig($Path,$PathSrc);
+            /*{
                 $Content = \Cmatrix\Kernel\Json::decode(file_get_contents($PathSrc));
                 
                 $Content['app']['info'] = null;
@@ -249,8 +248,7 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
                 //chown($Path,'www-data');
                 //chgrp($Path,'www-data');
                 //umask($old);
-                */
-            }
+            }*/
             return $Config = \Cmatrix\Kernel\Config::get($Path);
         });
     }
