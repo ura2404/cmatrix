@@ -41,8 +41,9 @@ class MyModel extends \Cmatrix\Web\Mvc\Model {
 	}
 	
     // --- --- --- --- --- --- --- ---
-	protected function getMyUrl(){
+    protected function getMyUrl(){
 		$url = $this->Config->getValue('app/url');
+		if(!$url) return;
 		$label = str_start($url,'http://') ? str_after($url,'http://') : $url;
 		return '<a href="' .$url. '">' .$label. '</a>';
 	}
