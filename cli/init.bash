@@ -4,26 +4,27 @@ PWD=`pwd`
 WWW_PATH=$PWD'/../www/'
 RAW_PATH=$PWD'/../www/raw'
 
-FUN_INIT="
-    define('CM_DS',DIRECTORY_SEPARATOR);
-    # создать конфиги
-    \$Arr=['app','db','web'];
-    \$FOLDER=realpath(dirname(__FILE__).CM_DS.'..'.CM_DS.'app');
-    array_map(function(\$val) use(\$FOLDER){
-        \$Path = \$FOLDER.CM_DS.\$val.'.config.json';
-        if(!file_exists(\$Path) && !file_exists(\$Path.'.src')) die('Can not create config file \"' .\$val. '.config.json\"'.\"\n\");
-        elseif(!file_exists(\$Path) && file_exists(\$Path.'.src')) copy(\$Path.'.src',\$Path);
-    },\$Arr);
+FUN_INIT="define('CM_DS',DIRECTORY_SEPARATOR);
+# создать конфиги
+\$Common=realpath(dirname(__FILE__).CM_DS.'..'.CM_DS.'modules'.CM_DS.'common.php');
+require_once(\$Common);
+\Cmatrix\App\Kernel::get()->Config;
+\Cmatrix\Web\Kernel::get()->Config;
+\Cmatrix\Db\Kernel::get()->Config;
 "
 
-GET_WHOME="
-    define('CM_DS',DIRECTORY_SEPARATOR);
-    \$File = realpath(dirname(__FILE__).CM_DS.'..'.CM_DS.'app').CM_DS.'web.config.json';
-    \$Content = json_decode(file_get_contents(\$File),true);
-    if(isset(\$Content['web']) &&  isset(\$Content['web']['root'])) echo \$Content['web']['root'];
-    else echo '';
+GET_WHOME="define('CM_DS',DIRECTORY_SEPARATOR);
+\$Common=realpath(dirname(__FILE__).CM_DS.'..'.CM_DS.'modules'.CM_DS.'common.php');
+require_once(\$Common);
+echo \Cmatrix\Web\Kernel::get()->Home;
 "
-SET_WHOME="
+SET_WHOME="define('CM_DS',DIRECTORY_SEPARATOR);
+\$Common=realpath(dirname(__FILE__).CM_DS.'..'.CM_DS.'modules'.CM_DS.'common.php');
+require_once(\$Common);
+\Cmatrix\Web\Kernel::get()->Config->setValue('web/root','%%%');
+
+return;
+
     define('CM_DS',DIRECTORY_SEPARATOR);
     \$Value = '%%%';
     \$File = realpath(dirname(__FILE__).CM_DS.'..'.CM_DS.'app').CM_DS.'web.config.json';

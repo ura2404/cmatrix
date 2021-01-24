@@ -16,9 +16,7 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
     protected $_Tts;
     protected $_Cookie;
     protected $_isDb;
-    protected $_AppConfig;
-    protected $_WebConfig;
-    protected $_DbConfig;
+    protected $_Config;
     
     // --- --- --- --- --- --- --- ---
     function __construct(){
@@ -39,9 +37,7 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
             case 'isDb'   : return $this->getIsDb();
             
             case 'Sapi'   : return $this->getMySapi();
-            case 'AppConfig' : return $this->getMyAppConfig();
-            case 'WebConfig' : return $this->getMyWebConfig();
-            case 'DbConfig'  : return $this->getMyDbConfig();
+            case 'Config' : return $this->getMyConfig();
             
             default : return parent::__get($name);
         }
@@ -55,7 +51,7 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
      */
     private function getCookieName(){
         return $this->getInstanceValue('_Cookie',function(){
-            return str_replace('.','-',$this->AppConfig->getValue('app/code','cmatrix').'-'.hid('_application'));
+            return str_replace('.','-',$this->Config->getValue('app/code','cmatrix').'-'.hid('_application'));
         });
     }
     
@@ -185,7 +181,7 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
     private function getIsDb(){
         //dump(self::$REFINSTANCES[$this->RefKey]);
         return $this->getInstanceValue('_isDb',function(){
-            $Config = $this->DbConfig->getValue('db/def');
+            $Config = \Cmatrix\Db\Kernel::get()->Config->getValue('db/def');
             return !!$Config;
             return $Config && count($Config);
         });        
@@ -211,61 +207,26 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
     
     // --- --- --- --- --- --- --- ---
     /**
-     * @return \Cmatrix\Kernel\Config - конфиг приложения
+     * @return \Cmatrix\Kernel\Config
      */
-    private function getMyAppConfig(){
-        return $this->getInstanceValue('_AppConfig',function(){
+    private function getMyConfig(){
+        return $this->getInstanceValue('_Config',function(){
             $Path = CM_ROOT.CM_DS.'app'.CM_DS.'app.config.json';
-            if(!file_exists($Path) && !file_exists($Path.'.src')) die('cannot open app.config.file');
-            elseif(!file_exists($Path) && file_exists($Path.'.src')){
-                $old = umask(0);
-                copy($Path.'.src',$Path);
-                chown($Path,'www-data');
-                chgrp($Path,'www-data');
-                umask($old);
+            $PathSrc = \Cmatrix\Kernel\Ide\Part::get('Cmatrix/App')->Path.CM_DS.'app.config.json';
+            
+            if(!file_exists($Path) && !file_exists($PathSrc)) die('cannot open app.config.file');
+            elseif(!file_exists($Path) && file_exists($PathSrc)){
+                //$old = umask(0);
+                copy($PathSrc,$Path);
+                chmod($Path,0660);
+                //chown($Path,'www-data');
+                //chgrp($Path,'www-data');
+                //umask($old);
             }
             return $Config = \Cmatrix\Kernel\Config::get($Path);
         });
     }
 
-    // --- --- --- --- --- --- --- ---
-    /**
-     * @return \Cmatrix\Kernel\Config - конфиг web приложения
-     */
-    private function getMyWebConfig(){
-        return $this->getInstanceValue('_WebConfig',function(){
-            $Path = CM_ROOT.CM_DS.'app'.CM_DS.'web.config.json';
-            if(!file_exists($Path) && !file_exists($Path.'.src')) die('cannot open web.config.file');
-            elseif(!file_exists($Path) && file_exists($Path.'.src')){
-                $old = umask(0);
-                copy($Path.'.src',$Path);
-                chown($Path,'www-data');
-                chgrp($Path,'www-data');
-                umask($old);
-            }
-            return $Config = \Cmatrix\Kernel\Config::get($Path);
-        });
-    }
-
-    // --- --- --- --- --- --- --- ---
-    /**
-     * @return \Cmatrix\Kernel\Config - конфиг DB приложения
-     */
-    private function getMyDbConfig(){
-        return $this->getInstanceValue('_DbConfig',function(){
-            $Path = CM_ROOT.CM_DS.'app'.CM_DS.'db.config.json';
-            if(!file_exists($Path) && !file_exists($Path.'.src')) die('cannot open db.config.file');
-            elseif(!file_exists($Path) && file_exists($Path.'.src')){
-                $old = umask(0);
-                copy($Path.'.src',$Path);
-                chown($Path,'www-data');
-                chgrp($Path,'www-data');
-                umask($old);
-            }
-            return $Config = \Cmatrix\Kernel\Config::get($Path);
-        });
-    }
-    
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---

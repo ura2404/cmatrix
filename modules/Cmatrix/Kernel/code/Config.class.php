@@ -12,11 +12,12 @@ class Config extends Reflection {
     //static $INSTANCES = [];
     protected $Key;
     protected $Data;
-    
+    protected $Path;
     // --- --- --- --- --- --- --- ---
-    function __construct($key,$data){
+    function __construct($key,$data,$path=null){
         $this->Key = $key;
         $this->Data = $data;
+        $this->Path = $path;
         
         parent::__construct($this->Key);
     }
@@ -44,6 +45,12 @@ class Config extends Reflection {
         };
         return $_fun(explode("/",$path),$this->Data);
     }
+
+    // --- --- --- --- --- --- --- ---
+    public function setValue($key,$value){
+        $this->Data = arraySetValue($this->Data,explode("/",$key),$value);
+        if($this->Path) file_put_contents($this->Path,Json::encode($this->Data));
+    }
     
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
@@ -58,12 +65,12 @@ class Config extends Reflection {
         //if(!file_exists($Path)) throw new ex\Error('Config file "'.strAfter($Path,CM_ROOT).'" not found.');
         if(!file_exists($Path)) throw new ex\Error('Config file "'.$Path.'" not found.');
         
-        return self::reg($path,Json::decode(file_get_contents($Path)));
+        return self::reg($path,Json::decode(file_get_contents($Path)),$Path);
     }
     
     // --- --- --- --- --- --- --- ---
-    static function reg($key,$data){
-        return new self($key,$data);
+    static function reg($key,$data,$path=null){
+        return new self($key,$data,$path);
     }
 }
 ?>

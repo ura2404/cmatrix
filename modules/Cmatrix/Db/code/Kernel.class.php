@@ -3,28 +3,25 @@
  * Class Kernel
  *
  * @author ura@itx.ru
- * @version 1.0 2020-11-11
+ * @version 1.0 2021-01-24
  */
 
-namespace Cmatrix\Web;
+namespace Cmatrix\Db;
 use \Cmatrix\Kernel\Exception as ex;
+use \Cmatrix\Db as db;
 
 class Kernel extends \Cmatrix\Kernel\Reflection {
-    //static $INSTANCES = [];
-    
     protected $_Config;
-    protected $_Home;
     
     // --- --- --- --- --- --- --- ---
     function __construct(){
-        parent::__construct('web.kernel');
+        parent::__construct('db.kernel');
     }
     
     // --- --- --- --- --- --- --- ---
     function __get($name){
         switch($name){
             case 'Config' : return $this->getMyConfig();
-            case 'Home' : return $this->getMyHome();
             default : return parent::__get($name);
         }
     }
@@ -32,26 +29,16 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
-    /**
-     * @return string - whome
-     */
-    protected function getMyHome(){
-        return $this->getInstanceValue('_Home',function(){
-            if(!($Home = Kernel::get()->Config->getValue('web/root'))) throw new ex\Error($this,'configure variable "web.root" is not defined.');
-            return $Home;
-        });
-    }
-    
     // --- --- --- --- --- --- --- ---
     /**
      * @return \Cmatrix\Kernel\Config - конфиг
      */
     private function getMyConfig(){
         return $this->getInstanceValue('_Config',function(){
-            $Path = CM_ROOT.CM_DS.'app'.CM_DS.'web.config.json';
-            $PathSrc = \Cmatrix\Kernel\Ide\Part::get('Cmatrix/Web')->Path.CM_DS.'web.config.json';
+            $Path = CM_ROOT.CM_DS.'app'.CM_DS.'db.config.json';
+            $PathSrc = \Cmatrix\Kernel\Ide\Part::get('Cmatrix/Db')->Path.CM_DS.'db.config.json';
             
-            if(!file_exists($Path) && !file_exists($PathSrc)) die('cannot open web.config.file');
+            if(!file_exists($Path) && !file_exists($PathSrc)) die('cannot open db.config.file');
             elseif(!file_exists($Path) && file_exists($PathSrc)){
                 //$old = umask(0);
                 copy($PathSrc,$Path);

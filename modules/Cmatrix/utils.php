@@ -336,6 +336,23 @@ function arrayGetValue(array $key,array $data,$default=null){
     else return $default;
 }
 
+function arraySetValue(array $data,array $key,$value){
+    // 1. получить первый индекс цепочки
+    $K = array_shift($key);
+    
+    // 2. если значение есть и индексов больше нет, то присвоить значение
+    // если индексы ещё есть и значение массив, то рекурсия
+    // если индексы ещё есть и значение НЕ массив, то ничего не делать
+    //
+    // если значения нет, то то ничего не делать
+    if(array_key_exists($K,$data)){
+        if(!count($key)) $data[$K] = $value;
+        if(is_array($data[$K])) $data[$K] = arraySetValue($data[$K],$key,$value);
+    }
+    
+    return $data;
+}
+
 /*
     public function getValue($path=null,$default=null){
         if($path === null) return $this->Data;

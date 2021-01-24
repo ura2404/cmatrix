@@ -1,7 +1,7 @@
 #-----------------------------------------------
 #AuthType Basic
 #AuthName "Cmatrix"
-#AuthUserFile .htpasswd
+#AuthUserFile /mnt/md1/home/ura/__WORK__/cmatrix/modules/Cmatrix/Web/www/.htpasswd
 #require valid-user
 
 #-----------------------------------------------
