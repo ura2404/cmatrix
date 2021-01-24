@@ -10,6 +10,10 @@ class MyModel extends \Cmatrix\Web\Mvc\Model {
             'web' => [
                 'browser' => \Cmatrix\Web\Page::get('browser')->Path,
             ],            
+            'code'    => [
+                'label' => 'Код проекта',
+                'value' => \Cmatrix\App\Kernel::get()->Config->getValue('app/code'),
+            ],
             'session' => $this->getMySession(),
             'sysuser' => $this->getMySysuser(),
         ];
