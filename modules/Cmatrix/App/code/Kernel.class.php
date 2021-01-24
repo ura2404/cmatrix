@@ -207,48 +207,18 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
     
     // --- --- --- --- --- --- --- ---
     /**
-     * @return \Cmatrix\Kernel\Config
+     * @return \Cmatrix\Kernel\Config - конфиг
      */
-    protected function initConfig($path,$pathSrc){
-        copy($pathSrc,$path);
-        chmod($path,0660);
-        
-        $Content = \Cmatrix\Kernel\Json::decode(file_get_contents($path));
-        if($Content['app']['code'] !== 'cmatrix'){
-            $Content['app']['info'] = null;
-            $Content['app']['author'] = null;
-            $Content['app']['url'] = null;
-            $Content['app']['since'] = date("Y");
-            $Content['app']['version'] = '1.0';
-            file_put_contents($path,\Cmatrix\Kernel\Json::encode($Content));
-        }
-    }
-     
     private function getMyConfig(){
         return $this->getInstanceValue('_Config',function(){
             $Path = CM_ROOT.CM_DS.'app'.CM_DS.'app.config.json';
             $PathSrc = \Cmatrix\Kernel\Ide\Part::get('Cmatrix/App')->Path.CM_DS.'app.config.json';
             
             if(!file_exists($Path) && !file_exists($PathSrc)) die('cannot open app.config.file');
-            elseif(!file_exists($Path) && file_exists($PathSrc)) $this->initConfig($Path,$PathSrc);
-            /*{
-                $Content = \Cmatrix\Kernel\Json::decode(file_get_contents($PathSrc));
-                
-                $Content['app']['info'] = null;
-                $Content['app']['author'] = null;
-                $Content['app']['url'] = null;
-                $Content['app']['since'] = date("Y");
-                $Content['app']['version'] = '1.0';
-                
-                file_put_contents($Path,\Cmatrix\Kernel\Json::encode($Content));
-                
-                //$old = umask(0);
-                //copy($PathSrc,$Path);
+            elseif(!file_exists($Path) && file_exists($PathSrc)){
+                copy($PathSrc,$Path);
                 chmod($Path,0660);
-                //chown($Path,'www-data');
-                //chgrp($Path,'www-data');
-                //umask($old);
-            }*/
+            }
             return $Config = \Cmatrix\Kernel\Config::get($Path);
         });
     }

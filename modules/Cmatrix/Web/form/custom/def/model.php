@@ -10,8 +10,8 @@ class MyModel extends \Cmatrix\Web\Mvc\Model {
             'app' => [
                 'name'       => $this->Config->getValue('app/name'),
                 'title'      => $this->Config->getValue('app/name'),
-                'descriptor' => $this->getMyDescriptor(),
-                'author'     => $this->Config->getValue('app/author'),
+                'descriptor' => $this->Config->getValue('app/info'),
+                'author'     => $this->getMyAuthor(),
                 'version'    => $this->Config->getValue('app/version'),
                 'period'     => $this->getMyPreiod(),
             ],
@@ -25,14 +25,13 @@ class MyModel extends \Cmatrix\Web\Mvc\Model {
             ]
         ];
     }
-
+    
     // --- --- --- --- --- --- --- ---
-	protected function getMyDescriptor(){
-        return $this->Config->getValue('app/code') !== 'cmatrix' ? 
-            $this->Config->getValue('app/info') : 
-            \Cmatrix\Kernel\Config::get(\Cmatrix\Kernel\Ide\Part::get('Cmatrix/App')->Path.CM_DS.'app.config.json')->getValue('app/info');
+	protected function getMyAuthor(){
+	    $Author = $this->Config->getValue('app/author');
+	    return $Author ? ('by ' . $Author) : null;
 	}
-	
+
     // --- --- --- --- --- --- --- ---
 	protected function getMyPreiod(){
         $now = date('Y');

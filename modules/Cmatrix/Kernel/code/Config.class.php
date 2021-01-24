@@ -49,6 +49,11 @@ class Config extends Reflection {
     // --- --- --- --- --- --- --- ---
     public function setValue($key,$value){
         $this->Data = arraySetValue($this->Data,explode("/",$key),$value);
+        return $this;
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    public function commit(){
         if($this->Path) file_put_contents($this->Path,Json::encode($this->Data));
     }
     

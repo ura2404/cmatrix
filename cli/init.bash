@@ -20,11 +20,8 @@ echo \Cmatrix\@@@\Kernel::get()->Config->getValue('###');
 SET_CONF="define('CM_DS',DIRECTORY_SEPARATOR);
 \$Common=realpath(dirname(__FILE__).CM_DS.'..'.CM_DS.'modules'.CM_DS.'common.php');
 require_once(\$Common);
-\Cmatrix\@@@\Kernel::get()->Config->setValue('###','%%%');
+\Cmatrix\@@@\Kernel::get()->Config->setValue('###','%%%')->commit();
 "
-
-
-
 GET_CODE="define('CM_DS',DIRECTORY_SEPARATOR);
 \$Common=realpath(dirname(__FILE__).CM_DS.'..'.CM_DS.'modules'.CM_DS.'common.php');
 require_once(\$Common);
@@ -33,7 +30,7 @@ echo \Cmatrix\App\Kernel::get()->Config->getValue('app/code');
 SET_CODE="define('CM_DS',DIRECTORY_SEPARATOR);
 \$Common=realpath(dirname(__FILE__).CM_DS.'..'.CM_DS.'modules'.CM_DS.'common.php');
 require_once(\$Common);
-\Cmatrix\App\Kernel::get()->Config->setValue('app/code','%%%');
+\Cmatrix\App\Kernel::get()->Config->setValue('app/code','%%%')->commit();
 "
 
 GET_WHOME="define('CM_DS',DIRECTORY_SEPARATOR);
@@ -45,7 +42,7 @@ echo \Cmatrix\Web\Kernel::get()->Home;
 SET_WHOME="define('CM_DS',DIRECTORY_SEPARATOR);
 \$Common=realpath(dirname(__FILE__).CM_DS.'..'.CM_DS.'modules'.CM_DS.'common.php');
 require_once(\$Common);
-\Cmatrix\Web\Kernel::get()->Config->setValue('web/root','%%%');
+\Cmatrix\Web\Kernel::get()->Config->setValue('web/root','%%%')->commit();
 "
 
 GET_PATH="
@@ -76,21 +73,36 @@ php -r "$FUN_INIT"
 
 # 1. --- --- --- ---
 # получить код проекта
-#CODE=`php -r "$GET_CODE"`
 CONF=$GET_CONF
 CONF=${CONF/'###'/'app/code'}
 CONF=${CONF/'@@@'/'App'}
 CODE=`php -r "$CONF"`
 
 # получить имя проекта
-#CODE=`php -r "$GET_CODE"`
 CONF=$GET_CONF
 CONF=${CONF/'###'/'app/name'}
 CONF=${CONF/'@@@'/'App'}
 NAME=`php -r "$CONF"`
 
+# получить инфо проекта
+CONF=$GET_CONF
+CONF=${CONF/'###'/'app/info'}
+CONF=${CONF/'@@@'/'App'}
+INFO=`php -r "$CONF"`
+
+# получить автора проекта
+CONF=$GET_CONF
+CONF=${CONF/'###'/'app/author'}
+CONF=${CONF/'@@@'/'App'}
+AUTH=`php -r "$CONF"`
+
+# получить url проекта
+CONF=$GET_CONF
+CONF=${CONF/'###'/'app/url'}
+CONF=${CONF/'@@@'/'App'}
+URL=`php -r "$CONF"`
+
 # получить whome
-#WHOME=`php -r "$GET_WHOME"`
 CONF=$GET_CONF
 CONF=${CONF/'###'/'web/root'}
 CONF=${CONF/'@@@'/'Web'}
@@ -98,13 +110,22 @@ WHOME=`php -r "$CONF"`
 
 # 2. --- --- --- ---
 echo 'Введите уникальный код проекта:'
-[ "$CODE" != "" ] && read -ei $CODE CODE || read CODE
+[ "$CODE" != "" ] && read -ei "$CODE" CODE || read CODE
 
 echo 'Введите краткое имя проекта:'
-[ "$NAME" != "" ] && read -ei $NAME NAME || read NAME
+[ "$NAME" != "" ] && read -ei "$NAME" NAME || read NAME
+
+echo 'Введите краткое описание проекта:'
+[ "$INFO" != "" ] && read -ei "$INFO" INFO || read INFO
+
+echo 'Введите автора проекта:'
+[ "$AUTH" != "" ] && read -ei "$AUTH" AUTH || read AUTH
+
+echo 'Введите url проекта:'
+[ "$URL" != "" ] && read -ei "$URL" URL || read URL
 
 echo 'Введите путь к корню проекта в нотации web-сервера:'
-[ "$WHOME" != "" ] && read -ei $WHOME WHOME || read WHOME
+[ "$WHOME" != "" ] && read -ei "$WHOME" WHOME || read WHOME
 
 # 3. --- --- --- ---
 # установить код проекта
@@ -118,6 +139,24 @@ CONF=$SET_CONF
 CONF=${CONF/'###'/'app/name'}
 CONF=${CONF/'@@@'/'App'}
 php -r "${CONF/'%%%'/$NAME}"
+
+# установить описание проекта
+CONF=$SET_CONF
+CONF=${CONF/'###'/'app/info'}
+CONF=${CONF/'@@@'/'App'}
+php -r "${CONF/'%%%'/$INFO}"
+
+# установить автора проекта
+CONF=$SET_CONF
+CONF=${CONF/'###'/'app/author'}
+CONF=${CONF/'@@@'/'App'}
+php -r "${CONF/'%%%'/$AUTH}"
+
+# установить автора проекта
+CONF=$SET_CONF
+CONF=${CONF/'###'/'app/url'}
+CONF=${CONF/'@@@'/'App'}
+php -r "${CONF/'%%%'/$URL}"
 
 # установить whome
 CONF=$SET_CONF
