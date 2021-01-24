@@ -125,18 +125,24 @@ CONF=${CONF/'###'/'web/root'}
 CONF=${CONF/'@@@'/'Web'}
 php -r "${CONF/'%%%'/$WHOME}"
 
+#
 VAR_HTACCESS=${SET_HTACCESS/'###'/'RewriteBase'}
 VAR_HTACCESS=${VAR_HTACCESS/'%%%'/$WHOME}
 php -r "${VAR_HTACCESS/'@@@'/$WWW_PATH}"
 
+#
 VAR_PATH=${GET_PATH/'@@@'/$WWW_PATH'/.htpasswd'}
 VAR_PATH=`php -r "$VAR_PATH"`
 VAR_HTACCESS=${SET_HTACCESS/'###'/'AuthUserFile'}
 VAR_HTACCESS=${VAR_HTACCESS/'%%%'/$VAR_PATH}
 php -r "${VAR_HTACCESS/'@@@'/$WWW_PATH}"
 
+#
 VAR_PATH=${GET_PATH/'@@@'/$RAW_PATH'/.htpasswd'}
 VAR_PATH=`php -r "$VAR_PATH"`
 VAR_HTACCESS=${SET_HTACCESS/'###'/'AuthUserFile'}
 VAR_HTACCESS=${VAR_HTACCESS/'%%%'/$VAR_PATH}
 php -r "${VAR_HTACCESS/'@@@'/$RAW_PATH}"
+
+#IGN=`cat ../.gitignore | grep '.htaccess'`
+#[ "$IGN" == "" ] && echo '.htaccess' >> ../.gitignore
