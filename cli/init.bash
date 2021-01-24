@@ -183,5 +183,6 @@ VAR_HTACCESS=${SET_HTACCESS/'###'/'AuthUserFile'}
 VAR_HTACCESS=${VAR_HTACCESS/'%%%'/$VAR_PATH}
 php -r "${VAR_HTACCESS/'@@@'/$RAW_PATH}"
 
+#
 #IGN=`cat ../.gitignore | grep '.htaccess'`
 #[ "$IGN" == "" ] && echo '.htaccess' >> ../.gitignore
