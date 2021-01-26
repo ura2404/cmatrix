@@ -9,10 +9,12 @@
         "version" : "4.0"
     },
     "parts" : [
+        "App",
         "Core",
         "Db",
         "Kernel",
         "Orm",
+        "Structure",
         "Vendor",
         "Web"
     ]
