@@ -1,4 +1,0 @@
-#AuthType Basic
-#AuthName "RawEditor"
-#AuthUserFile /mnt/md1/home/ura/__WORK__/cmatrix/raw/.htpasswd
-#require valid-user
