@@ -1,3 +1,7 @@
+@color-backgroud-header: #0baf64;
+//@color-backgroud-header: #0baf3d;
+//@color-backgroud-header: #2c8a21;
+
 html {
     font-size: 16px;
 }
@@ -17,13 +21,67 @@ body {
     right: 0;
     height: 50px;
     margin: 0;
-    background-color: #0baf64;
+    background-color: @color-backgroud-header;
     color: white;
     
     .app {
-        margin: auto auto auto 0;
+        margin: 0 auto 0 0;
+        display: flex;
         
         .app-name {
+            transition: linear .05s;
+            margin: 0;
+            display: flex;
+            
+            .label {
+                padding: 0 3px;
+                margin: auto 0;
+                
+                @media (max-width: 400px) {
+                    display: none;
+                }
+            }
+            
+            .icon {
+                padding: 0 3px;
+                margin: auto 0;
+                
+                @media (min-width: 401px) {
+                    display: none;
+                }
+            }
+            
+            &:hover {
+                //transition: linear 1.4s;
+                background-color:  darken(@color-backgroud-header,2%);
+            }
+        }
+        
+        .page-name {
+            transition: linear .05s;
+            margin: 0;
+            display: flex;
+            
+            .label {
+                padding: 0 3px;
+                margin: auto 0;
+                
+                @media (max-width: 250px) {
+                    display: none;
+                }
+            }
+            
+            //@media (max-width: 250px) {
+            //    display: none;
+            //}
+            
+            &:hover {
+                background-color:  darken(@color-backgroud-header,2%);
+            }
+        }
+        
+        .delimeter {
+            margin: auto 10px;
             @media (max-width: 250px) {
                 display: none;
             }
@@ -32,6 +90,32 @@ body {
     
     .home {
         margin: auto 0 auto auto;
+    }
+    
+    .user {
+        margin : 0 0 0 10px;
+        padding: 0 3px;
+        display: flex;
+        
+        .icon {
+            margin: auto 10px auto auto;
+            font-size: 2.5rem;
+        }
+        
+        .label {
+            margin: auto 0;
+            @media (max-width: 550px) {
+                display: none;
+            }
+        }
+        
+        .caret {
+            margin: auto 0 auto 10px;
+        }
+        
+        &:hover {
+            background-color:  darken(@color-backgroud-header,2%);
+        }
     }
     
     a {

@@ -15,9 +15,15 @@
     <body>
         <div id="wp" style="width:100vw;height:100vh;position:fixed;background-color:white;opacity:1;"></div>
         <h2 id="header">
-            <div class="app"><span class="app-name">{% block blockAppName %}{{ app.name }}{% endblock %}</span> <span class="page-name"> &bull; {% block blockPageName %}{{ page.name }}{% endblock %}</span></div>
+            <div class="app">
+                <a class="app-name" href="{{ web.home.addr }}" title="{{ web.home.label}}"><i class="icon fas fa-home"></i><span class="label">{% block blockAppName %}{{ app.name }}{% endblock %}</span></a>
+                <span class="delimeter">&bull;</span>
+                <a class="page-name" href="{{ web.page.addr }}" title="{{ web.page.label}}"><span class="label">{% block blockPageName %}{{ page.name }}{% endblock %}</span></a>
+            </div>
+            
+            {#<div class="app"><span class="app-name">{% block blockAppName %}{{ app.name }}{% endblock %}</span><span class="delimeter">&bull;</span><span class="page-name">{% block blockPageName %}{{ page.name }}{% endblock %}</span></div>#}
             {# <a href="{{ home }}">{{ name }}</a> <span> &bull; 404</span> #}
-            <a class="home" href="{{ web.home }}" title="Главная страница"><i class="fas fa-home"></i></a>            
+            <a class="user" href="{{ web.user.addr }}"><i class="icon fas fa-user-circle"></i><span class="label">{{ web.user.label }}</span><i class="caret fas fa-caret-down"></i></a>
         </h2>
         
         <div id="body">

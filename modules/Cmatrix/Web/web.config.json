@@ -11,7 +11,8 @@
                 "session": "Cmatrix/Web/custom/session",
                 "browser": "Cmatrix/Web/custom/browser",
                 "check": "Cmatrix/Web/custom/check",
-                "admin": "Cmatrix/Web/custom/admin"
+                "admin": "Cmatrix/Web/custom/admin",
+                "lk" :  "Cmatrix/Web/custom/lk"
             }
         }
     }

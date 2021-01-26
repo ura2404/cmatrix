@@ -13,10 +13,21 @@ class MyModel extends \Cmatrix\Web\Mvc\Model {
                 'author'  => $this->Config->getValue('app/author'),
                 'version' => $this->Config->getValue('app/version'),
                 'period'  => $this->getMyPreiod(),
-                
             ],
             'web' => [
-                'home'    => \Cmatrix\Web\Page::get()->Path,
+                'home' => [
+                    'addr'  => \Cmatrix\Web\Page::get()->Path,
+                    'label' => 'Главная страница'
+                ],
+                'page' => [
+                    'addr'  => \Cmatrix\Web\Page::get()->Path,
+                    'label' => 'Оновить текущую страницу',
+                ],
+                'user' => [
+                    'addr'  => \Cmatrix\Web\Page::get('lk')->Path,
+                    'label' => \Cmatrix\Core\Sysuser::get()->name,
+                    //'label' => 'Подковалихин Ю.А.',
+                ],
                 'favicon' => \Cmatrix\Web\Ide\Resource::get('form::Cmatrix/Web/custom/master/res/favicon.ico')->Link,
             ],
             'page' => [

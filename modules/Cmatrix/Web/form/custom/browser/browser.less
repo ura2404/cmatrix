@@ -1,83 +1,91 @@
 #body {
     overflow-y: auto;
-}
 
-.browser {
-    .container {
-        margin: 50px 0 20px 0;
+    > .browser {
         display: flex;
-        flex-direction: column;
-        width: 100%;
-        display: none;
+        margin-top: 50px;
         
-        > .info{
-            @media (max-width: 400px) {
-                font-size: 1.5rem;
-            }
-            
-            font-size: 2rem;
-            text-align: center;
-            color: #505050;
+        @media (max-height: 320px) {
+            margin-top: 10px;
         }
-    }
-}
-
-.download {
-    position : fixed;
-    display: flex;
-    flex-direction: column;
-    left: 0;
-    right: 0;
-    bottom: 30px;
-    background-color: #797979;
-    color: white;
-    padding: 10px 0;
-    
-    @media (max-height: 370px) {
-        padding: 2px 0;
-    }
         
-    a {
-        color: white;
-    }
-    
-    .label {
-        margin: 0 auto;
-        font-size: 1.2rem;
-    }
-    
-    .browsers {
-        display: flex;
-        margin: 0 auto;
-        
-        .browser {
+        .container {
+            margin: auto;
+            //margin: 50px 0 20px 0;
             display: flex;
             flex-direction: column;
-            text-align: center;
-            text-decoration: none;
-            padding: 15px;
-            transition: linear .09s;
+            width: 100%;
+            display: none;
             
-            @media (max-height: 370px) {
-                padding-top: 5px;
-                padding-bottom: 5px;
+            > .info{
+                text-align: center;
+                color: #505050;
+                font-size: 2rem;
                 
-                .browser-name {
-                    display: none;
+                @media (max-width: 400px) {
+                    font-size: 1.5rem;
                 }
             }
+        }
+    }
+
+    > .download {
+        position : fixed;
+        display: flex;
+        flex-direction: column;
+        left: 0;
+        right: 0;
+        bottom: 30px;
+        background-color: #797979;
+        color: white;
+        padding: 15px 0 5px 0;
+        
+        @media (max-height: 400px) {
+            padding: 2px 0;
+        }
             
-            &:hover {
-                background-color: #686868;
-            }
+        a {
+            color: white;
+        }
+        
+        .label {
+            margin: 0 auto;
+            font-size: 1.2rem;
+        }
+        
+        .browsers {
+            display: flex;
+            margin: 0 auto;
             
-            > i {
-                font-size: 2rem;
-                margin: auto;
-            }
-            
-            > span {
-                margin-top: 10px;
+            .browser {
+                display: flex;
+                flex-direction: column;
+                text-align: center;
+                text-decoration: none;
+                padding: 15px;
+                transition: linear .09s;
+                
+                @media (max-height: 400px), (max-width: 300px) {
+                    padding-top: 5px;
+                    padding-bottom: 5px;
+                    
+                    .browser-name {
+                        display: none;
+                    }
+                }
+                
+                &:hover {
+                    background-color: #686868;
+                }
+                
+                > i {
+                    font-size: 2rem;
+                    margin: auto;
+                }
+                
+                > span {
+                    margin-top: 10px;
+                }
             }
         }
     }

@@ -1,0 +1,85 @@
+#body {
+    overflow-y: auto;
+    
+    .page {
+        margin-top: 20px;
+        margin-bottom: 5px;
+        text-align: center;
+        font-size: 4.2rem;
+        
+        @media (max-width: 600px) {
+            font-size: 2.5rem;
+        }
+    }
+    
+    .container {
+        display: flex;
+        
+        .message {
+            margin: auto 5px auto auto;
+            font-size: 1.5rem;
+            
+            p {
+                text-align: center;
+            }
+        }
+        
+        .pic {
+            margin: auto auto auto 5px;
+            height: 265px;
+            width: 275px;
+            display: flex;
+            
+            img {
+                margin : auto;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            flex-direction: column-reverse;
+            
+            .pic img {
+                //width: 150px;
+            }
+            
+            .message, .pic {
+                margin: auto;
+            }
+        }
+    }
+}
+
+.exception {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+
+    .show,
+    .hide {
+        cursor: pointer;
+        border-bottom: 1px dotted black;
+        padding: 0 2px;
+    }
+    
+    .show:hover,
+    .hide:hover {
+        color: #4796c4;
+        border-bottom-color: #4796c4;
+    }
+    
+    span {
+        margin: auto;
+    }
+    
+    .message {
+        margin: 15px auto 0 auto;
+    }
+    
+    .message.hidden,
+    .show.hidden,
+    .hide.hidden {
+        display: none;
+    }
+}
+
+

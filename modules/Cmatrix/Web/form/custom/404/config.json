@@ -5,7 +5,7 @@
         "parent" : "Cmatrix/Web/custom/master",
         "_parent" : null,
         "styles" : [
-            "form::Cmatrix/Web/custom/404/404.css"
+            "form::Cmatrix/Web/custom/404/404.less"
         ],
         "scripts" : [
             "form::Cmatrix/Web/custom/404/404.js"

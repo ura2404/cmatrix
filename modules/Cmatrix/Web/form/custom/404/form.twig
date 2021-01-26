@@ -10,7 +10,7 @@
 
 {% block blockBody %}
     <div class="page">
-        {% if page.refer == '' %}Главная страница ...{% else %}Страница <b>{{ page.refer }}</b> ...{% endif %}
+        {% if page.refer == '' %}Главная страница ...{% else %}Страница <b>{{ page.refer }}</b>&nbsp;...{% endif %}
     </div>
     
     <div class="container">
@@ -26,8 +26,8 @@
     
     {% if page.exception %}
         <div class="exception">
-            <span class="show">Дополнительно ...</span>
-            <span class="hide hidden">Скрыть ...</span>
+            <span class="show">Дополнительно</span>
+            <span class="hide hidden">Скрыть</span>
             <div class="message hidden">
                 {{ page.exception|raw }}
             </div>

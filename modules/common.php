@@ -16,7 +16,7 @@ define('CM_MODE',isset($_SERVER['CM_MODE']) ? $_SERVER['CM_MODE'] : null);
 //define('CM_MODE','production');
 
 !defined('CM_DS') ? define('CM_DS',DIRECTORY_SEPARATOR) : null;
-define('CM_ROOT',realpath(dirname(__FILE__).CM_DS.'..'));
+!defined('CM_ROOT') ? define('CM_ROOT',realpath(dirname(__FILE__).CM_DS.'..')) : null;
 
 $Root = CM_ROOT.CM_DS.'modules';
 $Arr = scandir($Root);
