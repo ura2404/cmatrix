@@ -1,5 +1,5 @@
 .cache
 .tmp
 tmp
-app/*.config.json
 .htaccess
+app/*.config.json
