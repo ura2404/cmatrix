@@ -69,6 +69,9 @@ SET_HTACCESS="
 echo
 
 # 0. --- --- --- ---
+cp -uv ../src/www/.htaccess.src ../www/.htaccess
+cp -uv ../src/raw/.htaccess.src ../www/raw/.htaccess
+
 php -r "$FUN_INIT"
 
 # 1. --- --- --- ---
@@ -109,22 +112,22 @@ CONF=${CONF/'@@@'/'Web'}
 WHOME=`php -r "$CONF"`
 
 # 2. --- --- --- ---
-echo 'Введите уникальный код проекта:'
+echo '1. Введите уникальный код проекта:'
 [ "$CODE" != "" ] && read -ei "$CODE" CODE || read CODE
 
-echo 'Введите краткое имя проекта:'
+echo '2. Введите краткое имя проекта:'
 [ "$NAME" != "" ] && read -ei "$NAME" NAME || read NAME
 
-echo 'Введите краткое описание проекта:'
+echo '3. Введите краткое описание проекта:'
 [ "$INFO" != "" ] && read -ei "$INFO" INFO || read INFO
 
-echo 'Введите автора проекта:'
+echo '4. Введите автора проекта:'
 [ "$AUTH" != "" ] && read -ei "$AUTH" AUTH || read AUTH
 
-echo 'Введите url проекта:'
+echo '5. Введите url проекта:'
 [ "$URL" != "" ] && read -ei "$URL" URL || read URL
 
-echo 'Введите путь к корню проекта в нотации web-сервера:'
+echo '6. Введите путь к корню проекта в нотации web-сервера:'
 [ "$WHOME" != "" ] && read -ei "$WHOME" WHOME || read WHOME
 
 # 3. --- --- --- ---
