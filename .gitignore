@@ -4,6 +4,6 @@ tmp
 .htaccess
 app/*.config.json
 .gitmodules
-modules
+modules/*
 !modules/Cmatrix
 
