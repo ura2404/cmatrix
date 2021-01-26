@@ -1,5 +1,4 @@
 <?php
-
 class A {
     static $SSS;
     public $T;
@@ -47,6 +46,4 @@ var_dump($ObB::$SSS);
 var_dump($ObB::$DDD);
 var_dump($ObB->pddd());
 var_dump($ObB->T);
-
-
 ?>
