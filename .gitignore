@@ -3,5 +3,6 @@
 tmp
 .htaccess
 app/*.config.json
-.gitignore
+.gitmodules
 !modules/Cmatrix
+
