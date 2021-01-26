@@ -20,7 +20,7 @@ class MyModel extends \Cmatrix\Web\Mvc\Model {
                     'label' => 'Главная страница'
                 ],
                 'page' => [
-                    'addr'  => \Cmatrix\Web\Page::get()->Path,
+                    'addr'  => \Cmatrix\Web\Page::get(\Cmatrix\Web\Page::$PAGE)->Path,
                     'label' => 'Оновить текущую страницу',
                 ],
                 'user' => [

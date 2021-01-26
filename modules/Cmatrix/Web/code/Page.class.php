@@ -144,7 +144,7 @@ class Page extends kernel\Reflection{
         $Config = \Cmatrix\Web\Kernel::get()->Config;
         
         $Url = $Config->getValue('web/pages/aliases/'. $this->Url);
-        if(!$Url && $this->Url!='') throw new ex\Error('page "'.$this->Url.'" is not defined.');
+        //if(!$Url && $this->Url!='') throw new ex\Error('page "'.$this->Url.'" is not defined.');
         
         return web\Kernel::get()->Home.'/'.$this->Url;
     }
