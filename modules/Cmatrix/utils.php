@@ -96,10 +96,19 @@ function array2string($data){
  * @author ura@urx.su
  * @version 1.0 2017-02-17
  */
-function array2line($data){
-    if(!is_array($data)) return $data;
-    //dump($data);
+function array2line(array $data){
+    $Arr = [];
+    array_map(function($value) use(&$Arr){
+        if(is_array($value)){
+            array_map(function($value) use(&$Arr){
+                $value!==null ? $Arr[] = $value : null;
+            },array2line($value));
+        }
+        else $Arr[] = $value;
+    },$data);
+    return $Arr;
     
+    /*
 	$arr = [];
 	foreach($data as $val){
 		if(is_array($val)){
@@ -111,6 +120,7 @@ function array2line($data){
 	
 	//dump($arr);
 	return $arr;
+	*/
 };
 
 // --- --- --- --- --- --- --- --- --- ---

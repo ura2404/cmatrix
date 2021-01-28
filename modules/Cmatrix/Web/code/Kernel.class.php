@@ -65,6 +65,13 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
     }
     
     // --- --- --- --- --- --- --- ---
+    public function makeHtaccess(){
+        $Src = \Cmatrix\Kernel\Ide\Part::get('Cmatrix/Web')->Path.CM_DS.'src'.CM_DS.'.htaccess';
+        $Dst = CM_ROOT.CM_DS.'www'.CM_DS.'.htaccess';
+        copy($Src,$Dst);
+    }
+    
+    // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     static function get(){

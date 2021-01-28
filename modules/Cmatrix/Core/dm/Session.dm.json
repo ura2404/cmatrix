@@ -42,7 +42,8 @@
                 "length" : null,
                 "nn": null,
                 "index": null,
-                "default": null,
+                "_default": null,
+                "default": "::counter::",
                 "register" : null,
                 "info": null,
                 "association": null

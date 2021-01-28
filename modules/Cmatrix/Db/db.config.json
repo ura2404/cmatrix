@@ -1,6 +1,7 @@
 {
     "db": {
         "_def": {
+            "prefix" : "qq_",
             "_host": "localhost",
             "_port": "5433",
             "_driver": "pdo",

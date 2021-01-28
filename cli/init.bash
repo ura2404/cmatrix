@@ -11,7 +11,10 @@ require_once(\$Common);
 \Cmatrix\App\Kernel::get()->Config;
 \Cmatrix\Web\Kernel::get()->Config;
 \Cmatrix\Db\Kernel::get()->Config;
+\Cmatrix\Web\Kernel::get()->makeHtaccess();
+copy(CM_ROOT.CM_DS.'raw'.CM_DS.'src'.CM_DS.'.htaccess',CM_ROOT.CM_DS.'raw'.CM_DS.'.htaccess');
 "
+
 GET_CONF="define('CM_DS',DIRECTORY_SEPARATOR);
 \$Common=realpath(dirname(__FILE__).CM_DS.'..'.CM_DS.'modules'.CM_DS.'common.php');
 require_once(\$Common);
@@ -69,9 +72,6 @@ SET_HTACCESS="
 echo
 
 # 0. --- --- --- ---
-cp -uv ../src/www/.htaccess.src ../www/.htaccess
-cp -uv ../src/raw/.htaccess.src ../www/raw/.htaccess
-
 php -r "$FUN_INIT"
 
 # 1. --- --- --- ---
@@ -185,7 +185,3 @@ VAR_PATH=`php -r "$VAR_PATH"`
 VAR_HTACCESS=${SET_HTACCESS/'###'/'AuthUserFile'}
 VAR_HTACCESS=${VAR_HTACCESS/'%%%'/$VAR_PATH}
 php -r "${VAR_HTACCESS/'@@@'/$RAW_PATH}"
-
-#
-#IGN=`cat ../.gitignore | grep '.htaccess'`
-#[ "$IGN" == "" ] && echo '.htaccess' >> ../.gitignore

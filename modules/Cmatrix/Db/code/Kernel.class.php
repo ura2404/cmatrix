@@ -22,6 +22,7 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
     function __get($name){
         switch($name){
             case 'Config' : return $this->getMyConfig();
+            case 'CurConfig' : return $this->getMyCurConfig();
             default : return parent::__get($name);
         }
     }
@@ -49,6 +50,11 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
             }
             return $Config = \Cmatrix\Kernel\Config::get($Path);
         });
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    private function getMyCurConfig(){
+        return \Cmatrix\Kernel\Config::reg('db.current',$this->Config->getValue('db/_def'));
     }
     
     // --- --- --- --- --- --- --- ---

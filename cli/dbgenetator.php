@@ -71,24 +71,28 @@ $_script = function($target,$url) use($_help,$_provider){
     
     echo "----------------------------------------------------------------------\n";
     echo "-- start -------------------------------------------------------------\n";
-    echo "----------------------------------------------------------------------\n";
-    echo "\n";
+    echo "----------------------------------------------------------------------\n\n";
     
     switch($target){
         case 'dm' : 
-            $Provider = \Cmatrix\Structure\Provider::get($provider);
-            \Cmatrix\Structure\Datamodel::get($url,$Provider)->Sql;
+            $Sql = \Cmatrix\Structure\Datamodels::get($url,$provider)->Sql;
             break;
+            
+        case 'ds' : 
+            $Sql = \Cmatrix\Structure\Datasources::get($url,$provider)->Sql;
+            break;
+            
         default: $_help('Неверная цель');
     }
     
-    echo "\n";
-    echo "----------------------------------------------------------------------\n";
+    dump($Sql);
+    
+    echo "\n----------------------------------------------------------------------\n";
     echo "-- end ---------------------------------------------------------------\n";
     echo "----------------------------------------------------------------------\n";
 };
 
-echo "\n----------------------------------------------------------------------\n";
+echo "----------------------------------------------------------------------\n";
 $version = $_version();
 echo "DB creator" .($version ? ' v'.$version : null). " by © ura@urx.su\n\n";
 
