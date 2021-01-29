@@ -1,6 +1,7 @@
 .cache
 .tmp
 tmp
+!*/src/.htaccess
 .htaccess
 app/*.config.json
 
