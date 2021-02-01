@@ -14,7 +14,7 @@ use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Exception as ex;
 use \Cmatrix\App as app;
 
-class Datamodel extends kernel\Reflection implements iModel{
+class Datamodel extends kernel\Reflection implements iDatamodel,iModel {
     protected $Url;
     
     protected $_ClassName;

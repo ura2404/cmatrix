@@ -43,7 +43,7 @@
                 "nn": null,
                 "index": null,
                 "_default": null,
-                "default": "::counter::",
+                "default": null,
                 "register" : null,
                 "info": null,
                 "association": null

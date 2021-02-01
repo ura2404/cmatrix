@@ -1,11 +1,11 @@
 <?php
 /**
- * Class \Cmatrix\Structure\Model
+ * Class \Cmatrix\Structure\Model\Datamodel
  * 
  * Реализует механизм создания управляющих скриптов для датамодели и провайдера
  *
  * @author ura@itx.ru 
- * @version 1.0 2021-02-01
+ * @version 1.0 2020-12-29
  */
  
 namespace Cmatrix\Structure\Model;
@@ -13,19 +13,22 @@ use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Structure as structure;
 use \Cmatrix\Kernel\Exception as ex;
 
-class Datamodel extends \Cmatrix\Structure\Model {
+class Datamodel {
     
     protected $Model;
+    protected $Provider;
     
     // --- --- --- --- --- --- --- ---
-    function __construct(kernel\Ide\iDatamodel $model){
+    function __construct(kernel\Ide\iModel $model, structure\iProvider $provider){
         $this->Model = $model;
+        $this->Provider = $provider;
     }
     
     // --- --- --- --- --- --- --- ---
     function __get($name){
         switch($name){
-            case 'Model' : return $this->Model;
+            case 'Sql' : return $this->getMySql();
+            case 'Tablename' : return $this->getMyTablename();
             default : throw new ex\Property($this,$name);
         }
     }
@@ -33,57 +36,6 @@ class Datamodel extends \Cmatrix\Structure\Model {
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
-    public function getSql(structure\iProvider $provider){
-        $Queries = [];
-        $this->Model->Parent ? $Queries['parent'] = (new self($this->Model->Parent))->getSql($provider) : null;
-        
-        $Queries['main'][] = '-- ---------------------------------------------------';
-        $Queries['main'][] = '-- --- dm::' .$this->Model->Url. '-----------------------';
-        $Queries['main'][] = "";
-        
-        $Queries['main'][] = '-- sequence --- dm::' .$this->Model->Url. ' -------------';
-        $Queries['main'][] = $provider->sqlCreateSequence($this);
-        $Queries['main'][] = "";
-        
-        $Queries['main'][] = '-- table --- dm::' .$this->Model->Url. ' ----------------';
-        $Queries['main'][] = $provider->sqlCreateTable($this);
-        $Queries['main'][] = "";
-
-        $Queries['main'][] = '-- uniques --- dm::' .$this->Model->Url. ' --------------';
-		$Queries['main'][] = $provider->sqlCreateUniques($this);
-		$Queries['main'][] = "";
-        
-        
-        //dump($Queries);
-        
-        return implode("\n",array2line($Queries))."\n";
-        //return implode("\n", $Queries);
-    }
-    
-    // --- --- --- --- --- --- --- ---
-    public function getSequenceProps(){
-        return array_filter($this->Model->Props,function($prop){ return $prop['default'] === '::counter::'; });
-    }
-    
-    // --- --- --- --- --- --- --- ---
-    public function getPropSequenceName($prop){
-        $name = $this->getTableName() .'_'. $prop['code'] .'_seq';
-        $name = strtolower($name);
-        return $name;
-        
-    }
-    
-    // --- --- --- --- --- --- --- ---
-    public function getTableName(){
-        $Prefix = \Cmatrix\Db\Kernel::get()->CurConfig->getValue('prefix',null);
-        return $Prefix.str_replace('/','_',$this->Model->Json['code']);
-    }
-    
-    public function getPropName($prop){
-        return $prop['code'];
-    }
-    
-    /*
     private function getMySql(){
         $Queries = [];
         
@@ -243,6 +195,5 @@ class Datamodel extends \Cmatrix\Structure\Model {
     static function get(kernel\Ide\iModel $model, structure\iProvider $provider){
         return new self($model,$provider);
     }
-    */
 }
 ?>

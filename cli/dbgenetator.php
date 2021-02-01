@@ -73,18 +73,28 @@ $_script = function($target,$url) use($_help,$_provider){
     echo "-- start -------------------------------------------------------------\n";
     echo "----------------------------------------------------------------------\n\n";
     
+    /*
     switch($target){
         case 'dm' : 
-            $Sql = \Cmatrix\Structure\Datamodels::get($url,$provider)->Sql;
+            $Model = \Cmatrix\Structure\Model::get(\Cmatrix\Kernel\Ide\Datamodel::get($url));
+            //$Sql = \Cmatrix\Structure\Datamodels::get($url,$provider)->Sql;
             break;
             
         case 'ds' : 
-            $Sql = \Cmatrix\Structure\Datasources::get($url,$provider)->Sql;
+            $Model = \Cmatrix\Structure\Model::get(\Cmatrix\Kernel\Ide\Datasource::get($url));
+            //$Sql = \Cmatrix\Structure\Datasources::get($url,$provider)->Sql;
             break;
             
         default: $_help('Неверная цель');
     }
+    */
     
+    if($target === 'dm') $Model = \Cmatrix\Structure\Model::get(\Cmatrix\Kernel\Ide\Datamodel::get($url));
+    elseif($target === 'ds') $Model = \Cmatrix\Structure\Model::get(\Cmatrix\Kernel\Ide\Datasource::get($url));
+    else $_help('Неверная цель');
+
+    $Provider = \Cmatrix\Structure\Provider::get($provider);
+    $Sql = \Cmatrix\Structure\Kernel::get($Model,$Provider)->SqlCreate;
     dump($Sql);
     
     echo "\n----------------------------------------------------------------------\n";
