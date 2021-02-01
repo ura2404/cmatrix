@@ -2,5 +2,5 @@
 .tmp
 tmp
 app/*.config.json
-.htaccess
-*/src/.htaccess
+modules/Cmatrix/Web/www/.htaccess
+raw/.htaccess
