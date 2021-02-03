@@ -12,6 +12,8 @@ use \Cmatrix\Kernel\Exception as ex;
 
 abstract class Model implements \Cmatrix\Structure\iModel {
     
+    protected $Model;
+    
     // --- --- --- --- --- --- --- ---
     function __get($name){
         switch($name){
@@ -22,14 +24,14 @@ abstract class Model implements \Cmatrix\Structure\iModel {
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
-    abstract public function getSequenceProps();
-    abstract public function getPropSequenceName($prop);
+    abstract public function getSql(iProvider $provider);
     abstract public function getTableName();
     abstract public function getPropName($prop);
 
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
+    /*
     static function get(kernel\Ide\iModel $model){
         $_target = function() use($model){
             if($model instanceof kernel\Ide\iDatamodel) return 'datamodel';
@@ -39,7 +41,13 @@ abstract class Model implements \Cmatrix\Structure\iModel {
         
         $ClassName = '\Cmatrix\Structure\Model\\' .ucfirst($_target());
         return new $ClassName($model);
-        
     }
+    */
+    static function get($url,$target){
+        if($target === 'dm') return new Model\Datamodel(kernel\Ide\Datamodel::get($url));
+        elseif($target === 'ds') return new Model\Datasource(kernel\Ide\Datasource::get($url));
+        else throw new ex\Error('Неверная цель "' .$target. '"');
+    }
+    
 }
 ?>

@@ -15,7 +15,7 @@ class Kernel {
     protected $Provider;
     
     // --- --- --- --- --- --- --- ---
-    function __construct(iModel $model, iProvider $provider){
+    function __construct(iProvider $provider, iModel $model){
         $this->Model = $model;
         $this->Provider = $provider;
     }
@@ -36,8 +36,17 @@ class Kernel {
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
-    static function get(iModel $model,iProvider $provider){
+    /*static function get(iModel $model,iProvider $provider){
         return new self($model,$provider);
+    }*/
+    static function get($target,$url){
+        if(!($Provider = strAfter($target,'::'))) $Provider = \Cmatrix\App\Kernel::get()->Config->getValue('db/def/provider','pgsql');
+        $Provider = Provider::get($Provider);
+        
+        $Target = strBefore($target,'::');
+        $Model = \Cmatrix\Structure\Model::get($url,$Target);
+        
+        return new self($Provider,$Model);
     }
 }
 ?>

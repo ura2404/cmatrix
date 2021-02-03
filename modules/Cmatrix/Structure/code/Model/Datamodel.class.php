@@ -13,9 +13,7 @@ use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Structure as structure;
 use \Cmatrix\Kernel\Exception as ex;
 
-class Datamodel extends \Cmatrix\Structure\Model {
-    
-    protected $Model;
+class Datamodel extends \Cmatrix\Structure\Model implements iDatamodel{
     
     // --- --- --- --- --- --- --- ---
     function __construct(kernel\Ide\iDatamodel $model){
@@ -35,9 +33,10 @@ class Datamodel extends \Cmatrix\Structure\Model {
     // --- --- --- --- --- --- --- ---
     public function getSql(structure\iProvider $provider){
         $Queries = [];
+        
         $this->Model->Parent ? $Queries['parent'] = (new self($this->Model->Parent))->getSql($provider) : null;
         
-        $Queries['main'][] = '-- ---------------------------------------------------';
+        $Queries['main'][] = '-- -------------------------------------------------------------';
         $Queries['main'][] = '-- --- dm::' .$this->Model->Url. '-----------------------';
         $Queries['main'][] = "";
         
@@ -49,10 +48,29 @@ class Datamodel extends \Cmatrix\Structure\Model {
         $Queries['main'][] = $provider->sqlCreateTable($this);
         $Queries['main'][] = "";
 
+        $Queries['main'][] = '-- pk --- dm::' .$this->Model->Url. ' -------------------';
+        $Queries['main'][] = $provider->sqlCreatePk($this);
+        $Queries['main'][] = "";
+
         $Queries['main'][] = '-- uniques --- dm::' .$this->Model->Url. ' --------------';
 		$Queries['main'][] = $provider->sqlCreateUniques($this);
 		$Queries['main'][] = "";
         
+        $Queries['main'][] = '-- indexes --- dm::' .$this->Model->Url. ' --------------';
+		$Queries['main'][] = $provider->sqlCreateIndexes($this);
+		$Queries['main'][] = "";
+		
+        $Queries['main'][] = '-- grant --- dm::' .$this->Model->Url. ' ----------------';
+		$Queries['main'][] = $provider->sqlCreateGrant($this);
+		$Queries['main'][] = "";
+		
+        $Queries['init'][] = '-- init --- dm::' .$this->Model->Url. ' -----------------';
+		$Queries['init'][] = $provider->sqlCreateInit($this);
+		$Queries['init'][] = "";
+		
+        $Queries['fk'][] = '-- fk --- dm::' .$this->Model->Url. ' -------------------';
+		//$Queries['fk'][] = $this->sqlCreateFk($this);
+		$Queries['fk'][] = "";
         
         //dump($Queries);
         
@@ -78,9 +96,22 @@ class Datamodel extends \Cmatrix\Structure\Model {
         $Prefix = \Cmatrix\Db\Kernel::get()->CurConfig->getValue('prefix',null);
         return $Prefix.str_replace('/','_',$this->Model->Json['code']);
     }
+    // --- --- --- --- --- --- --- ---
+    public function getParentTableName(){
+        $Parent = $this->Model->Parent;
+        return $Parent ? (new self($this->Model->Parent))->getTableName() : null;
+    }
     
+    // --- --- --- --- --- --- --- ---
     public function getPropName($prop){
         return $prop['code'];
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    public function getPkProps(){
+        $Props = array_filter($this->Model->OwnProps,function($prop){ return !!$prop['pk']; });
+        $Props = array_map(function($prop){ return $prop['code']; },$Props);
+        return $Props;
     }
     
     /*

@@ -11,7 +11,7 @@ use \Cmatrix\Kernel as kernel;
 use \Cmatrix\Kernel\Exception as ex;
 use \Cmatrix\Structure as structure;
 
-class Pgsql extends \Cmatrix\Structure\Provider {
+class Pgsql extends \Cmatrix\Structure\Provider implements iPgsql{
     
     // --- --- --- --- --- --- --- ---
     function __construct(){
@@ -31,11 +31,12 @@ class Pgsql extends \Cmatrix\Structure\Provider {
         $Arr = array_map(function($prop) use($model){
             $Arr = [];
 			$Name = $model->getPropSequenceName($prop);
-			$Arr[] = 'DROP SEQUENCE IF EXISTS '. $Name .';';
+			$Arr[] = 'DROP SEQUENCE IF EXISTS '. $Name .' CASCADE;';
 			$Arr[] = 'CREATE SEQUENCE '. $Name .';';
 			return implode("\n", $Arr);
         },$model->getSequenceProps());
-        return implode("\n", $Arr);
+        
+        return $Arr;
     }
     
     // --- --- --- --- --- --- --- ---
@@ -49,7 +50,7 @@ class Pgsql extends \Cmatrix\Structure\Provider {
         $Arr[] = implode(",\n",array_map(function($prop) use($model){
             return $this->sqlCreateProp($model,$prop);
         },$model->Model->OwnProps));
-        $Arr[] = $Parent ? ') INHERITS ('. structure\Model::get($Parent)->getTableName() .');' : ');';
+        $Arr[] = $Parent ? ') INHERITS ('. $model->getParentTableName() .');' : ');';
         
         //$Arr[] = $this->getFields();
         
@@ -57,48 +58,123 @@ class Pgsql extends \Cmatrix\Structure\Provider {
         //$ParentTablename = $Json['parent'] ? kernel\Structure\Datamodel::get($Json['parent'])->Tablename : null;
         //$Arr[] = $ParentTablename ?  ') INHERITS ('. $ParentTablename .');' : ');';
         
-        return implode("\n", $Arr);
+        return $Arr;
     }
 
     // --- --- --- --- --- --- --- ---
     public function sqlCreateProp(structure\iModel $model, array $prop){
         $Arr = [];
+        
         $Arr[] = $model->getPropName($prop);
         $Arr[] = $this->getPropType($prop);
-        if($prop['default'] !== null) $Arr[] = $this->getPropDefault($model,$prop);
-        return implode(" ",$Arr);
+        $Arr[] = $this->getPropDefault($model,$prop);
+        $Arr[] = $this->getPropNotNull($prop);
+
+        return implode(" ",array_filter($Arr,function($val){ return !!$val; }));
     }
 
-    // --- --- --- --- --- --- --- ---
-    public function sqlCreateUniques(structure\iModel $model){
-        //dump($model->getUniques());
-    }
-    
     // --- --- --- --- --- --- --- ---    
     public function getPropType($prop){
-        $Type = $prop['type'];
-        
-        if($Type === '::id::') return 'BIGINT';
-        if($Type === '::ip::') return 'VARCHAR(45)'; // 15 - ipv4, 45 - ipv6
-        elseif($Type === '::hid::') return 'VARCHAR(32)';
-        elseif($Type === 'string'){
-            $Length = $prop['length'];
-            return 'VARCHAR' .($Length ? '('. $Length .')' : null);
-        }
-        else return strtoupper($Type);    
+        return parent::getPropType($prop);
     }
     
     // --- --- --- --- --- --- --- ---
     public function getPropDefault($model,$prop){
-        $Def = $prop['default'];
-            
-        if($Def === '::hid::')           $Value = "DEFAULT md5(to_char(now(), 'DDDYYYYNNDDHH24MISSUS') || random())";
-        elseif($Def === '::now::')       $Value = 'DEFAULT CURRENT_TIMESTAMP';
-        elseif($Def === '::counter::')   $Value = "DEFAULT nextval('". $model->getPropSequenceName($prop) ."')";
-        //elseif(strStart($Def,'::next(')) $Value = "DEFAULT nextval('". $_next($Def) ."')";
-        //else $Value =  'DEFAULT '. kernel\Orm\Query\Value::get($Def)->Query;
+        $_def = function() use($model,$prop){
+            if($prop['default'] === '::hid::')         return "md5(to_char(now(), 'DDDYYYYNNDDHH24MISSUS') || random())";
+            elseif($prop['default'] === '::counter::') return "nextval('". $model->getPropSequenceName($prop) ."')";
+            else return parent::getPropDefault($model,$prop);
+        };
         
-        return $Value;
+        $Default = $_def();
+        return $Default ? 'DEFAULT '.$Default : null;
+        
     }
+    
+    // --- --- --- --- --- --- --- ---
+    public function getPropNotNull($prop){
+        return $prop['nn'] === true ? 'NOT NULL' : null;
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    public function sqlCreatePk(structure\iModel $model){
+        $Props = $model->getPkProps();
+        
+        $TableName = $model->getTableName();
+        $PkName = $TableName .'__pk__'. implode('_',$Props);
+        //$PkName = md5($TableName .'__pk__'. implode('_',$Props));
+        
+        $Arr = [];
+        $Arr[] = 'ALTER TABLE ' .$TableName. ' DROP CONSTRAINT IF EXISTS ' .$PkName. ' CASCADE;';
+        $Arr[] = 'ALTER TABLE ' .$TableName. ' ADD CONSTRAINT ' .$PkName. ' PRIMARY KEY (' .implode(',',$Props). ');';
+        
+        return implode("\n",$Arr);
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    public function sqlCreateUniques(structure\iModel $model){
+        //dump($model->getUniques());
+    }
+
+    // --- --- --- --- --- --- --- ---
+    public function sqlCreateIndexes(structure\iModel $model){
+        $TableName = $model->getTableName();
+        
+        return array_map(function($group) use ($TableName) {
+            $Props = array_map(function($prop){
+                return $prop['code'];
+            },$group);
+            
+            $IndexName = $TableName .'__index__'. implode('_',$Props);
+            //$IndexName = md5($TableName .'__index__'. implode('_',$Props));
+            
+            $Arr = [];
+            $Arr[] = 'DROP INDEX IF EXISTS ' .$IndexName. ' CASCADE;';
+            $Arr[] = 'CREATE INDEX ' .$IndexName. ' ON ' .$TableName. ' USING btree (' .implode(',',$Props). ');';
+            
+            return implode("\n",$Arr);
+            
+        },$model->Model->Indexes);
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    public function sqlCreateGrant(structure\iModel $model){
+        $TableName = $model->getTableName();
+        
+        $Arr = [];
+        $Arr[] = 'GRANT SELECT ON '. $TableName .' TO PUBLIC;';
+        $Arr[] = 'GRANT REFERENCES ON '. $TableName .' TO PUBLIC;';
+        
+        return $Arr;
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    public function sqlCreateInit(structure\iModel $model){
+        $TableName = $model->getTableName();
+        $Init = $model->Model->Init;
+        
+        return array_map(function($init) use($model,$TableName){
+            $Fields = array_keys($init);
+            $Values = array_values($init);
+            
+			$Fields[] = 'session_id';
+			$Values[] = '1';
+			
+			// проверить поля
+			array_map(function($prop) use($model){
+			    $model->Model->getProp($prop);
+			},$Fields);
+			
+			$Values = array_map(function($val){ return $this->sqlValue($val); },$Values);
+            
+            return 'INSERT INTO ' .$TableName. ' (' .implode(',',$Fields). ') VALUES (' .implode(',',$Values). ');';
+        },$model->Model->Init);
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    public function sqlValue($val){
+        
+    }
+
 }
 ?>

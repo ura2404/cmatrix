@@ -18,15 +18,15 @@ $_help = function($text){
     print '
 Использование: 
   1. php -f dbGenerator.php dbcreate <login> <password>, где
-        - login - логин администратора БД
-        - password - пароль администратора БД
+        - login - логин администратора БД;
+        - password - пароль администратора БД.
         
   2. php -f dbGenerator.php <mode> <target> <url>, где
-        -mode   - режим: script,check,create,update,fkcreate,update,init
-        -target - цель: "all", dm", "ds", "<provider>::all", "<provider>::dm", "<provider>::ds"
-        -url    - url модуля, части или сущности, например "all", "Cmatrix", "Cmatrix/Core", "Cmatrix/Core/Session" 
+        -mode   - режим: script,check,create,update,fkcreate,update,init;
+        -target - цель: "all", dm", "ds", "all::<provider>", "dm::<provider>", "ds::<provider>";
+        -url    - url модуля, части или сущности, например "all", "Cmatrix", "Cmatrix/Core", "Cmatrix/Core/Session".
         
-    Режим:
+    - mode (режим):
         -script   - вывод SQL-скриптов
         -check    - проверка соответствия объектов DB их описаниям;
         -create   - создания в DB таблицы сущности;
@@ -34,10 +34,11 @@ $_help = function($text){
         -fkupdate - пересоздание внешних ключей в DB для таблицы сущности;
         -update   - обновление в DB таблицы сущности;
         -init     - наполнение в DB таблицы сущности начальными данными.
-        -provider - DB provider: pdsql,mysql,sqlite3
-    Цель:
-        -dm - модель данных
-        -ds - модель источника данных
+        
+    - target (цель):
+        -provider - DB provider: pdsql,mysql,sqlite3;
+        -dm - модель данных;
+        -ds - модель источника данных.
 ';
     echo PHP_EOL;
     die();
@@ -52,14 +53,38 @@ $_version = function(){
 };
 
 // --- --- --- --- --- --- --- ---
-$_provider = function(){
+$_provider = function($target){
+    $Provider = strAfter($target,'::');
     return \Cmatrix\App\Kernel::get()->Config->getValue('db/def/provider','pgsql');
 };
 
 // --- --- --- --- --- --- --- ---
+/**
+ * @param string $target
+ * @param string $url
+ */
 $_script = function($target,$url) use($_help,$_provider){
     if(!$target) $_help('Не указана цель');
     if(!$url) $_help('Не указан url');
+    
+    try {
+        $Sql = \Cmatrix\Structure\Kernel::get($target,$url)->SqlCreate;
+    }
+    catch (\Cmatrix\Kernel\Exception\Error $e) {
+        $_help($e->getMessage());
+    }
+    catch (\Throwable $e) {
+        $_help($e->getMessage());
+    }
+    
+    echo "----------------------------------------------------------------------\n";
+    echo "-- start -------------------------------------------------------------\n";
+    echo "----------------------------------------------------------------------\n\n";
+    echo $Sql;
+    echo "\n----------------------------------------------------------------------\n";
+    echo "-- end ---------------------------------------------------------------\n";
+    echo "----------------------------------------------------------------------\n";
+    return;
     
     $provider = strAfter($target,'::');
     $target = strBefore($target,'::');
@@ -69,9 +94,6 @@ $_script = function($target,$url) use($_help,$_provider){
     //dump($provider);
     //dump($target);
     
-    echo "----------------------------------------------------------------------\n";
-    echo "-- start -------------------------------------------------------------\n";
-    echo "----------------------------------------------------------------------\n\n";
     
     /*
     switch($target){
@@ -89,17 +111,15 @@ $_script = function($target,$url) use($_help,$_provider){
     }
     */
     
-    if($target === 'dm') $Model = \Cmatrix\Structure\Model::get(\Cmatrix\Kernel\Ide\Datamodel::get($url));
+    if($target === 'dm')     $Model = \Cmatrix\Structure\Model::get(\Cmatrix\Kernel\Ide\Datamodel::get($url));
     elseif($target === 'ds') $Model = \Cmatrix\Structure\Model::get(\Cmatrix\Kernel\Ide\Datasource::get($url));
     else $_help('Неверная цель');
 
     $Provider = \Cmatrix\Structure\Provider::get($provider);
-    $Sql = \Cmatrix\Structure\Kernel::get($Model,$Provider)->SqlCreate;
-    dump($Sql);
+    //$Sql = \Cmatrix\Structure\Kernel::get($Model,$Provider)->SqlCreate;
     
-    echo "\n----------------------------------------------------------------------\n";
-    echo "-- end ---------------------------------------------------------------\n";
-    echo "----------------------------------------------------------------------\n";
+    $Sql = $Model->getSql($Provider);
+    
 };
 
 echo "----------------------------------------------------------------------\n";

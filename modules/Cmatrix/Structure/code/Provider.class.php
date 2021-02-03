@@ -26,9 +26,44 @@ abstract class Provider implements \Cmatrix\Structure\iProvider {
     // --- --- --- --- --- --- --- ---
     abstract public function sqlCreateSequence(iModel $prop);
     abstract public function sqlCreateTable(iModel $model);
+    abstract public function getPropNotNull($prop);
+    abstract public function sqlCreatePk(iModel $model);
     abstract public function sqlCreateUniques(iModel $model);
-    abstract public function getPropType(array $prop);
-    abstract public function getPropDefault(iModel $model, array $prop);
+    abstract public function sqlCreateGrant(iModel $model);
+    abstract public function sqlCreateInit(iModel $model);
+    
+    /**
+     * Функция sqlValue
+     * Для формирлования sql представления значения для подстановки в запросы.
+     * 
+     * @return mix - представление значения
+     * 
+     */
+    abstract public function sqlValue($val);
+        
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    public function getPropType(array $prop){
+        if($prop['type'] === '::id::')      return 'BIGINT';
+        elseif($prop['type'] === '::ip::')  return 'VARCHAR(45)'; // 15 - ipv4, 45 - ipv6
+        elseif($prop['type'] === '::hid::') return 'VARCHAR(32)';
+        elseif($prop['type'] === 'string')  return 'VARCHAR' .(isset($prop['length']) ? '('. $prop['length'] .')' : null);
+        else return strtoupper($prop['type']);
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    /**
+     * switch(default) - не подойдёт, так как невозможно будевы типы анализировать
+     */
+    public function getPropDefault(iModel $model, array $prop){
+        
+        if($prop['default'] === null)          return;
+        elseif($prop['default'] === true)      return 'TRUE';
+        elseif($prop['default'] === false)     return 'FALSE';
+        elseif($prop['default'] === '::now::') return 'CURRENT_TIMESTAMP';
+        else return "'" .$prop['default']. "'";
+    }
     
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
@@ -38,7 +73,6 @@ abstract class Provider implements \Cmatrix\Structure\iProvider {
         
         $ClassName = '\Cmatrix\Structure\Provider\\' .ucfirst($provider);
         return new $ClassName();
-        
     }
 }
 ?>

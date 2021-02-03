@@ -35,12 +35,14 @@ class Datamodel extends kernel\Reflection implements iDatamodel,iModel {
     function __get($name){
         switch($name){
             case 'Url' : return $this->Url;
-            case 'ClassName' : return $this->getMyClassName();
-            case 'Json'      : return $this->getMyJson();
-            case 'Parent'    : return $this->getMyParent();
-            case 'Props'     : return $this->getMyProps();
-            case 'OwnProps'  : return $this->getMyOwnProps();
-            case 'Init'      : return $this->getMyInit();
+            case 'ClassName'  : return $this->getMyClassName();
+            case 'Json'       : return $this->getMyJson();
+            case 'Parent'     : return $this->getMyParent();
+            case 'Props'      : return $this->getMyProps();
+            case 'OwnProps'   : return $this->getMyOwnProps();
+            case 'Init'       : return $this->getMyInit();
+            case 'Indexes'    : return $this->getMyIndexes();
+            case 'OwnIndexes' : return $this->getMyOwnIndexes();
             default : return parent::__get($name);
         }
     }
@@ -176,7 +178,54 @@ class Datamodel extends kernel\Reflection implements iDatamodel,iModel {
         $Init = $this->Json['init'];
         return is_array($Init) ? $Init : [];
     }
+    
+    // --- --- --- --- --- --- --- ---
+    /**
+     * @return array - массив массивов собственных свойтсв, требующих индексов
+     * [
+     *    [
+     *        '<prop_code>" : [],
+     *        '<prop_code>" : [],
+     *    ],
+     *    [
+     *        '<prop_code>" : [],
+     *        '<prop_code>" : [],
+     *    ]
+     * ]
+     */
+    protected function getMyOwnIndexes(){
+        $Indexes = $this->Json['indexes'];
+        
+        return array_map(function($group){
+            return array_map(function($prop){
+                return $this->getProp($prop);
+            },$group);
+        },is_array($Indexes) ? $Indexes : []);
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    /**
+     * @return array - массив массивов свойтсв c наследование, требующих индексов
+     */
+    protected function getMyIndexes(){
+        $Indexes = $this->OwnIndexes;
+        $ParentIndexes = $this->Parent ? $this->Parent->OwnIndexes : [];
+        return array_merge($ParentIndexes,$Indexes);
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    public function isPropExists($propCode){
+        return array_key_exists($propCode,$this->Props);
+    }
 
+    // --- --- --- --- --- --- --- ---
+    public function getProp($propCode){
+        if(!$this->isPropExists($propCode)) throw new ex\Error('Datamodel "' .$this->Url. '" prop "' .$propCode. '"is not exists.');
+        return $this->Props[$propCode];
+    }
+    
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
