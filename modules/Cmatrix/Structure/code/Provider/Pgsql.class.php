@@ -48,7 +48,17 @@ class Pgsql extends \Cmatrix\Structure\Provider implements iPgsql{
         $Arr[] = 'DROP TABLE IF EXISTS '. $TableName .' CASCADE;';
         $Arr[] = 'CREATE TABLE '. $TableName .'(';
         $Arr[] = implode(",\n",array_map(function($prop) use($model){
-            return $this->sqlCreateProp($model,$prop);
+            
+            $Arr = [];
+            
+            $Arr[] = $model->getPropName($prop);
+            $Arr[] = $this->getPropType($prop);
+            $Arr[] = $this->getPropDefault($model,$prop);
+            $Arr[] = $this->getPropNotNull($prop);
+            
+            //return implode(" ",$Arr);
+            return implode(" ",array_filter($Arr,function($val){ return !!$val; }));
+            
         },$model->Model->OwnProps));
         $Arr[] = $Parent ? ') INHERITS ('. $model->getParentTableName() .');' : ');';
         
@@ -59,18 +69,6 @@ class Pgsql extends \Cmatrix\Structure\Provider implements iPgsql{
         //$Arr[] = $ParentTablename ?  ') INHERITS ('. $ParentTablename .');' : ');';
         
         return $Arr;
-    }
-
-    // --- --- --- --- --- --- --- ---
-    public function sqlCreateProp(structure\iModel $model, array $prop){
-        $Arr = [];
-        
-        $Arr[] = $model->getPropName($prop);
-        $Arr[] = $this->getPropType($prop);
-        $Arr[] = $this->getPropDefault($model,$prop);
-        $Arr[] = $this->getPropNotNull($prop);
-
-        return implode(" ",array_filter($Arr,function($val){ return !!$val; }));
     }
 
     // --- --- --- --- --- --- --- ---    
@@ -172,8 +170,35 @@ class Pgsql extends \Cmatrix\Structure\Provider implements iPgsql{
     }
     
     // --- --- --- --- --- --- --- ---
-    public function sqlValue($val){
+    public function sqlValue($val,$cond='='){
+        //--- --- --- --- --- --- --- ---
+        $_quote = function($val){
+            return "'" .str_replace("'","''",$val). "'";
+        };
         
+        //--- --- --- --- --- --- --- ---
+        if(is_array($val)){
+            $Arr = array_map(function($val) use($_quote){
+                return $this->sqlValue($val);
+            },$val);
+            return '('. implode(',',$Arr) .')';
+        }
+        elseif($val === true) return 'TRUE';
+        elseif($val === null) return 'NULL';
+        elseif($val === false) return 'FALSE';
+        elseif(gettype($val) === 'string'){
+            if(strStart($val,'raw::')) return strAfter($val,'raw::');
+            elseif($val === 'true' || $val === 'null' || $val === 'false') return strtoupper($val);
+            elseif(strStart($val,'(') && strEnd($val,')')) return $val;
+            elseif(strtolower($val) === '::now::') return 'CURRENT_TIMESTAMP';
+            else{
+                    if($cond == '%'   || $cond == '!%'  ) return $_quote('%'.cmStrToLower($val));
+                elseif($cond == '%%'  || $cond == '!%%' ) return $_quote('%'.cmStrToLower($val).'%');
+                elseif($cond == '%%%' || $cond == '!%%%') return $_quote(cmStrToLower($val).'%');
+                else return $_quote($val);
+            }
+        }
+        else return $val;
     }
 
 }

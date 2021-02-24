@@ -32,9 +32,10 @@ abstract class Provider implements \Cmatrix\Structure\iProvider {
     abstract public function sqlCreateGrant(iModel $model);
     abstract public function sqlCreateInit(iModel $model);
     
+    // --- --- --- --- --- --- --- ---
     /**
      * Функция sqlValue
-     * Для формирлования sql представления значения для подстановки в запросы.
+     * Для формирования sql представления значения для подстановки в запросы
      * 
      * @return mix - представление значения
      * 

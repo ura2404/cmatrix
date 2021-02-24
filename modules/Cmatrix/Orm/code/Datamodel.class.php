@@ -1,6 +1,8 @@
 <?php
 /**
  * Class Cmatrix\Orm\Datamodel
+ * 
+ * Класс для наследования для датамоделей сущностей
  *
  * @author ura@itx.ru
  * @version 1.0 2020-12-17
@@ -37,7 +39,7 @@ abstract class Datamodel extends \Cmatrix\Kernel\Reflection implements iDatamode
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     private function init(){
-        $Own    = kernel\Ide\Datamodel::get($this->Url);
+        $Own = kernel\Ide\Datamodel::get($this->Url);
         //$Parent = kernel\Ide\Datamodel::get($Own->Parent);
         $Parent = $Own->Parent;
         
@@ -65,8 +67,10 @@ abstract class Datamodel extends \Cmatrix\Kernel\Reflection implements iDatamode
             $ClassName = kernel\Ide\Datamodel::get($url)->ClassName;
             $Dm = new $ClassName();
             
+            // это для однократного создания кэша датамодели
             isset(self::$C[$url]) ? null : self::$C[$url] = 0;
             if(!self::$C[$url]++) kernel\Ide\Cache::get('dm')->updateValue($url,serialize($Dm));
+            
             return $Dm;
         }
         else{

@@ -30,15 +30,12 @@ class Kernel {
     
     // --- --- --- --- --- --- --- ---
     protected function getMySqlCreate(){
-        return $this->Model->getSql($this->Provider);
+        return $this->Model->getSqlCreate($this->Provider);
     }
     
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
-    /*static function get(iModel $model,iProvider $provider){
-        return new self($model,$provider);
-    }*/
     static function get($target,$url){
         if(!($Provider = strAfter($target,'::'))) $Provider = \Cmatrix\App\Kernel::get()->Config->getValue('db/def/provider','pgsql');
         $Provider = Provider::get($Provider);

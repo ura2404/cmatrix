@@ -48,9 +48,9 @@ class Session {
             
             $Init = kernel\Ide\Datamodel::get('Cmatrix/Core/Session')->Init;
             $Init = array_filter($Init,function($val){ return !!($val['agent'] === 'Console'); });
-            $Session = array_shift($Init);
+            $Init = array_shift($Init);
             
-            if($Session) $Ob->setValues($Session);
+            if($Init) $Ob->setValues($Init);
             
             $Ob->hid = app\Kernel::get()->Hid;
             $Ob->create_ts = date('Y-m-d H:i:s',app\Kernel::get()->Cts);

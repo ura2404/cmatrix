@@ -24,7 +24,7 @@ abstract class Model implements \Cmatrix\Structure\iModel {
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
-    abstract public function getSql(iProvider $provider);
+    abstract public function getSqlCreate(iProvider $provider);
     abstract public function getTableName();
     abstract public function getPropName($prop);
 

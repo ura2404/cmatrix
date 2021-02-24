@@ -86,10 +86,10 @@ $_script = function($target,$url) use($_help,$_provider){
     echo "----------------------------------------------------------------------\n";
     return;
     
-    $provider = strAfter($target,'::');
-    $target = strBefore($target,'::');
+    //$provider = strAfter($target,'::');
+    //$target = strBefore($target,'::');
     
-    if(!$provider) $provider = $_provider();
+    //if(!$provider) $provider = $_provider();
     
     //dump($provider);
     //dump($target);
@@ -110,7 +110,7 @@ $_script = function($target,$url) use($_help,$_provider){
         default: $_help('Неверная цель');
     }
     */
-    
+    /*
     if($target === 'dm')     $Model = \Cmatrix\Structure\Model::get(\Cmatrix\Kernel\Ide\Datamodel::get($url));
     elseif($target === 'ds') $Model = \Cmatrix\Structure\Model::get(\Cmatrix\Kernel\Ide\Datasource::get($url));
     else $_help('Неверная цель');
@@ -119,7 +119,7 @@ $_script = function($target,$url) use($_help,$_provider){
     //$Sql = \Cmatrix\Structure\Kernel::get($Model,$Provider)->SqlCreate;
     
     $Sql = $Model->getSql($Provider);
-    
+    */
 };
 
 echo "----------------------------------------------------------------------\n";

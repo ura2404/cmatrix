@@ -31,50 +31,51 @@ class Datamodel extends \Cmatrix\Structure\Model implements iDatamodel{
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
-    public function getSql(structure\iProvider $provider){
+    public function getSqlCreate(structure\iProvider $provider){
         $Queries = [];
         
-        $this->Model->Parent ? $Queries['parent'] = (new self($this->Model->Parent))->getSql($provider) : null;
+        $this->Model->Parent ? $Queries['parent'] = (new self($this->Model->Parent))->getSqlCreate($provider) : null;
         
-        $Queries['main'][] = '-- -------------------------------------------------------------';
-        $Queries['main'][] = '-- --- dm::' .$this->Model->Url. '-----------------------';
+        $Queries['main'][] = '-- -------------------------------------------------------------------';
+        $Queries['main'][] = '-- --- dm::' .$this->Model->Url. '---------------------------';
         $Queries['main'][] = "";
         
-        $Queries['main'][] = '-- sequence --- dm::' .$this->Model->Url. ' -------------';
+        $Queries['main'][] = '-- --- sequence --- dm::' .$this->Model->Url. ' -------------';
         $Queries['main'][] = $provider->sqlCreateSequence($this);
         $Queries['main'][] = "";
         
-        $Queries['main'][] = '-- table --- dm::' .$this->Model->Url. ' ----------------';
+        $Queries['main'][] = '-- --- table --- dm::' .$this->Model->Url. ' ----------------';
         $Queries['main'][] = $provider->sqlCreateTable($this);
         $Queries['main'][] = "";
 
-        $Queries['main'][] = '-- pk --- dm::' .$this->Model->Url. ' -------------------';
+        $Queries['main'][] = '-- --- pk --- dm::' .$this->Model->Url. ' -------------------';
         $Queries['main'][] = $provider->sqlCreatePk($this);
         $Queries['main'][] = "";
 
-        $Queries['main'][] = '-- uniques --- dm::' .$this->Model->Url. ' --------------';
+        $Queries['main'][] = '-- --- uniques --- dm::' .$this->Model->Url. ' --------------';
 		$Queries['main'][] = $provider->sqlCreateUniques($this);
 		$Queries['main'][] = "";
         
-        $Queries['main'][] = '-- indexes --- dm::' .$this->Model->Url. ' --------------';
+        $Queries['main'][] = '-- --- indexes --- dm::' .$this->Model->Url. ' --------------';
 		$Queries['main'][] = $provider->sqlCreateIndexes($this);
 		$Queries['main'][] = "";
 		
-        $Queries['main'][] = '-- grant --- dm::' .$this->Model->Url. ' ----------------';
+        $Queries['main'][] = '-- --- grant --- dm::' .$this->Model->Url. ' ----------------';
 		$Queries['main'][] = $provider->sqlCreateGrant($this);
 		$Queries['main'][] = "";
 		
-        $Queries['init'][] = '-- init --- dm::' .$this->Model->Url. ' -----------------';
+        $Queries['init'][] = '-- --- init --- dm::' .$this->Model->Url. ' -----------------';
 		$Queries['init'][] = $provider->sqlCreateInit($this);
 		$Queries['init'][] = "";
 		
-        $Queries['fk'][] = '-- fk --- dm::' .$this->Model->Url. ' -------------------';
+        $Queries['fk'][] = '-- --- fk --- dm::' .$this->Model->Url. ' -------------------';
 		//$Queries['fk'][] = $this->sqlCreateFk($this);
 		$Queries['fk'][] = "";
         
         //dump($Queries);
         
         return implode("\n",array2line($Queries))."\n";
+        //return implode("\n",array2line($Queries));
         //return implode("\n", $Queries);
     }
     
