@@ -48,26 +48,16 @@ class Pgsql extends \Cmatrix\Structure\Provider implements iPgsql{
         $Arr[] = 'DROP TABLE IF EXISTS '. $TableName .' CASCADE;';
         $Arr[] = 'CREATE TABLE '. $TableName .'(';
         $Arr[] = implode(",\n",array_map(function($prop) use($model){
-            
             $Arr = [];
-            
             $Arr[] = $model->getPropName($prop);
             $Arr[] = $this->getPropType($prop);
             $Arr[] = $this->getPropDefault($model,$prop);
             $Arr[] = $this->getPropNotNull($prop);
             
-            //return implode(" ",$Arr);
             return implode(" ",array_filter($Arr,function($val){ return !!$val; }));
-            
         },$model->Model->OwnProps));
         $Arr[] = $Parent ? ') INHERITS ('. $model->getParentTableName() .');' : ');';
-        
-        //$Arr[] = $this->getFields();
-        
-        //$Json = kernel\Ide\Datamodel::get($this->Datamodel->Url)->Json;
-        //$ParentTablename = $Json['parent'] ? kernel\Structure\Datamodel::get($Json['parent'])->Tablename : null;
-        //$Arr[] = $ParentTablename ?  ') INHERITS ('. $ParentTablename .');' : ');';
-        
+
         return $Arr;
     }
 
@@ -96,15 +86,13 @@ class Pgsql extends \Cmatrix\Structure\Provider implements iPgsql{
     
     // --- --- --- --- --- --- --- ---
     public function sqlCreatePk(structure\iModel $model){
-        $Props = $model->getPkProps();
-        
         $TableName = $model->getTableName();
-        $PkName = $TableName .'__pk__'. implode('_',$Props);
-        //$PkName = md5($TableName .'__pk__'. implode('_',$Props));
+        $PkName    = $model->getPkName();
+        $PkProps   = $model->getPkProps();
         
         $Arr = [];
         $Arr[] = 'ALTER TABLE ' .$TableName. ' DROP CONSTRAINT IF EXISTS ' .$PkName. ' CASCADE;';
-        $Arr[] = 'ALTER TABLE ' .$TableName. ' ADD CONSTRAINT ' .$PkName. ' PRIMARY KEY (' .implode(',',$Props). ');';
+        $Arr[] = 'ALTER TABLE ' .$TableName. ' ADD CONSTRAINT ' .$PkName. ' PRIMARY KEY (' .$PkProps. ');';
         
         return implode("\n",$Arr);
     }
@@ -116,23 +104,19 @@ class Pgsql extends \Cmatrix\Structure\Provider implements iPgsql{
 
     // --- --- --- --- --- --- --- ---
     public function sqlCreateIndexes(structure\iModel $model){
-        $TableName = $model->getTableName();
-        
-        return array_map(function($group) use ($TableName) {
-            $Props = array_map(function($prop){
-                return $prop['code'];
-            },$group);
-            
-            $IndexName = $TableName .'__index__'. implode('_',$Props);
-            //$IndexName = md5($TableName .'__index__'. implode('_',$Props));
+        $Arr = array_map(function($group) use($model){
+            $TableName  = $model->getTableName();
+            $IndexProps = $model->getIndexProps($group);
+            $IndexName  = $model->getIndexName($group);
             
             $Arr = [];
             $Arr[] = 'DROP INDEX IF EXISTS ' .$IndexName. ' CASCADE;';
-            $Arr[] = 'CREATE INDEX ' .$IndexName. ' ON ' .$TableName. ' USING btree (' .implode(',',$Props). ');';
+            $Arr[] = 'CREATE INDEX ' .$IndexName. ' ON ' .$TableName. ' USING btree (' .$IndexProps. ');';
             
             return implode("\n",$Arr);
-            
         },$model->Model->Indexes);
+        
+        return implode("\n",$Arr);
     }
     
     // --- --- --- --- --- --- --- ---
@@ -148,57 +132,21 @@ class Pgsql extends \Cmatrix\Structure\Provider implements iPgsql{
     
     // --- --- --- --- --- --- --- ---
     public function sqlCreateInit(structure\iModel $model){
-        $TableName = $model->getTableName();
-        $Init = $model->Model->Init;
-        
-        return array_map(function($init) use($model,$TableName){
+        return array_map(function($init) use($model){
+            foreach($init as $key=>$val) if($key{0} === '_') unset($init[$key]);
+            
             $Fields = array_keys($init);
             $Values = array_values($init);
+            //dump($Fields);
             
-			$Fields[] = 'session_id';
-			$Values[] = '1';
-			
-			// проверить поля
-			array_map(function($prop) use($model){
-			    $model->Model->getProp($prop);
-			},$Fields);
-			
-			$Values = array_map(function($val){ return $this->sqlValue($val); },$Values);
+            $Values = array_map(function($prop,$index) use($model,$Values){
+                $Prop = $model->Model->getProp($prop);
+                return $this->sqlValue($Prop,$Values[$index]);
+            },$Fields,array_keys($Fields));
+            //dump($Values);die();
             
-            return 'INSERT INTO ' .$TableName. ' (' .implode(',',$Fields). ') VALUES (' .implode(',',$Values). ');';
+            return 'INSERT INTO ' .$model->getTableName(). ' (' .implode(',',$Fields). ') VALUES (' .implode(',',$Values). ');';
         },$model->Model->Init);
-    }
-    
-    // --- --- --- --- --- --- --- ---
-    public function sqlValue($val,$cond='='){
-        //--- --- --- --- --- --- --- ---
-        $_quote = function($val){
-            return "'" .str_replace("'","''",$val). "'";
-        };
-        
-        //--- --- --- --- --- --- --- ---
-        if(is_array($val)){
-            $Arr = array_map(function($val) use($_quote){
-                return $this->sqlValue($val);
-            },$val);
-            return '('. implode(',',$Arr) .')';
-        }
-        elseif($val === true) return 'TRUE';
-        elseif($val === null) return 'NULL';
-        elseif($val === false) return 'FALSE';
-        elseif(gettype($val) === 'string'){
-            if(strStart($val,'raw::')) return strAfter($val,'raw::');
-            elseif($val === 'true' || $val === 'null' || $val === 'false') return strtoupper($val);
-            elseif(strStart($val,'(') && strEnd($val,')')) return $val;
-            elseif(strtolower($val) === '::now::') return 'CURRENT_TIMESTAMP';
-            else{
-                    if($cond == '%'   || $cond == '!%'  ) return $_quote('%'.cmStrToLower($val));
-                elseif($cond == '%%'  || $cond == '!%%' ) return $_quote('%'.cmStrToLower($val).'%');
-                elseif($cond == '%%%' || $cond == '!%%%') return $_quote(cmStrToLower($val).'%');
-                else return $_quote($val);
-            }
-        }
-        else return $val;
     }
 
 }

@@ -70,8 +70,8 @@
                 },
                 "label": null,
                 "baloon": null,
-                "type": "string",
-                "length" : 64,
+                "type": "::pass::",
+                "length" : null,
                 "pk" : null,
                 "nn": null,
                 "default": null,
@@ -121,9 +121,8 @@
                 "status" : "C",
                 "code" : "init",
                 "name" : "Init",
-                "_pass" : "raw::md5('ewrf#$dfgdfs#$ASDaf33er')",
-                "pass" : "58bc4e1ff964006368b8f8876e44e749",
-                
+                "pass" : "raw::md5('ewrf#$dfgdfs#$ASDaf33er')",
+                "_pass" : "58bc4e1ff964006368b8f8876e44e749",
                 "info" : "Инициализационный пользователь / #1"
             },
             {
@@ -133,8 +132,8 @@
                 "status" : "C",
                 "code" : "guest",
                 "name" : "Гость",
-                "_pass" : "raw::md5('ewrf#$dfgdfs#$#$%rewfgdfge')",
-                "pass" : "ef635c7d786ed3b73a35d46474d5d992",
+                "pass" : "raw::md5('ewrf#$dfgdfs#$#$%rewfgdfge')",
+                "_pass" : "ef635c7d786ed3b73a35d46474d5d992",
                 "info" : "Гость системы / #2"
             },
             {
@@ -144,8 +143,8 @@
                 "status" : "C",
                 "code" : "admin",
                 "name" : "Администратор",
-                "_pass" : "raw::md5('admin')",
-                "pass" : "21232f297a57a5a743894a0e4a801fc3",
+                "pass" : "raw::md5('admin')",
+                "_pass" : "21232f297a57a5a743894a0e4a801fc3",
                 "info" : "Администратор системы / #3",
                 "lk"   : true
             },

@@ -80,39 +80,106 @@ class Datamodel extends \Cmatrix\Structure\Model implements iDatamodel{
     }
     
     // --- --- --- --- --- --- --- ---
+    /**
+     * @retrun string - трансформированное имя
+     */
+    public function getTransName($name){
+        // 1.
+        return 'cm'.md5($name);
+        
+        // 2.
+        //$Prefix = \Cmatrix\Db\Kernel::get()->CurConfig->getValue('prefix',null);
+        //$Prefix = $Prefix ? $Prefix : 'cm';
+        //return $Prefix .'_'. md5($name);
+        
+        // 3.
+        //return $name;
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    /**
+     * @return array - массив свойств для счётчика
+     */
     public function getSequenceProps(){
         return array_filter($this->Model->Props,function($prop){ return $prop['default'] === '::counter::'; });
     }
     
     // --- --- --- --- --- --- --- ---
-    public function getPropSequenceName($prop){
-        $name = $this->getTableName() .'_'. $prop['code'] .'_seq';
-        $name = strtolower($name);
-        return $name;
-        
-    }
-    
-    // --- --- --- --- --- --- --- ---
-    public function getTableName(){
-        $Prefix = \Cmatrix\Db\Kernel::get()->CurConfig->getValue('prefix',null);
-        return $Prefix.str_replace('/','_',$this->Model->Json['code']);
-    }
-    // --- --- --- --- --- --- --- ---
-    public function getParentTableName(){
-        $Parent = $this->Model->Parent;
-        return $Parent ? (new self($this->Model->Parent))->getTableName() : null;
-    }
-    
-    // --- --- --- --- --- --- --- ---
-    public function getPropName($prop){
-        return $prop['code'];
-    }
-    
-    // --- --- --- --- --- --- --- ---
+    /**
+     * @return array - массив свойств для primary key
+     */
     public function getPkProps(){
         $Props = array_filter($this->Model->OwnProps,function($prop){ return !!$prop['pk']; });
-        $Props = array_map(function($prop){ return $prop['code']; },$Props);
-        return $Props;
+        $Arr = array_map(function($prop){ return $prop['code']; },$Props);
+        return implode(',',$Arr);
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    /**
+     * @return string - имя primary key
+     */
+    public function getPkName(){
+        $Name = $this->getTableName() .'__pk__'. str_replace(',','_',$this->getPkProps());
+        return $this->getTransName($Name);
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    /**
+     * @return string - имя счётчика для свойства
+     */
+    public function getPropSequenceName($prop){
+        $Name = $this->getTableName() . '__seq__' . $prop['code'];
+        $Name = strtolower($Name);
+        return $this->getTransName($Name);
+    }
+    // --- --- --- --- --- --- --- ---
+    /**
+     * @return string - имя таблицы
+     */
+    public function getTableName(){
+        $Prefix = \Cmatrix\Db\Kernel::get()->CurConfig->getValue('prefix',null);
+        $Name = $Prefix.str_replace('/','_',$this->Model->Json['code']);
+        return $Name;
+        //return $this->getTransName($Name);
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    /**
+     *@return string - имя таблицы родителя
+     */
+    public function getParentTableName(){
+        $Parent = $this->Model->Parent;
+        $Name = $Parent ? (new self($this->Model->Parent))->getTableName() : null;
+        return $Name;
+        //return $Name ? $this->getTransName($Name) : null;
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    /**
+     * @return string - имя свойства
+     */
+    public function getPropName($prop){
+        $Name = $prop['code'];
+        return $Name;
+        //return $this->getTransName($Name);
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    /**
+     * @return string - имена свойств для index через запятую
+     */
+    public function getIndexProps(array $props){
+        $Arr = array_map(function($prop){ return $prop['code']; },$props);
+        return implode(',',$Arr);
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    /**
+     * @return string - имя индекса для массива полей
+     */
+    public function getIndexName(array $props){
+        $Name = $this->getTableName() .'__index__'. str_replace(',','_',$this->getIndexProps($props));
+        return $this->getTransName($Name);
     }
     
     /*

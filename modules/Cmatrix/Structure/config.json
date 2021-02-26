@@ -6,7 +6,8 @@
         "version" : "4.0",
         "build" : "1",
         "requiries" : [
-            "Cmatrix/Kernel"
+            "Cmatrix/Kernel",
+            "Cmatrix/Orm"
         ]
     }
 }

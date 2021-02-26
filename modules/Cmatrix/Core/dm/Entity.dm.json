@@ -41,7 +41,7 @@
                     "_def": "Уникальный HID идентификатор"
                 },
                 "type": "::hid::",
-                "length" : 32,
+                "length" : null,
                 "pk" : true,
                 "nn": true,
                 "default": "::hid::",

@@ -8,6 +8,7 @@
  
 namespace Cmatrix\Structure;
 use \Cmatrix\Kernel as kernel;
+use \Cmatrix\Orm as orm;
 use \Cmatrix\Kernel\Exception as ex;
 
 abstract class Provider implements \Cmatrix\Structure\iProvider {
@@ -40,17 +41,44 @@ abstract class Provider implements \Cmatrix\Structure\iProvider {
      * @return mix - представление значения
      * 
      */
-    abstract public function sqlValue($val);
+    public function sqlValue($prop,$val,$cond='='){
+        if(gettype($val) === 'string' && strStart($val,'raw::')) return strAfter($val,'raw::');
+        else switch($prop['type']){
+            case 'bool' :
+                return orm\Query\Value::get($val)->BoolValue;
+                
+            case 'timestamp' :
+                return orm\Query\Value::get($val)->TsValue;
+
+            case '::id::' :
+            case 'integer' :
+                return orm\Query\Value::get($val)->IntegerValue;
+                
+            case 'real' :
+                return orm\Query\Value::get($val)->RealValue;
+                
+            case '::hid::' :
+            case '::ip::' :
+            case 'string' :
+            case 'text' :
+            default :
+                return "'" .str_replace("'","''",$val). "'";
+        }
+        
+    }
         
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     public function getPropType(array $prop){
-        if($prop['type'] === '::id::')      return 'BIGINT';
-        elseif($prop['type'] === '::ip::')  return 'VARCHAR(45)'; // 15 - ipv4, 45 - ipv6
-        elseif($prop['type'] === '::hid::') return 'VARCHAR(32)';
-        elseif($prop['type'] === 'string')  return 'VARCHAR' .(isset($prop['length']) ? '('. $prop['length'] .')' : null);
-        else return strtoupper($prop['type']);
+        $Type = $prop['type'];
+        
+        if($Type === '::id::')       return 'BIGINT';
+        elseif($Type === '::ip::')   return 'VARCHAR(45)'; // 15 - ipv4, 45 - ipv6
+        elseif($Type === '::hid::')  return 'VARCHAR(32)';
+        elseif($Type === '::pass::') return 'VARCHAR(255)';
+        elseif($Type === 'string')   return 'VARCHAR' .(isset($prop['length']) ? '('. $prop['length'] .')' : null);
+        else return strtoupper($Type);
     }
     
     // --- --- --- --- --- --- --- ---
@@ -58,7 +86,6 @@ abstract class Provider implements \Cmatrix\Structure\iProvider {
      * switch(default) - не подойдёт, так как невозможно будевы типы анализировать
      */
     public function getPropDefault(iModel $model, array $prop){
-        
         if($prop['default'] === null)          return;
         elseif($prop['default'] === true)      return 'TRUE';
         elseif($prop['default'] === false)     return 'FALSE';
