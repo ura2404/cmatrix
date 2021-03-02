@@ -27,6 +27,99 @@ class Pgsql extends \Cmatrix\Structure\Provider implements iPgsql{
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
+    protected function inheritIndex(array $props){
+        //dump($props);
+        
+        // кол-во свойств
+        $N = count($props);
+        
+        // перебор возможных вариантов
+        $Ret = [];
+        for($i=1; $i<pow(2,$N); $i++){
+            // 1. получить бинарную строку
+            //   например: 0010110
+            //   здесь форматирование строки для дополнения лидирующих нулей: %'.05s
+            //     - .0 - дополнить нулями
+            //     - 5  - общая длина 5 символов
+            //     - s  - вовод строчных символов
+            $S = str_split(sprintf("%'.0".$N."s",decbin($i)));
+            
+            // 2. получить все варианты и пометить неиспользуемые варианты (nn=true)
+            $Variants = array_map(function($val,$ind) use($props){
+                if($val === '0' && $props[$ind]['nn']) return -1;
+                return $val;
+            },$S,array_keys($S));
+            
+            // 3. удалить неиспользуемые варианты
+            $Fl = array_reduce($Variants,function($carry, $item){
+                $carry = $carry && ($item == -1 ? false : true);
+                return $carry;
+            },true);
+            if(!$Fl) continue;
+            
+            // 3. перебрать варианты для условий
+            // если символ '0' - условие is null
+            // если символ '1' - условие is not null
+            //dump($Variants);
+            
+            $Props = [];
+            $Rules = [];
+            $Arr = array_map(function($var,$index) use($props,&$Props,&$Rules){
+                if($props[$index]['nn'] || (!$props[$index]['nn'] && $var == '1')) $Props[] = $props[$index]['code'];
+                
+                if(!$props[$index]['nn'] && $var == '0') $Rules[] = $props[$index]['code'] .' IS NULL';
+                if(!$props[$index]['nn'] && $var == '1') $Rules[] = $props[$index]['code'] .' IS NOT NULL';
+            },$Variants,array_keys($Variants));
+            
+            $Ret[] = [
+                'props' => $Props,
+                'rules' => $Rules
+            ];
+        }
+        //dump($Ret);
+        return $Ret;
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    /**
+     * @retrun string - трансформированное имя
+     */
+    private function getTransName($name){
+        // 1.
+        return $name;
+        
+        // 2.
+        //return 'cm'.md5($name);
+        
+        // 3.
+        //$Prefix = \Cmatrix\Db\Kernel::get()->CurConfig->getValue('prefix',null);
+        //$Prefix = $Prefix ? $Prefix : 'cm';
+        //return $Prefix .'_'. md5($name);
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    private function getTableName(kernel\Ide\iModel $model){
+        $Prefix = \Cmatrix\Db\Kernel::get()->CurConfig->getValue('prefix',null);
+        $Name = $Prefix.str_replace('/','_',$model->Json['code']);
+        
+        //return $this->getTransName($Name);
+        return $Name;
+    }
+    
+    
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    public function sqlValue($prop,$val,$cond='='){
+        switch($prop['type']){
+            case 'timestamp' :
+                return "'" .parent::sqlValue($prop,$val,$cond). "'";
+            default :
+                return parent::sqlValue($prop,$val,$cond);
+        }
+    }
+    
+    // --- --- --- --- --- --- --- ---
     public function sqlCreateSequence(structure\iModel $model){
         $Arr = array_map(function($prop) use($model){
             $Arr = [];
@@ -98,23 +191,75 @@ class Pgsql extends \Cmatrix\Structure\Provider implements iPgsql{
     }
     
     // --- --- --- --- --- --- --- ---
+    public function sqlCreateFk(structure\iModel $model){
+        $TableName  = $model->getTableName();        
+        
+        $Arr = array_map(function($prop) use($TableName,$model){
+            $_to = function() use($prop){
+                $EntityUrl = $prop['association']['entity'];
+                $PropName = $prop['association']['prop'];
+                $Datamodel = kernel\Ide\Datamodel::get($EntityUrl);
+                $Tablename = $this->getTableName($Datamodel);
+                $PropName = $Datamodel->getProp($PropName)['code'];
+                return $Tablename .'('. $PropName .')';
+            };
+            
+            $FkName = $TableName .'__fk__'. $this->getTransName($prop['code']);
+            
+            $Arr = [];
+            $Arr[] = 'ALTER TABLE ' .$TableName. ' DROP CONSTRAINT IF EXISTS ' .$FkName. ' CASCADE;';
+            $Arr[] = 'ALTER TABLE ' .$TableName. ' ADD CONSTRAINT ' .$FkName. ' FOREIGN KEY ('. $prop['code'] .') REFERENCES ' .$_to(). ';';
+            
+            return implode("\n",$Arr);
+            
+        },$model->Model->Association);
+        
+        return implode("\n",$Arr);
+    }
+    
+    // --- --- --- --- --- --- --- ---
     public function sqlCreateUniques(structure\iModel $model){
-        //dump($model->getUniques());
+        return $this->sqlCreateIndexes($model,true);
     }
 
     // --- --- --- --- --- --- --- ---
-    public function sqlCreateIndexes(structure\iModel $model){
-        $Arr = array_map(function($group) use($model){
-            $TableName  = $model->getTableName();
-            $IndexProps = $model->getIndexProps($group);
-            $IndexName  = $model->getIndexName($group);
+    public function sqlCreateIndexes(structure\iModel $model,$isUnique=false){
+        $TableName  = $model->getTableName();
+        
+        $_src = function() use($model,$isUnique){
+            if($isUnique) return $model->Model->Uniques;
             
-            $Arr = [];
-            $Arr[] = 'DROP INDEX IF EXISTS ' .$IndexName. ' CASCADE;';
-            $Arr[] = 'CREATE INDEX ' .$IndexName. ' ON ' .$TableName. ' USING btree (' .$IndexProps. ');';
+            $Indexes = $model->Model->Indexes;
+            $Association = $model->Model->Association;
+            if(count($Association)) $Indexes[] = $Association;
+            
+            return $Indexes;
+        };
+        
+        $Arr = array_map(function($group) use($model,$isUnique,$TableName){
+            $Arr = array_map(function($val) use($model,$isUnique,$TableName){
+                $Props = $val['props'];
+                $Rules = $val['rules'];
+                
+                if($isUnique && $model->isActiveProp) $Rules[] = 'active IS NOT NULL';
+                
+                $IndexName = $TableName .'__' .($isUnique ? 'uniq' : 'index'). '__'. $this->getTransName(implode('_',$Props));
+                $IndexProps = implode(',',$Props);
+                
+                $Arr = [];
+                $Arr[] = 'DROP INDEX IF EXISTS ' .$IndexName. ' CASCADE;';
+                $Arr[] = 'CREATE INDEX ' .$IndexName. ' ON ' .$TableName. ' USING btree (' .$IndexProps. ')' .(count($Rules) ? ' WHERE '.implode(' AND ',$Rules) : null). ';';
+                
+                //так не работает
+                //$Arr[] = 'ALTER TABLE ' .$TableName. ' DROP CONSTRAINT IF EXISTS ' .$IndexName. ' CASCADE;';
+                //$Arr[] = 'ALTER TABLE ' .$TableName. ' ADD CONSTRAINT ' .$IndexName. ' UNIQUE (' .$IndexProps. ')' .(count($Rules) ? ' WHERE '.implode(' AND ',$Rules) : null). ';';
+                return implode("\n",$Arr);
+                
+            },$this->inheritIndex($group));
             
             return implode("\n",$Arr);
-        },$model->Model->Indexes);
+            
+        },$_src());
         
         return implode("\n",$Arr);
     }
@@ -148,6 +293,5 @@ class Pgsql extends \Cmatrix\Structure\Provider implements iPgsql{
             return 'INSERT INTO ' .$model->getTableName(). ' (' .implode(',',$Fields). ') VALUES (' .implode(',',$Values). ');';
         },$model->Model->Init);
     }
-
 }
 ?>

@@ -12,6 +12,22 @@
 
 require_once "../modules/common.php";
 
+/*
+$n = 4;
+//echo $n.':'.pow(2,$n)."\n";
+
+for($i=1; $i<pow(2,$n); $i++){
+    //echo $i . '-' . sprintf("%'.0".($n+1)."s",decbin($i)) ."\n";
+    echo $i . '-' . sprintf("%'.0".$n."s",decbin($i)) ."\n";
+    
+}
+//sprintf("%'.09d\n", 123);
+
+//dump(pow(2,$N));
+//dump(decbin(pow(2,$N)));
+exit;
+*/
+
 // --- --- --- --- --- --- --- ---
 $_help = function($text){
     echo 'Ошибка: '. $text . PHP_EOL;

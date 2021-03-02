@@ -11,8 +11,8 @@
         "info" : null,
         "indexes" : null,
         "uniques": [
-            "code",
-            "name"
+            ["code"],
+            ["name"]
         ],
         "props": {
             "id" : {

@@ -21,7 +21,7 @@ abstract class Provider implements \Cmatrix\Structure\iProvider {
             default : throw new ex\Property($this,$name);
         }
     }
-    
+
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---

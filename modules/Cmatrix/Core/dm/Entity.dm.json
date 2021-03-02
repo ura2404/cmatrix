@@ -8,10 +8,10 @@
         "parent": null,
         "info": null,
         "indexes" : [
-            ["id","hid"],
+            ["id"],
             ["status"]
         ],
-        "uniques": [ "hid" ],
+        "uniques": [[ "hid" ]],
         "props": {
             "id" : {
                 "code": "id",

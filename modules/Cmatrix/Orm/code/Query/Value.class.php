@@ -29,6 +29,7 @@ class Value{
             case 'IntegerValue' : return $this->getMyIntegerValue();
             case 'RealValue'    : return $this->getMyRealValue();
             
+            /*
             case 'isDayY'   : return $this->getMyIsDayY();
             case 'isDayYM'  : return $this->getMyIsDayYM();
             case 'isDayYMD' : return $this->getMyIsDayYMD();
@@ -40,6 +41,7 @@ class Value{
             case 'isTimeH'   : return $this->getMyIsTimeH();
             case 'isTimeHM'  : return $this->getMyIsTimeHM();
             case 'isTimeHMS' : return $this->getMyIsTimeHMS();
+            */
             
             default : throw new ex\Property($this,$name);
         }
@@ -85,10 +87,11 @@ class Value{
         return floatval($this->Value);
     }
     
+    /*
     // --- --- --- --- --- --- --- ---
-    /*private function getMyIsTs(){
+    private function getMyIsTs(){
         return preg_match('/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) (2[0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9]$/',$this->Value) ? true : false;
-    }*/
+    }
     
     // --- --- --- --- --- --- --- ---
     private function getMyIsDayY(){
@@ -134,6 +137,7 @@ class Value{
     private function getMyIsTimeHMS(){
         return preg_match('/^(2[0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9]$/',$value) ? true : false;
     }
+    */
     
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---

@@ -24,8 +24,19 @@ class Datamodel extends \Cmatrix\Structure\Model implements iDatamodel{
     function __get($name){
         switch($name){
             case 'Model' : return $this->Model;
+            case 'isActiveProp' : return $this->getMyIsActiveProp();
             default : throw new ex\Property($this,$name);
         }
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    /**
+     * @retrun bool - есить ли поле active
+     */
+    protected function getMyIsActiveProp(){
+        return $this->Model->isPropExists('active');
     }
     
     // --- --- --- --- --- --- --- ---
@@ -34,7 +45,7 @@ class Datamodel extends \Cmatrix\Structure\Model implements iDatamodel{
     public function getSqlCreate(structure\iProvider $provider){
         $Queries = [];
         
-        $this->Model->Parent ? $Queries['parent'] = (new self($this->Model->Parent))->getSqlCreate($provider) : null;
+        //$this->Model->Parent ? $Queries['parent'] = (new self($this->Model->Parent))->getSqlCreate($provider) : null;
         
         $Queries['main'][] = '-- -------------------------------------------------------------------';
         $Queries['main'][] = '-- --- dm::' .$this->Model->Url. '---------------------------';
@@ -69,7 +80,7 @@ class Datamodel extends \Cmatrix\Structure\Model implements iDatamodel{
 		$Queries['init'][] = "";
 		
         $Queries['fk'][] = '-- --- fk --- dm::' .$this->Model->Url. ' -------------------';
-		//$Queries['fk'][] = $this->sqlCreateFk($this);
+		$Queries['fk'][] = $provider->sqlCreateFk($this);
 		$Queries['fk'][] = "";
         
         //dump($Queries);

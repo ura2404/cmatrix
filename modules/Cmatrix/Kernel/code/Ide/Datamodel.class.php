@@ -43,6 +43,10 @@ class Datamodel extends kernel\Reflection implements iDatamodel,iModel {
             case 'Init'       : return $this->getMyInit();
             case 'Indexes'    : return $this->getMyIndexes();
             case 'OwnIndexes' : return $this->getMyOwnIndexes();
+            case 'Uniques'    : return $this->getMyUniques();
+            case 'OwnUniques' : return $this->getMyOwnUniques();
+            case 'OwnAssociation' : return $this->getMyOwnAssociation();
+            case 'Association'    : return $this->getMyAssociation();
             default : return parent::__get($name);
         }
     }
@@ -213,6 +217,40 @@ class Datamodel extends kernel\Reflection implements iDatamodel,iModel {
         return array_merge($ParentIndexes,$Indexes);
     }
     
+    // --- --- --- --- --- --- --- ---
+    protected function getMyOwnUniques(){
+        $Uniques = $this->Json['uniques'];
+        
+        return array_map(function($group){
+            return array_map(function($prop){
+                return $this->getProp($prop);
+            },$group);
+        },is_array($Uniques) ? $Uniques : []);
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    protected function getMyUniques(){
+        $Uniques = $this->OwnUniques;
+        $ParentUniques = $this->Parent ? $this->Parent->OwnUniques : [];
+        return array_merge($ParentUniques,$Uniques);
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    protected function getMyOwnAssociation(){
+        $Association = array_values(array_filter($this->Json['props'],function($prop){ return !!$prop['association']; }));
+        //dump($Association);
+        
+        return $Association;
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    protected function getMyAssociation(){
+        $Association = $this->OwnAssociation;
+        $ParentAssociation = $this->Parent ? $this->Parent->OwnAssociation : [];
+        return array_merge($ParentAssociation,$Association);
+    }
+    
+
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
