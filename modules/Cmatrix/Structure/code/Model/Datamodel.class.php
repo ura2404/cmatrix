@@ -47,9 +47,9 @@ class Datamodel extends \Cmatrix\Structure\Model implements iDatamodel{
         
         //$this->Model->Parent ? $Queries['parent'] = (new self($this->Model->Parent))->getSqlCreate($provider) : null;
         
-        $Queries['main'][] = '-- -------------------------------------------------------------------';
-        $Queries['main'][] = '-- --- dm::' .$this->Model->Url. '---------------------------';
-        $Queries['main'][] = "";
+        //$Queries['main'][] = '-- -------------------------------------------------------------------';
+        //$Queries['main'][] = '-- --- dm::' .$this->Model->Url. '---------------------------';
+        //$Queries['main'][] = "";
         
         $Queries['main'][] = '-- --- sequence --- dm::' .$this->Model->Url. ' -------------';
         $Queries['main'][] = $provider->sqlCreateSequence($this);
@@ -84,6 +84,7 @@ class Datamodel extends \Cmatrix\Structure\Model implements iDatamodel{
 		$Queries['fk'][] = "";
         
         //dump($Queries);
+        return $Queries;
         
         return implode("\n",array2line($Queries))."\n";
         //return implode("\n",array2line($Queries));

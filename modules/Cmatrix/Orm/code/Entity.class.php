@@ -1,6 +1,8 @@
 <?php
 /**
  * Class Cmatrix\Orm\Entity
+ * 
+ * Абстракция для управления представлением сущности в БД
  *
  * @author ura@itx.ru
  * @version 1.0 2020-12-19

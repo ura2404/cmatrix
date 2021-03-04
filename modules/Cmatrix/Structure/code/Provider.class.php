@@ -13,7 +13,6 @@ use \Cmatrix\Kernel\Exception as ex;
 
 abstract class Provider implements \Cmatrix\Structure\iProvider {
     static $PROVIDERS = ['pgsql','mysql','sqlite3'];
-    
 
     // --- --- --- --- --- --- --- ---
     function __get($name){

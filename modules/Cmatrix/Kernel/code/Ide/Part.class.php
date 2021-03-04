@@ -31,6 +31,7 @@ class Part extends kernel\Reflection {
         switch($name){
             case 'Path' : return $this->getMyPath();
             case 'Config' : return $this->getMyConfig();
+            case 'Datamodels' : return $this->getMyDatamodels();
             default : return parent::__get($name);
         }
     }
@@ -55,6 +56,19 @@ class Part extends kernel\Reflection {
         return $this->getInstanceValue('_Config',function(){
             return kernel\Config::get($this->Path);
         });
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    /**
+     * @return array - список data
+     */
+    private function getMyDatamodels(){
+        $Path = $this->Path.CM_DS.'dm';
+        if(!file_exists($Path)) return [];
+        $Arr = scandir($Path);
+        $Arr = array_filter($Arr,function($val){ return ($val !== '.' && $val !== '..' && strpos($val,'.class.php') !== false) ? true : false; });
+        $Arr = array_map(function($val){ return $this->Url.'/'.strBefore($val,'.class.php'); },$Arr);
+        return $Arr;
     }
     
     // --- --- --- --- --- --- --- ---

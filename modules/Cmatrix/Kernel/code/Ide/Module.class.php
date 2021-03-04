@@ -29,6 +29,7 @@ class Module extends kernel\Reflection{
         switch($name){
             case 'Path' : return $this->getMyPath();
             case 'Config' : return $this->getMyConfig();
+            case 'Parts' : return $this->getMyParts();
             default : return parent::__get($name);
         }
     }
@@ -53,6 +54,17 @@ class Module extends kernel\Reflection{
         return $this->getInstanceValue('_Config',function(){
             return kernel\Config::get($this->Path);
         });
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    /**
+     * @return array - массив parts url
+     */
+    private function getMyParts(){
+        $Arr = scandir($this->Path);
+        $Parts = array_filter($Arr,function($val){ return ($val !== '.' && $val !== '..' && is_dir($this->Path.CM_DS.$val) && file_exists($this->Path.CM_DS.$val.CM_DS.'config.json')); });
+        $Parts = array_map(function($val){ return $this->Url.'/'.$val; },$Parts);
+        return $Parts;
     }
 
     // --- --- --- --- --- --- --- ---

@@ -183,7 +183,7 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
         return $this->getInstanceValue('_isDb',function(){
             $Config = \Cmatrix\Db\Kernel::get()->Config->getValue('db/def');
             return !!$Config;
-            return $Config && count($Config);
+            //return $Config && count($Config);
         });        
     }
     

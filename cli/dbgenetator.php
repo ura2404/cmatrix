@@ -83,8 +83,42 @@ $_script = function($target,$url) use($_help,$_provider){
     if(!$target) $_help('Не указана цель');
     if(!$url) $_help('Не указан url');
     
+    /*
+    $Arr = [
+        [ 'name' => 'a1', 'parent' => null ],
+        [ 'name' => 'a2', 'parent' => null ],
+        [ 'name' => 'a11', 'parent' => 'a1' ],
+        [ 'name' => 'a12', 'parent' => 'a1' ],
+        [ 'name' => 'a13', 'parent' => 'a1' ],
+        [ 'name' => 'a14', 'parent' => 'a1' ],
+        [ 'name' => 'a131', 'parent' => 'a13' ],
+        [ 'name' => 'a132', 'parent' => 'a13' ],
+        [ 'name' => 'a132', 'parent' => 'a13' ],
+        [ 'name' => 'a21', 'parent' => 'a2' ],
+        [ 'name' => 'a22', 'parent' => 'a2' ],
+    ];
+    
+    //dump($Arr);
+    //(new \Cmatrix\Kernel\Tree())->createTreeFromList($Arr);
+    
+    $Tree = (new \Cmatrix\Kernel\Tree())->createTreeFromList($Arr)->getPlainTree();
+    dump($Tree);
+    
+    die();
+    */
+    
     try {
         $Sql = \Cmatrix\Structure\Kernel::get($target,$url)->SqlCreate;
+        dump($Sql);
+        die();
+        
+        $Arr = \Cmatrix\Structure\Tree::get($url)->List;
+        
+        $Url = \Cmatrix\Kernel\Url::get($url);
+        if($Url->Part3) $Sql = \Cmatrix\Structure\Kernel::get($target,$url)->SqlCreate;
+        else{
+            \Cmatrix\Structure\Tree::get($url)->List;
+        }
     }
     catch (\Cmatrix\Kernel\Exception\Error $e) {
         $_help($e->getMessage());

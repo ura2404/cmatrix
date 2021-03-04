@@ -38,6 +38,7 @@ class Session {
             // ---- создать сессию с БД
             $Dm = orm\Datamodel::get('Cmatrix/Core/Session');
             $Ob = orm\Entity::create($Dm);
+            dump($Ob);
             
             return $Ob;
         }
