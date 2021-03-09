@@ -1,6 +1,6 @@
 <?php
 /**
- * Class Cmatrix\Orm\ValueType
+ * Class Cmatrix\Orm\Query\Value
  *
  * @author ura@itx.ru
  * @version 1.0 2020-12-19
@@ -28,6 +28,7 @@ class Value{
             case 'BoolValue'    : return $this->getMyBoolValue();
             case 'IntegerValue' : return $this->getMyIntegerValue();
             case 'RealValue'    : return $this->getMyRealValue();
+            case 'StringValue'  : return $this->getMyStringValue();
             
             /*
             case 'isDayY'   : return $this->getMyIsDayY();
@@ -85,6 +86,11 @@ class Value{
     private function getMyRealValue(){
         if(!self::isReal($this->Value)) throw new ex\Error('Invalid real value ['.$this->Value.'].');
         return floatval($this->Value);
+    }
+
+    // --- --- --- --- --- --- --- ---
+    private function getMyStringValue(){
+        return "'" .str_replace("'","''",$this->Value). "'";
     }
     
     /*

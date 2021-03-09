@@ -15,8 +15,9 @@ use \Cmatrix\Kernel\Exception as ex;
 abstract class Datamodel extends \Cmatrix\Kernel\Reflection implements iDatamodel{
     static $C = [];
     
-    public $Code;
-    public $Name;
+    // ????
+    //public $Code;
+    //public $Name;
     
     protected $_Props;
     
@@ -78,5 +79,32 @@ abstract class Datamodel extends \Cmatrix\Kernel\Reflection implements iDatamode
             return unserialize($Sc);
         }
     }
+    
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    // --- --- --- --- --- --- --- ---
+    public function beforeCreate($ob){
+        //parent::beforeCreate($ob);
+        return true;
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    public function afterCreate($ob){
+        //parent::afterCreate($ob);
+        return true;
+    }
+
+    // --- --- --- --- --- --- --- ---
+    public function beforeSelect($ob){
+        //parent::beforeSelect($ob);
+        return true;
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    public function afterSelect($ob){
+        //parent::afterSelect($ob);
+        return true;
+    }
+    
 }
 ?>

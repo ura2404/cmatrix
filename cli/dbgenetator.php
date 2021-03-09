@@ -83,29 +83,28 @@ $_script = function($target,$url) use($_help,$_provider){
     if(!$target) $_help('Не указана цель');
     if(!$url) $_help('Не указан url');
     
-    /*
-    $Arr = [
-        [ 'name' => 'a1', 'parent' => null ],
-        [ 'name' => 'a2', 'parent' => null ],
-        [ 'name' => 'a11', 'parent' => 'a1' ],
-        [ 'name' => 'a12', 'parent' => 'a1' ],
-        [ 'name' => 'a13', 'parent' => 'a1' ],
-        [ 'name' => 'a14', 'parent' => 'a1' ],
-        [ 'name' => 'a131', 'parent' => 'a13' ],
-        [ 'name' => 'a132', 'parent' => 'a13' ],
-        [ 'name' => 'a132', 'parent' => 'a13' ],
-        [ 'name' => 'a21', 'parent' => 'a2' ],
-        [ 'name' => 'a22', 'parent' => 'a2' ],
-    ];
+
+    $Rules = Cmatrix\Orm\Cql\Rules::get();
     
-    //dump($Arr);
-    //(new \Cmatrix\Kernel\Tree())->createTreeFromList($Arr);
-    
-    $Tree = (new \Cmatrix\Kernel\Tree())->createTreeFromList($Arr)->getPlainTree();
-    dump($Tree);
-    
-    die();
+    $Rules->add('sysuser_id::int','2','>');
+    $Rules->add('name','QWERT');
+    /*$Rules->add([
+        ['dep','qqq'],
+        ['dep','www'],
+    ]);
+    $Rules->add(Cmatrix\Orm\Cql\Rules::get('or')
+        ->add('name2','AAZ')
+        ->add('name3','RTY')
+    );
+    $Rules->add(Cmatrix\Orm\Cql\Rules::get('and')
+        ->add('name2','AAZ')
+        ->add('name3','RTY')
+    );
     */
+    dump($Rules->Data);
+    dump($Rules->Query);
+    die();
+    
     
     try {
         $Sql = \Cmatrix\Structure\Kernel::get($target,$url)->SqlCreate;

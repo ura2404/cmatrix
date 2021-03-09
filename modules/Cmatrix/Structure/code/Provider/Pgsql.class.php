@@ -106,7 +106,35 @@ class Pgsql extends \Cmatrix\Structure\Provider implements iPgsql{
         return $Name;
     }
     
+    // --- --- --- --- --- --- --- ---
+    /**
+     * @return string - имя счётчика для свойства
+     */
+    private function getPropSequenceName(kernel\Ide\iModel $model, $propCode){
+        $Name = $this->getTableName($model) . '__seq__' . $model->getProp($propCode)['code'];
+        $Name = strtolower($Name);
+        
+        return $this->getTransName($Name);
+    }
     
+    // --- --- --- --- --- --- --- ---
+    private function getPropName(kernel\Ide\iModel $model, $propCode){
+        $Name = $model->getProp($propCode)['code'];
+        
+        //return $this->getTransName($Name);
+        return $Name;
+    }
+    
+    // --- --- --- --- --- --- --- ---
+    /**
+     * @return string - имя индекса для массива полей
+     */
+    private function getIndexName(array $props){
+        $Name = $this->getTableName() .'__index__'. str_replace(',','_',$this->getIndexProps($props));
+        return $this->getTransName($Name);
+    }
+    
+
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
     // --- --- --- --- --- --- --- ---
@@ -123,7 +151,7 @@ class Pgsql extends \Cmatrix\Structure\Provider implements iPgsql{
     public function sqlCreateSequence(structure\iModel $model){
         $Arr = array_map(function($prop) use($model){
             $Arr = [];
-			$Name = $model->getPropSequenceName($prop);
+			$Name = $this->getPropSequenceName($model->Model,$prop['code']);
 			$Arr[] = 'DROP SEQUENCE IF EXISTS '. $Name .' CASCADE;';
 			$Arr[] = 'CREATE SEQUENCE '. $Name .';';
 			return implode("\n", $Arr);
@@ -135,21 +163,22 @@ class Pgsql extends \Cmatrix\Structure\Provider implements iPgsql{
     // --- --- --- --- --- --- --- ---
     public function sqlCreateTable(structure\iModel $model){
         $Parent = $model->Model->Parent;
-        $TableName = $model->getTableName();
+        $TableName = $this->getTableName($model->Model);
+        $ParentTableName = $Parent ? (new self())->getTableName($Parent) : null;
         
         $Arr = [];
         $Arr[] = 'DROP TABLE IF EXISTS '. $TableName .' CASCADE;';
         $Arr[] = 'CREATE TABLE '. $TableName .'(';
         $Arr[] = implode(",\n",array_map(function($prop) use($model){
             $Arr = [];
-            $Arr[] = $model->getPropName($prop);
+            $Arr[] = $this->getPropName($model->Model,$prop['code']);
             $Arr[] = $this->getPropType($prop);
             $Arr[] = $this->getPropDefault($model,$prop);
             $Arr[] = $this->getPropNotNull($prop);
             
             return implode(" ",array_filter($Arr,function($val){ return !!$val; }));
         },$model->Model->OwnProps));
-        $Arr[] = $Parent ? ') INHERITS ('. $model->getParentTableName() .');' : ');';
+        $Arr[] = $Parent ? ') INHERITS ('. $ParentTableName .');' : ');';
 
         return $Arr;
     }
@@ -163,7 +192,7 @@ class Pgsql extends \Cmatrix\Structure\Provider implements iPgsql{
     public function getPropDefault($model,$prop){
         $_def = function() use($model,$prop){
             if($prop['default'] === '::hid::')         return "md5(to_char(now(), 'DDDYYYYNNDDHH24MISSUS') || random())";
-            elseif($prop['default'] === '::counter::') return "nextval('". $model->getPropSequenceName($prop) ."')";
+            elseif($prop['default'] === '::counter::') return "nextval('". $this->getPropSequenceName($model->Model,$prop['code']) ."')";
             else return parent::getPropDefault($model,$prop);
         };
         
@@ -179,20 +208,23 @@ class Pgsql extends \Cmatrix\Structure\Provider implements iPgsql{
     
     // --- --- --- --- --- --- --- ---
     public function sqlCreatePk(structure\iModel $model){
-        $TableName = $model->getTableName();
-        $PkName    = $model->getPkName();
-        $PkProps   = $model->getPkProps();
+        $Props = $model->getPkProps();
+        $Props = array_map(function($prop){ return $prop['code']; },$Props);
         
+        $TableName = $this->getTableName($model->Model);
+        $PkName = $TableName .'__pk__'. implode('_',$Props);
+        $PkName = $this->getTransName($PkName);
+
         $Arr = [];
         $Arr[] = 'ALTER TABLE ' .$TableName. ' DROP CONSTRAINT IF EXISTS ' .$PkName. ' CASCADE;';
-        $Arr[] = 'ALTER TABLE ' .$TableName. ' ADD CONSTRAINT ' .$PkName. ' PRIMARY KEY (' .$PkProps. ');';
+        $Arr[] = 'ALTER TABLE ' .$TableName. ' ADD CONSTRAINT ' .$PkName. ' PRIMARY KEY (' .implode(',',$Props). ');';
         
         return implode("\n",$Arr);
     }
     
     // --- --- --- --- --- --- --- ---
     public function sqlCreateFk(structure\iModel $model){
-        $TableName  = $model->getTableName();        
+        $TableName  = $this->getTableName($model->Model);
         
         $Arr = array_map(function($prop) use($TableName,$model){
             $_to = function() use($prop){
@@ -224,14 +256,15 @@ class Pgsql extends \Cmatrix\Structure\Provider implements iPgsql{
 
     // --- --- --- --- --- --- --- ---
     public function sqlCreateIndexes(structure\iModel $model,$isUnique=false){
-        $TableName  = $model->getTableName();
+        $TableName  = $this->getTableName($model->Model);
         
         $_src = function() use($model,$isUnique){
             if($isUnique) return $model->Model->Uniques;
             
             $Indexes = $model->Model->Indexes;
             $Association = $model->Model->Association;
-            if(count($Association)) $Indexes[] = $Association;
+            if(count($Association)) foreach($Association as $ass) $Indexes[] = [$ass];
+            //dump($Indexes);die();
             
             return $Indexes;
         };
@@ -266,7 +299,7 @@ class Pgsql extends \Cmatrix\Structure\Provider implements iPgsql{
     
     // --- --- --- --- --- --- --- ---
     public function sqlCreateGrant(structure\iModel $model){
-        $TableName = $model->getTableName();
+        $TableName = $this->getTableName($model->Model);
         
         $Arr = [];
         $Arr[] = 'GRANT SELECT ON '. $TableName .' TO PUBLIC;';
@@ -290,7 +323,7 @@ class Pgsql extends \Cmatrix\Structure\Provider implements iPgsql{
             },$Fields,array_keys($Fields));
             //dump($Values);die();
             
-            return 'INSERT INTO ' .$model->getTableName(). ' (' .implode(',',$Fields). ') VALUES (' .implode(',',$Values). ');';
+            return 'INSERT INTO ' .$this->getTableName($model->Model). ' (' .implode(',',$Fields). ') VALUES (' .implode(',',$Values). ');';
         },$model->Model->Init);
     }
 }

@@ -36,8 +36,9 @@ class Session {
     private function createInstance(){
         if(app\Kernel::get()->isDb){
             // ---- создать сессию с БД
+            $Hid = app\Kernel::get()->Hid;
             $Dm = orm\Datamodel::get('Cmatrix/Core/Session');
-            $Ob = orm\Entity::create($Dm);
+            $Ob = orm\Entity::get(['hid::hid' => $Hid,'aaa'=>'bbb'],$Dm);
             dump($Ob);
             
             return $Ob;
@@ -50,6 +51,7 @@ class Session {
             $Init = kernel\Ide\Datamodel::get('Cmatrix/Core/Session')->Init;
             $Init = array_filter($Init,function($val){ return !!($val['agent'] === 'Console'); });
             $Init = array_shift($Init);
+            $Init['id'] = 1;
             
             if($Init) $Ob->setValues($Init);
             
@@ -59,8 +61,7 @@ class Session {
             $Ob->session_id = $Ob->id;
             $Ob->sysuser_id = core\Sysuser::get()->id;
             
-            $Ob->setValues($this->Ident);
-            
+            $Ob->setValues($this->Ident)->flush();
             //dump($Ob);
             
             return $Ob;

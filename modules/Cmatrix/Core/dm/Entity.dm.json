@@ -8,7 +8,6 @@
         "parent": null,
         "info": null,
         "indexes" : [
-            ["id"],
             ["status"]
         ],
         "uniques": [[ "hid" ]],
@@ -42,7 +41,7 @@
                 },
                 "type": "::hid::",
                 "length" : null,
-                "pk" : true,
+                "pk" : null,
                 "nn": true,
                 "default": "::hid::",
                 "registr" : null,

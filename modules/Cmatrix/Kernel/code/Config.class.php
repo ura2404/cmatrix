@@ -43,6 +43,7 @@ class Config extends Reflection {
             }
             else return array_key_exists($arr[0],$ini) ? $ini[$arr[0]] : ($default ? $default : false);
         };
+        //dump($this->Data);
         return $_fun(explode("/",$path),$this->Data);
     }
 

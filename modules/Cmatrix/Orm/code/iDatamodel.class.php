@@ -14,6 +14,9 @@ interface iDatamodel{
      * Можно применять для установки свойств по умолчанию или для фиксации каких-либо значений, например температуры и давления воздуха :) (шутка)
      */
     public function beforeCreate($ob);
+    public function afterCreate($ob);
     
+    public function beforeSelect($ob);
+    public function afterselect($ob);
 }
 ?>

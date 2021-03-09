@@ -45,8 +45,8 @@ class Datamodel extends kernel\Reflection implements iDatamodel,iModel {
             case 'OwnIndexes' : return $this->getMyOwnIndexes();
             case 'Uniques'    : return $this->getMyUniques();
             case 'OwnUniques' : return $this->getMyOwnUniques();
-            case 'OwnAssociation' : return $this->getMyOwnAssociation();
             case 'Association'    : return $this->getMyAssociation();
+            case 'OwnAssociation' : return $this->getMyOwnAssociation();
             default : return parent::__get($name);
         }
     }
@@ -238,7 +238,7 @@ class Datamodel extends kernel\Reflection implements iDatamodel,iModel {
     // --- --- --- --- --- --- --- ---
     protected function getMyOwnAssociation(){
         $Association = array_values(array_filter($this->Json['props'],function($prop){ return !!$prop['association']; }));
-        //dump($Association);
+        //dump($Association);die();
         
         return $Association;
     }

@@ -48,8 +48,9 @@ abstract class Provider implements \Cmatrix\Structure\iProvider {
                 
             case 'timestamp' :
                 return orm\Query\Value::get($val)->TsValue;
-
+                
             case '::id::' :
+            case 'int' :
             case 'integer' :
                 return orm\Query\Value::get($val)->IntegerValue;
                 
@@ -61,7 +62,8 @@ abstract class Provider implements \Cmatrix\Structure\iProvider {
             case 'string' :
             case 'text' :
             default :
-                return "'" .str_replace("'","''",$val). "'";
+                //return "'" .str_replace("'","''",$val). "'";
+                return orm\Query\Value::get($val)->StringValue;
         }
         
     }

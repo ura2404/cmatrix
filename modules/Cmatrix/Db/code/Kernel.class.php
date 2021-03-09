@@ -54,7 +54,7 @@ class Kernel extends \Cmatrix\Kernel\Reflection {
     
     // --- --- --- --- --- --- --- ---
     private function getMyCurConfig(){
-        return \Cmatrix\Kernel\Config::reg('db.current',$this->Config->getValue('db/_def'));
+        return \Cmatrix\Kernel\Config::reg('db.current',$this->Config->getValue('db/def'));
     }
     
     // --- --- --- --- --- --- --- ---
